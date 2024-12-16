@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js"
-import { sendVerificationEmail, sendWelcomEmail } from "../mailtrap/emails.js";
+import { sendVerificationEmail, sendWelcomEmail } from "../nodeMailer/emails.js";
 export const signup = async (req, res) => {
     const {email, password, username} = req.body
 
@@ -77,7 +77,39 @@ export const verifyEmail = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    res.send("login")
+    const {username, password} = req.body
+    try {
+        if(!username || !password ){
+            return res.status(400).json({ success: false, message: "All fields are required" });
+        }
+
+        const user = await User.findOne({username})
+        if(!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        const isPasswordValid = await bcryptjs.compare(password, user.password)
+        if(!isPasswordValid) {
+            return res.status(400).json(
+                {
+                    success: true,
+                    message: "Invalid password"
+                }
+            )
+        }
+        res.status(200).json(
+            {
+                success: true,
+                message: "Login verify successfuly"
+            }
+        )
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
 }
 
 export const logout = async (req, res) => {
