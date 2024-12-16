@@ -1,4 +1,4 @@
-import {MailtrapClient} from "mailtrap"
+import nodemailer from "nodemailer";
 import dotenv from "dotenv"
 dotenv.config()
 const TOKEN = "a263149dbc8ea1cf566d430e5baf6479"
@@ -6,13 +6,18 @@ const TOKEN = "a263149dbc8ea1cf566d430e5baf6479"
 
 console.log(TOKEN)
 
-export const mailtrapClient = new MailtrapClient({
-  token: TOKEN,
-})
+// Tạo transporter sử dụng dịch vụ email của bạn (ví dụ Gmail)
+export const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER, // Email của bạn
+    pass: process.env.EMAIL_PASSWORD, // Mật khẩu ứng dụng (app password) của email
+  },
+});
 
 export const sender = {
-  email: "hello@demomailtrap.com",
-  name: "Nguyen Thanh Nguyen",
+  email: process.env.EMAIL_USER,
+  name: "Admin",
 }
 // const recipients = [
 //   {
