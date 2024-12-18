@@ -1,8 +1,7 @@
 {
-  "name": "user-service",
+  "name": "teacher-service",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js"
@@ -11,17 +10,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
-    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
+    "env": "^0.0.2",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mailtrap": "^3.4.0",
-    "mongoose": "^8.8.4",
-    "nodemailer": "^6.9.16"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.7"
+    "mongoose": "^8.9.1",
+    "nodemon": "^3.1.9"
   }
 }

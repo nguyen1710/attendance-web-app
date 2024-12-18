@@ -95,11 +95,13 @@ export const login = async (req, res) => {
         if(!isPasswordValid) {
             return res.status(400).json(
                 {
-                    success: true,
+                    success: false,
                     message: "Invalid password"
                 }
             )
         }
+        //jwt
+        generateTokenAndSetCookie(res, user._id)
         res.status(200).json(
             {
                 success: true,
