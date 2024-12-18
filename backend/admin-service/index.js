@@ -5,13 +5,10 @@ import authRoutes from "./routes/auth.route.js";  // Đảm bảo có phần m�
 
 dotenv.config();
 const app = express()
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3002
 
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.send("Hellooo port 3000")
-})
 app.use("/api/auth", authRoutes)
 app.listen(port, () => {
     connectDB()
