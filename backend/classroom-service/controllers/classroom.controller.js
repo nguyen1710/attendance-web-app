@@ -13,7 +13,7 @@ export const createClassroom = [authMiddleware , async (req, res) => {
             owner: req.userId,
             name: name,
             description: description,
-            teacherId: req.userId
+            teacherIds: [new mongoose.Types.ObjectId(req.userId)]
         })
 
         await classroom.save()
