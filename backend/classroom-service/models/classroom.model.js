@@ -4,7 +4,7 @@ const ClassroomSchema = new mongoose.Schema({
   owner: {type: String, require: true},
   name: { type: String, required: true },        
   description: { type: String, default: "" },  
-  teacherId: [{                                   
+  teacherIds: [{                                   
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
