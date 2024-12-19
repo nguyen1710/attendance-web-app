@@ -3,7 +3,7 @@ import bcryptjs from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js"
 import { sendVerificationEmail, sendWelcomEmail } from "../nodeMailer/emails.js";
 export const signup = async (req, res) => {
-    const {email, password, username} = req.body
+    const {email, password, username, role} = req.body
 
     try{
         if(!email || !password || !username){
@@ -21,13 +21,14 @@ export const signup = async (req, res) => {
             email, 
             password: hashedPassword, 
             username,
+            role,
             verificationToken,
             verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000
         })
         await user.save()
 
         //jwt
-        generateTokenAndSetCookie(res, user._id)
+        generateTokenAndSetCookie(res, user._id, user.role)
 
         await sendVerificationEmail(user.email, verificationToken)
 
@@ -101,11 +102,24 @@ export const login = async (req, res) => {
             )
         }
         //jwt
-        generateTokenAndSetCookie(res, user._id)
+        
+        generateTokenAndSetCookie(res, user._id, user.role)
+
+        console.log(user)
         res.status(200).json(
             {
                 success: true,
-                message: "Login verify successfuly"
+                message: "Login verify successfuly",
+                user: {
+                    _id: user._id,
+                email: user.email,
+                username: user.username,
+                isVerified: user.isVerified,
+                lastLogin: user.lastLogin,
+                createAt: user.createAt,
+                updatedAt: user.updatedAt,
+                role: user.role.role,  // Đảm bảo bạn trả về trường role ở đây
+                }
             }
         )
     } catch (error) {

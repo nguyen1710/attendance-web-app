@@ -12,7 +12,7 @@ app.use(express.json())
 app.get('/', (req, res) => {
     res.send("Hellooo port 3001")
 })
-app.use("/api/teacher", classroomRoutes)
+app.use("/api/classrooms", classroomRoutes)
 app.listen(port, () => {
     connectDB()
     console.log(`Server is running on port ${port}`)
