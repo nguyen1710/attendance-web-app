@@ -1,5 +1,5 @@
 import express from "express"
-import { createClassroom, getClassrooms } from "../controllers/classroom.controller.js"
+import { createClassroom, getClassrooms, deleteClassroom } from "../controllers/classroom.controller.js"
 const router = express.Router()
 
 
@@ -7,7 +7,7 @@ router.post("/createClassroom", createClassroom)
 
 // router.post("/updateClassroom", updateClassroom)
 
-// router.post("/deleteClassroom", deleteClassroom)
+router.post("/deleteClassroom/:id", deleteClassroom)
 
 router.get("/getClassrooms", getClassrooms)
 

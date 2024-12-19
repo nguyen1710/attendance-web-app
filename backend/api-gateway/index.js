@@ -20,10 +20,10 @@ app.use('/user-service', createProxyMiddleware({
     }
 }))
 
-app.use('/teacher-service', createProxyMiddleware({
+app.use('/classroom-service', createProxyMiddleware({
     target: 'http://localhost:3001',
     pathRewrite: {
-        '^/teacher-service': ''
+        '^/classroom-service': ''
     },
     changeOrigin: true, // Để thay đổi nguồn của yêu cầu đến
     cookieDomainRewrite: {

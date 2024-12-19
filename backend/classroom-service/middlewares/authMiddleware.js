@@ -19,7 +19,8 @@ const authMiddleware = async (req, res, next) => {
         //     return res.status(404).json({ success: false, message: 'User not found' });
         // }
 
-        req.userId = decoded.userId; // Thêm thông tin user vào request để sử dụng trong các API tiếp theo
+        req.userId = decoded.userId // Thêm thông tin user vào request để sử dụng trong các API tiếp theo
+        req.userRole = decoded.userRole
         next();
     } catch (error) {
         console.error(error);
