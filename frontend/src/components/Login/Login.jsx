@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';
-
+import toast from "react-hot-toast";
 import LoginImg from "~/public/img/authLanding.gif";
 import axios from "axios";
+import { GoogleLogin } from "@react-oauth/google";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,26 +11,47 @@ function Login() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
       const response = await axios.post("http://localhost:4000/user-service/api/auth/login", {email, password})
       if (response.data.success) {
-        setSuccessMessage(response.data.message);
+        // setSuccessMessage(response.data.message);
         // Optionally, you can store the user data in state or localStorage
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        toast.success(response.data.message)
+        localStorage.setItem("email", JSON.stringify(response.data.user.email))
+        localStorage.setItem("username", JSON.stringify(response.data.user.username))
         console.log(response.data.message)
         navigate('/home')
       }
     } catch (error) {
       if (error.response) {
         setErrorMessage(error.response.data.message);
-        console.log(error.response.data.message)
+        toast.error(error.response.data.message)
       } else {
-        setErrorMessage("Something went wrong. Please try again later.");
+        toast.error("Something went wrong. Please try again later.");
       }
     }
+  }
+
+  const handleSuccess = async (response) => {
+    try {
+      const { data } = await axios.post('http://localhost:4000/user-service/api/auth/google-auth', {
+        token: response.credential,
+    });
+      if(data.success) {
+        console.log("thành công")
+      }
+    } catch (error) {
+      const data = error.response.data.message
+      console.log(data)
+    }
+  }
+
+  const handleError = () => {
+    toast.error('Login Failed')
   }
   
   return (
@@ -146,8 +168,8 @@ function Login() {
                 {" "}
                 Or{" "}
               </p>
-              <div className="!mt-4">
-                <button
+              <div className="!mt-4 flex">
+                {/* <button
                   type="button"
                   className="w-full shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-primary-100 hover:bg-blue-700 focus:outline-none flex items-center justify-center"
                   
@@ -167,7 +189,13 @@ function Login() {
                     />
                   </svg>
                   <p className="text-center text-white">Log in with Email</p>
-                </button>
+                </button> */}
+              <GoogleLogin
+                className="w-30 shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-primary-100 hover:bg-blue-700 focus:outline-none"
+                onSuccess={handleSuccess}
+                onError={handleError}
+              />
+
               </div>
 
               <p className="text-sm !mt-8 text-center text-gray-800">

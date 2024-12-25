@@ -5,6 +5,7 @@ import Login from './components/Login/Login.jsx'
 import Home from './components/HomePage/Home.jsx'
 import SignUp from './components/Login/SignUp.jsx'
 import VerifyEmail from './components/Login/VerifyEmail.jsx'
+import { Toaster } from 'react-hot-toast'
 function App() {
 
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path='/verify' element={<VerifyEmail/>}/>
         <Route path='/home' element={<Home/>}/>
       </Routes>
+
+      <Toaster position="top-right" reverseOrder={false}/>
     </>
   )
 }
