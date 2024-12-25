@@ -69,13 +69,6 @@ function VerifyEmail() {
     }
   };
 
-  // useEffect(() => {
-  //   if (errorsMessage) {
-  //     toast.error(errorsMessage); // Sử dụng toast.error cho thông báo lỗi
-  //     console.log(errorsMessage); // Log lỗi ra console
-  //   }
-  // }, [errorsMessage]);
-
   const handleResendOTP = async (e) => {
     e.preventDefault()
 

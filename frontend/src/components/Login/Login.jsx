@@ -42,7 +42,11 @@ function Login() {
         token: response.credential,
     });
       if(data.success) {
-        console.log("thành công")
+        toast.success(data.message)
+        localStorage.setItem("email", JSON.stringify(data.user.email))
+        localStorage.setItem("username", JSON.stringify(data.user.username))
+        console.log(data)
+        navigate('/home')
       }
     } catch (error) {
       const data = error.response.data.message
@@ -190,11 +194,12 @@ function Login() {
                   </svg>
                   <p className="text-center text-white">Log in with Email</p>
                 </button> */}
-              <GoogleLogin
-                className="w-30 shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-primary-100 hover:bg-blue-700 focus:outline-none"
-                onSuccess={handleSuccess}
-                onError={handleError}
-              />
+                <GoogleLogin
+                  clientid=""
+                  className="w-30 shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-primary-100 hover:bg-blue-700 focus:outline-none"
+                  onSuccess={handleSuccess}
+                  onError={handleError}
+                />
 
               </div>
 
