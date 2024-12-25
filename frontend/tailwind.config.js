@@ -4,6 +4,7 @@ export default {
   theme: {
     colors:{
        'white': '#ffffff',
+       'warning': '#dc2626',
       'primary': {
         100: '#0891b2',
         200: '#0284c7',
