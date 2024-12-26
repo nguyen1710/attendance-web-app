@@ -8,8 +8,9 @@ import toast from 'react-hot-toast';
 import Header from '../../components/common/Header';
 import UsersTable from '../../components/common/UsersTable';
 import SidebarHomePage from '../../components/common/SidebarHomePage';
-
-function ClassDetail() {
+import { CirclePlus } from 'lucide-react';
+import AddStudentDialog from '../Dialog/AddStudentDialog';
+function ClassDetailUsers() {
     const navigate = useNavigate();
     const [email, setEmail] = useState(localStorage.getItem('email'));
     const [username, setUsername] = useState(localStorage.getItem('username'));
@@ -18,88 +19,71 @@ function ClassDetail() {
     const [students, setStudents] = useState([])
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    console.log(id)
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+     // Hàm đóng dialog
+  const closeDialog = () => setIsDialogOpen(false);
+
+  // Hàm mở dialog
+  const openDialog = () => setIsDialogOpen(true);
     useEffect(() => {
         const token = localStorage.getItem("token");
-        // console.log("token",token)
+    
         if (!token) {
           // Nếu không có token, chuyển hướng đến trang login
           navigate("/login");
         } else {
           // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
           axios
-            .get(`http://localhost:4000/classroom-service/api/classrooms/getClassroom/${id}`, {
+            .get(`http://localhost:4000/classroom-service/api/classrooms/getUserFromClass/${id}`, {
               headers: {
                 Authorization: `Bearer ${token}`, // Gửi token trong header
               },
             })
             .then((response) => {
               if (response.data.success) {
-                setClassroom(response.data.classroom);
+                setStudents(response.data.students);
                 toast.success(response.data.message);
               } else {
                 toast.error(response.data.message);
               }
             })
             .catch((error) => {
-              console.log(error)
-              toast.error(error.response.data.message);
+              toast.error("Error fetching classrooms");
             });
         }
       }, [navigate]);
       
-      console.log(classroom)
-    //   console.log(students)
+      // console.log(classroom)
+      // console.log(students)
   return (
     <>
-    <SidebarHomePage />
+    <SidebarHomePage/>
         <div className='flex-1 overflow-auto relative z-10'>
         <Header username={username} email={email}/>
 
-			<main className='w-full mx-auto py-6 px-4 lg:px-8'>
+			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={openDialog}
+            className="flex items-center text-white bg-primary-100 hover:bg-primary-300 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          >
+            <CirclePlus className="w-5 h-5 mr-2" />
+            Add Student
+          </button>
+      </div>
+				<UsersTable userData={students}/>
+        <AddStudentDialog
+          isOpen={isDialogOpen}
+          onClose={closeDialog}
+          id={id}
 
-      <motion.div
-					className='grid grid-cols-1 gap-5 mb-8'
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 1 }}
-				>
-          <ClassCard
-              // name={classroom.name}
-              // owner={classroom.owner}
-              // desc={classroom.description}
-              // color="#6366F1"
-              name='Attendance Week 1'
-              owner={classroom?.owner || 'N/A'}
-              desc="25/12/2024"
-              color="#6366F1"
-              // name={classroom?.name || 'Attendance Week 1'}
-              // owner={classroom?.owner || 'N/A'}
-              // desc={classroom?.description || 'No description'}
-              // color="#6366F1"
-          />
-
-            <ClassCard
-              // name={classroom.name}
-              // owner={classroom.owner}
-              // desc={classroom.description}
-              // color="#6366F1"
-              name='Attendance Week 2'
-              owner={classroom?.owner || 'N/A'}
-              desc="25/12/2024"
-              color="#6366F1"
-              // name={classroom?.name || 'Attendance Week 1'}
-              // owner={classroom?.owner || 'N/A'}
-              // desc={classroom?.description || 'No description'}
-              // color="#6366F1"
-          />
-      </motion.div>
-				{/* <UsersTable userData={students}/> */}
-          
+        />
 			</main>
 		</div>
     </>
   )
 }
 
-export default ClassDetail
+export default ClassDetailUsers

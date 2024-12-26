@@ -18,18 +18,38 @@ import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
-<<<<<<< HEAD
 import ClassDetail from './pages/HomePage/ClassDetail.jsx'
-=======
 import AdminLogin from './components/admin/login/adminLogin.jsx';
-
->>>>>>> eb9cc5e95a208c5e76331385b070f477140b7286
+import ClassDetailUsers from './pages/HomePage/ClassDetailUsers.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
 
+  // const classroomRoutes = ["/classroom"];
+  // const isClassroomRoute = classroomRoutes.includes(location.pathname);
+  const isClassroomRoute = location.pathname.startsWith("/classroom");
+
+  if (isClassroomRoute) {
+    // Nếu là route độc lập, render trực tiếp route đó
+    return (
+
+      <div  className='flex h-screen bg-blue-900 text-gray-100 overflow-hidden'>
+        <div className='fixed inset-0 z-10'>
+            <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
+            <div className='absolute inset-0 backdrop-blur-sm' />
+        </div>
+        <Routes>
+            <Route path="/classroom/:id" element={<ClassDetail />} />
+            <Route path="/classroom/:id/users" element={<ClassDetailUsers />} />
+
+        </Routes>
+        <Toaster position="top-right" reverseOrder={false} />
+
+    </div>
+    );
+  }
 
   // Các route hoàn toàn độc lập
-  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login"];
+  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/"];
   const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
 
   if (isStandaloneRoute) {
@@ -37,6 +57,7 @@ function App() {
     return (
       <>
         <Routes>
+          <Route path='/' element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/verify" element={<VerifyEmail />} />
@@ -57,8 +78,7 @@ function App() {
       
         <Sidebar />
         <Routes>
-            <Route path='/home' element={<Home />} />
-            <Route path="/classroom/:id" element={<ClassDetail />} />
+
             <Route path='/admin' element={<OverviewPage />} />
             <Route path='/admin/products' element={<ProductsPage />} />
             <Route path='/admin/users' element={<UsersPage />} />

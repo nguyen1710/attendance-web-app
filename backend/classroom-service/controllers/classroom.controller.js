@@ -206,17 +206,7 @@ export const getDetailClass = [authMiddleware, async (req, res) => {
             })
         }
         console.log(classroom)
-        // console.log(classroom.owner.toString())
-        // if(classroom.owner.toString() != req.userEmail) {
-        //     return res.status(403).json({ success: false, message: "You do not have permission to delete this classroom" });
-        // }
 
-        // console.log(email)
-        // const user = await User.findOne({email: email})
-        // classroom.studentEmails.push(email)
-        // await classroom.save()
-
-        // sendInviteEmail(email,classroom.name)
         return res.status(200).json({
             success: true,
             message: ` Get classroom success`,
