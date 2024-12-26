@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
         await user.save()
 
         //jwt
-        generateTokenAndSetCookie(res, user._id, user.role)
+        generateTokenAndSetCookie(res, user.email, user.role)
 
         await sendVerificationEmail(user.email, verificationToken)
 
@@ -142,7 +142,7 @@ export const login = async (req, res) => {
         }
         //jwt
         
-        generateTokenAndSetCookie(res, user._id, user.role)
+        generateTokenAndSetCookie(res, user.email, user.role)
 
         console.log(user)
         res.status(200).json(
@@ -206,7 +206,7 @@ export const loginWithGoogle = async (req, res) => {
         }
 
         // Tạo token JWT và set cookie
-        generateTokenAndSetCookie(res, user._id, user.role);
+        generateTokenAndSetCookie(res, user.email, user.role);
 
         res.status(200).json({
             success: true,
