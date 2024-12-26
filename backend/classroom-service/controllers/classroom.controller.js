@@ -37,7 +37,7 @@ export const createClassroom = [authMiddleware , async (req, res) => {
     }
 }]
 
-export const getClassrooms = [authMiddleware, async (req, res) => {
+export const getAllClassrooms = [authMiddleware, async (req, res) => {
     try {
         const userEmail = req.userEmail
         const userRole = req.userRole
@@ -192,3 +192,80 @@ export const handleExcelUpload = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+export const getDetailClass = [authMiddleware, async (req, res) => {
+    try {
+        // const { id } = req.params
+        const { id } = req.params
+
+        const classroom = await Classroom.findById(id)
+        if(!classroom) {
+            return res.status(404).json({
+                success: "false",
+                message: "Classroom not found"
+            })
+        }
+        console.log(classroom)
+        // console.log(classroom.owner.toString())
+        // if(classroom.owner.toString() != req.userEmail) {
+        //     return res.status(403).json({ success: false, message: "You do not have permission to delete this classroom" });
+        // }
+
+        // console.log(email)
+        // const user = await User.findOne({email: email})
+        // classroom.studentEmails.push(email)
+        // await classroom.save()
+
+        // sendInviteEmail(email,classroom.name)
+        return res.status(200).json({
+            success: true,
+            message: ` Get classroom success`,
+            classroom: classroom
+            
+        });
+    } catch (error) {
+        console.log("Error when add student", error)
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}]
+
+export const getUserFromClass = [authMiddleware, async (req, res) => {
+    try {
+        // const { id } = req.params
+        const { id } = req.params
+
+        const classroom = await Classroom.findById(id)
+        if(!classroom) {
+            return res.status(404).json({
+                success: "false",
+                message: "Classroom not found"
+            })
+        }
+        // console.log(req.userEmail)
+        // console.log(classroom.owner.toString())
+        // if(classroom.owner.toString() != req.userEmail) {
+        //     return res.status(403).json({ success: false, message: "You do not have permission to delete this classroom" });
+        // }
+
+        console.log(classroom.studentEmails)
+        const students = []
+
+        for (const email of classroom.studentEmails) {
+            const student = await User.findOne({email: email})
+            students.push(student)
+        }
+        // classroom.studentEmails.push(email)
+        // await classroom.save()
+
+        // sendInviteEmail(email,classroom.name)
+        return res.status(200).json({
+            success: true,
+            message: ` Get classroom success`,
+            students: students
+            
+        });
+    } catch (error) {
+        console.log("Error when add student", error)
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}]

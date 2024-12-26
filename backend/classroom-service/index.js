@@ -4,10 +4,18 @@ import connectDB from "./db/connectDB.js";  // Đảm bảo có phần mở rộ
 import classroomRoutes from "./routes/classroom.route.js";  // Đảm bảo có phần mở rộng .js
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
+import cors from 'cors'
 dotenv.config();
 const app = express()
 const port = process.env.PORT || 3002
 
+const corsOptions = {
+    origin: 'http://localhost:5173', // Chỉ cho phép frontend từ localhost:5173 truy cập
+    methods: 'GET, POST, PUT, DELETE', // Các phương thức HTTP được phép
+    allowedHeaders: 'Content-Type, Authorization', // Các header được phép
+  };
+
+app.use(cors(corsOptions));
 app.use(cookieParser()); // Đảm bảo dòng này được khai báo trước các route khác
 app.use(express.json())
 

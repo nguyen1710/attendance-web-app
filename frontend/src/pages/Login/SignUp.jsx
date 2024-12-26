@@ -39,6 +39,7 @@ function SignUp() {
                 const response = await axios.post("http://localhost:4000/user-service/api/auth/signup", {email, username, password})
                 if(response.data.success) {
                     toast.success(response.data.message)
+                    localStorage.setItem("token", response.data.token); // Lưu token JWT
                     localStorage.setItem("email", JSON.stringify(response.data.user.email))
                     localStorage.setItem("username", JSON.stringify(response.data.user.username))
                     console.log(response.data.message)

@@ -1,19 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Edit, Search, Trash2  } from "lucide-react";
 
-const userData = [
-	{ id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "Active" },
-	{ id: 2, name: "Jane Smith", email: "jane@example.com", role: "Admin", status: "Active" },
-	{ id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Customer", status: "Inactive" },
-	{ id: 4, name: "Alice Brown", email: "alice@example.com", role: "Customer", status: "Active" },
-	{ id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Moderator", status: "Active" },
-];
+// const userData = [
+// 	{ id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "Active" },
+// 	{ id: 2, name: "Jane Smith", email: "jane@example.com", role: "Admin", status: "Active" },
+// 	{ id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Customer", status: "Inactive" },
+// 	{ id: 4, name: "Alice Brown", email: "alice@example.com", role: "Customer", status: "Active" },
+// 	{ id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Moderator", status: "Active" },
+// ];
 
-const UsersTable = () => {
+const UsersTable = ({userData}) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState(userData);
+	const [users, setUsers] = useState(userData)
+	console.log("Student",userData)
+	useEffect(() => {
+		setUsers(userData);
+	  }, [userData]);
+	console.log("sss",users)
 
+	console.log("Studnet",filteredUsers)
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
 		setSearchTerm(term);
@@ -67,22 +74,22 @@ const UsersTable = () => {
 					</thead>
 
 					<tbody className='divide-y divide-gray-700'>
-						{filteredUsers.map((user) => (
+						{users.map((user) => (
 							<motion.tr
-								key={user.id}
+								key={user._id}
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								transition={{ duration: 0.3 }}
 							>
 								<td className='px-6 py-4 whitespace-nowrap'>
 									<div className='flex items-center'>
-										<div className='flex-shrink-0 h-10 w-10'>
+										{/* <div className='flex-shrink-0 h-10 w-10'>
 											<div className='h-10 w-10 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold'>
-												{user.name.charAt(0)}
+												{user.username.charAt(0)}
 											</div>
-										</div>
+										</div> */}
 										<div className='ml-4'>
-											<div className='text-sm font-medium text-gray-100'>{user.name}</div>
+											<div className='text-sm font-medium text-gray-100'>{user.username}</div>
 										</div>
 									</div>
 								</td>
@@ -95,7 +102,7 @@ const UsersTable = () => {
 										{user.role}
 									</span>
 								</td>
-
+{/* 
 								<td className='px-6 py-4 whitespace-nowrap'>
 									<span
 										className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -106,7 +113,7 @@ const UsersTable = () => {
 									>
 										{user.status}
 									</span>
-								</td>
+								</td> */}
 
 								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
 									<button className='text-indigo-400 hover:text-indigo-300 mr-2'><Edit size={18} /></button>

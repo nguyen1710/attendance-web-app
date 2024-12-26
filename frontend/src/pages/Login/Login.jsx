@@ -21,6 +21,7 @@ function Login() {
         // setSuccessMessage(response.data.message);
         // Optionally, you can store the user data in state or localStorage
         toast.success(response.data.message)
+        localStorage.setItem("token", response.data.token); // Lưu token JWT
         localStorage.setItem("email", JSON.stringify(response.data.user.email))
         localStorage.setItem("username", JSON.stringify(response.data.user.username))
         console.log(response.data.message)

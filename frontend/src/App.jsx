@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Route, Routes, useLocation} from 'react-router-dom'
 // import Classroom from '../../backend/classroom-service/models/classroom.model'
-import Login from './components/Login/Login.jsx'
-import Home from './components/HomePage/Home.jsx'
-import SignUp from './components/Login/SignUp.jsx'
-import VerifyEmail from './components/Login/VerifyEmail.jsx'
+import Login from './pages/Login/Login.jsx'
+import Home from './pages/HomePage/Home.jsx'
+import SignUp from './pages/Login/SignUp.jsx'
+import VerifyEmail from './pages/Login/VerifyEmail.jsx'
 import { Toaster } from 'react-hot-toast'
 
 import Sidebar from './components/common/Sidebar.jsx'
@@ -16,9 +16,10 @@ import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
-
+import ClassDetail from './pages/HomePage/ClassDetail.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
+
 
   // Các route hoàn toàn độc lập
   const standaloneRoutes = ["/login", "/signup", "/verify"];
@@ -66,6 +67,8 @@ function App() {
             <Route path='/orders' element={<OrdersPage />} />
             <Route path='/analytics' element={<AnalyticsPage />} />
             <Route path='/settings' element={<SettingsPage />} />
+            <Route path='/home' element={<Home />} />
+            <Route path="/classroom/:id" element={<ClassDetail />} />
         </Routes>
     </div>
   

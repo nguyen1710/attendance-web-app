@@ -142,13 +142,14 @@ export const login = async (req, res) => {
         }
         //jwt
         
-        generateTokenAndSetCookie(res, user.email, user.role)
+        const token = generateTokenAndSetCookie(res, user.email, user.role)
 
         console.log(user)
         res.status(200).json(
             {
                 success: true,
                 message: "Login verify successfuly",
+                token: token,
                 user: {
                     _id: user._id,
                 email: user.email,
