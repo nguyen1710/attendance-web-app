@@ -9,6 +9,8 @@ import { Toaster } from 'react-hot-toast'
 
 import Sidebar from './components/common/Sidebar.jsx'
 
+
+//admin
 import OverviewPage from "./pages/OverviewPage";
 import ProductsPage from "./pages/ProductsPage";
 import UsersPage from "./pages/UsersPage";
@@ -16,13 +18,18 @@ import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
+<<<<<<< HEAD
 import ClassDetail from './pages/HomePage/ClassDetail.jsx'
+=======
+import AdminLogin from './components/admin/login/adminLogin.jsx';
+
+>>>>>>> eb9cc5e95a208c5e76331385b070f477140b7286
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
 
 
   // Các route hoàn toàn độc lập
-  const standaloneRoutes = ["/login", "/signup", "/verify"];
+  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login"];
   const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
 
   if (isStandaloneRoute) {
@@ -33,6 +40,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/verify" element={<VerifyEmail />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />
       </>
@@ -40,18 +49,6 @@ function App() {
   }
   
   return (
-    // <>
-    //   <Routes>
-    //     <Route path="/" element={<Sidebar/>}/>
-        // <Route path='/login' element={<Login/>}/>
-        // <Route path='/signup' element={<SignUp/>}/>
-        // <Route path='/verify' element={<VerifyEmail/>}/>
-    //     <Route path='/home' element={<Home/>}/>
-    //   </Routes>
-
-    //   <Toaster position="top-right" reverseOrder={false}/>
-    // </>
-
     <div  className='flex h-screen bg-blue-900 text-gray-100 overflow-hidden'>
         <div className='fixed inset-0 z-10'>
             <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
@@ -60,18 +57,17 @@ function App() {
       
         <Sidebar />
         <Routes>
-            <Route path='/' element={<OverviewPage />} />
-            <Route path='/products' element={<ProductsPage />} />
-            <Route path='/users' element={<UsersPage />} />
-            <Route path='/sales' element={<SalesPage />} />
-            <Route path='/orders' element={<OrdersPage />} />
-            <Route path='/analytics' element={<AnalyticsPage />} />
-            <Route path='/settings' element={<SettingsPage />} />
             <Route path='/home' element={<Home />} />
             <Route path="/classroom/:id" element={<ClassDetail />} />
+            <Route path='/admin' element={<OverviewPage />} />
+            <Route path='/admin/products' element={<ProductsPage />} />
+            <Route path='/admin/users' element={<UsersPage />} />
+            <Route path='/admin/sales' element={<SalesPage />} />
+            <Route path='/admin/orders' element={<OrdersPage />} />
+            <Route path='/admin/analytics' element={<AnalyticsPage />} />
+            <Route path='/admin/settings' element={<SettingsPage />} />
         </Routes>
     </div>
-  
   )
 }
 

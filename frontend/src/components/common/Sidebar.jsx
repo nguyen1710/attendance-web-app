@@ -1,21 +1,25 @@
-import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users } from "lucide-react";
+import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
-  { name: "Overview", icon: BarChart2, color: "#6366f1", href: "/" },
-  { name: "Products", icon: ShoppingBag, color: "#6366f1", href: "/products" },
-  { name: "Users", icon: Users, color: "#6366f1", href: "/users" },
-  { name: "Sales", icon: DollarSign, color: "#6366f1", href: "/sales" },
-  { name: "Orders", icon: ShoppingCart, color: "#6366f1", href: "/orders" },
-  { name: "Analytics", icon: TrendingUp, color: "#6366f1", href: "/analytics" },
-  { name: "Settings", icon: Settings, color: "#6366f1", href: "/settings" },
+  { name: "Overview", icon: BarChart2, color: "#6366f1", href: "/admin" },
+  { name: "Products", icon: ShoppingBag, color: "#6366f1", href: "/admin/products" },
+  { name: "Users", icon: Users, color: "#6366f1", href: "/admin/users" },
+  { name: "Sales", icon: DollarSign, color: "#6366f1", href: "/admin/sales" },
+  { name: "Orders", icon: ShoppingCart, color: "#6366f1", href: "/admin/orders" },
+  { name: "Analytics", icon: TrendingUp, color: "#6366f1", href: "/admin/analytics" },
+  { name: "Settings", icon: Settings, color: "#6366f1", href: "/admin/settings" },
+  { name: "Log out", icon: LogOut, color: "#6366f1", href: "/admin/logout" },
+
 ];
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation(); // Get the current location (route)
+  
 
   return (
     <motion.div
