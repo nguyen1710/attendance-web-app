@@ -36,6 +36,24 @@ app.use('/classroom-service', createProxyMiddleware({
         }
     }
 }))
+
+app.use('/admin-service', createProxyMiddleware({
+    target: 'http://localhost:3002',
+    pathRewrite: {
+        '^/admin-service': ''
+    },
+    changeOrigin: true, // Để thay đổi nguồn của yêu cầu đến
+    cookieDomainRewrite: {
+        "*": "localhost", // Đảm bảo cookie có thể truy cập từ localhost
+    },
+    onProxyReq: (proxyReq, req, res) => {
+        // Thêm token vào header nếu cần
+        if (req.cookies.token) {
+            proxyReq.setHeader('Cookie', `token=${req.cookies.token}`);
+        }
+    }
+}))
+
 app.listen(4000, () => {
     console.log("API Gateway service is listening at http://localhost:4000")
 })

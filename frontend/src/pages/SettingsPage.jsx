@@ -1,9 +1,10 @@
 import Header from "../components/common/Header";
-import ConnectedAccounts from "../components/settings/ConnectedAccounts";
-import DangerZone from "../components/settings/DangerZone";
-import Notifications from "../components/settings/Notifications";
-import Profile from "../components/settings/Profile";
-import Security from "../components/settings/Security";
+
+import ConnectedAccounts from "../components/admin/settings/ConnectedAccounts";
+import DangerZone from "../components/admin/settings/DangerZone";
+import Notifications from "../components/admin/settings/Notifications";
+import Profile from "../components/admin/settings/Profile";
+import Security from "../components/admin/settings/Security";
 
 const SettingsPage = () => {
 	return (
