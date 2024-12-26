@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import User from "../models/user.model.js"
 import { sendInviteEmail } from "../nodeMailer/emails.js"
 import xlsx from 'xlsx'
+
 export const createClassroom = [authMiddleware , async (req, res) => {
     try {
         const {name, description} = req.body
@@ -12,11 +13,15 @@ export const createClassroom = [authMiddleware , async (req, res) => {
             return res.status(400).json({ success: false, message: 'Classroom name is required' });
         }
 
+        if(req.userRole != "teacher") {
+            return res.status(403).json({ success: false, message: "Only teacher have permission" });
+        }
+
         const classroom = new Classroom({
-            owner: req.userId,
+            owner: req.userEmail,
             name: name,
             description: description,
-            teacherIds: [new mongoose.Types.ObjectId(req.userId)]
+            teacherEmails: [req.userEmail]
         })
 
         await classroom.save()
@@ -34,12 +39,12 @@ export const createClassroom = [authMiddleware , async (req, res) => {
 
 export const getClassrooms = [authMiddleware, async (req, res) => {
     try {
-        const userId = new mongoose.Types.ObjectId(req.userId)
+        const userEmail = req.userEmail
         const userRole = req.userRole
-        console.log(typeof(userId))
+        // console.log(typeof(userId))
         if (userRole == 'teacher') {
-            const classrooms = await Classroom.find({teacherIds: {$in : [userId]}})
-            console.log(req.userId)
+            const classrooms = await Classroom.find({teacherEmails: {$in : [userEmail]}})
+            console.log(req.userEmail)
             if(classrooms.length == 0) {
                 return res.status(404).json({ success: false, message: 'Class not found' });
             }
@@ -53,8 +58,8 @@ export const getClassrooms = [authMiddleware, async (req, res) => {
 
         // const studentId = new mongoose.Types.ObjectId(req.userId);
         const classrooms = await Classroom.find({
-            studentIds: { 
-                $all: [userId]
+            studentEmails: { 
+                $all: [userEmail]
             }
         })
         
@@ -87,9 +92,9 @@ export const deleteClassroom = [authMiddleware, async (req, res) => {
                 message: "Classroom not found"
             })
         }
-        console.log(req.userId)
+        console.log(req.userEmail)
         console.log(classroom.owner.toString())
-        if(classroom.owner.toString() != req.userId) {
+        if(classroom.owner.toString() != req.userEmail) {
             return res.status(403).json({ success: false, message: "You do not have permission to delete this classroom" });
         }
 
@@ -120,17 +125,18 @@ export const addStudent = [authMiddleware, async (req, res) => {
                 message: "Classroom not found"
             })
         }
-        console.log(req.userId)
+        console.log(req.userEmail)
         console.log(classroom.owner.toString())
-        if(classroom.owner.toString() != req.userId) {
+        if(classroom.owner.toString() != req.userEmail) {
             return res.status(403).json({ success: false, message: "You do not have permission to delete this classroom" });
         }
 
-        const user = await User.findOne({email})
-        classroom.studentIds.push(user._id)
+        console.log(email)
+        // const user = await User.findOne({email: email})
+        classroom.studentEmails.push(email)
         await classroom.save()
 
-        sendInviteEmail(email, user.username, classroom.name)
+        sendInviteEmail(email,classroom.name)
         return res.status(200).json({
             success: true,
             message: ` Add ${email} successfully`
@@ -169,8 +175,8 @@ export const handleExcelUpload = async (req, res) => {
                 if(!user) {
                     console.log("Cannot find user")
                 }
-                sendInviteEmail(email, name, classroom.name)
-                classroom.studentIds.push(user._id)
+                sendInviteEmail(email, classroom.name)
+                classroom.studentEmails.push(user.email)
                 await classroom.save()
             } else {
                 console.log('Missing email or name for student:', student);

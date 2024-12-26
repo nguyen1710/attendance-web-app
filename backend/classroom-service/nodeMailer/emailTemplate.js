@@ -11,10 +11,10 @@ export const INVITE_EMAIL_TEMPLATE = `
     <h1 style="color: white; margin: 0;">Invitation</h1>
   </div>
   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,{name}</p>
+    <p>Hello,</p>
     <p>You are invited to join the class.</p>
     <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #4CAF50;">{className}</span>
+      <span style="font-size: 32px; font-weight: bold; color: #4CAF50;">{className}</span>
     </div>
     <p>Please log in and check the class now.</p>
     <p>Best regards</p>

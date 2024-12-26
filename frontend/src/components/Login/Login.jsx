@@ -173,27 +173,6 @@ function Login() {
                 Or{" "}
               </p>
               <div className="!mt-4 flex">
-                {/* <button
-                  type="button"
-                  className="w-full shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-primary-100 hover:bg-blue-700 focus:outline-none flex items-center justify-center"
-                  
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="h-6 w-6 mr-2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z"
-                    />
-                  </svg>
-                  <p className="text-center text-white">Log in with Email</p>
-                </button> */}
                 <GoogleLogin
                   clientid=""
                   className="w-30 shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-primary-100 hover:bg-blue-700 focus:outline-none"
