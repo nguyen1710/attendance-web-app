@@ -60,7 +60,7 @@ function VerifyEmail() {
       );
       if (response.data.success) {
         toast.success(response.data.message)
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       setErrorsMessage(error.response.data.message)

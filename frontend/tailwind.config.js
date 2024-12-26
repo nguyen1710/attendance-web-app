@@ -3,6 +3,7 @@ export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     colors:{
+        'black': '#000000',
        'white': '#ffffff',
        'warning': '#dc2626',
       'primary': {

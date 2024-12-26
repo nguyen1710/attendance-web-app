@@ -25,7 +25,7 @@ function Login() {
         localStorage.setItem("email", JSON.stringify(response.data.user.email))
         localStorage.setItem("username", JSON.stringify(response.data.user.username))
         console.log(response.data.message)
-        navigate('/home')
+        navigate('/')
       }
     } catch (error) {
       if (error.response) {
