@@ -47,7 +47,7 @@ function Login() {
         localStorage.setItem("email", JSON.stringify(data.user.email))
         localStorage.setItem("username", JSON.stringify(data.user.username))
         console.log(data)
-        navigate('/home')
+        navigate('/')
       }
     } catch (error) {
       const data = error.response.data.message
@@ -188,6 +188,7 @@ function Login() {
                 <a
                   href="javascript:void(0);"
                   className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
+                  onClick={() => navigate("/signup")}
                 >
                   Register here
                 </a>
