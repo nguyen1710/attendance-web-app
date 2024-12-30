@@ -54,6 +54,23 @@ app.use('/admin-service', createProxyMiddleware({
     }
 }))
 
+app.use('/attandence-service', createProxyMiddleware({
+    target: 'http://localhost:3003',
+    pathRewrite: {
+        '^/attandence-service': ''
+    },
+    changeOrigin: true, // Để thay đổi nguồn của yêu cầu đến
+    cookieDomainRewrite: {
+        "*": "localhost", // Đảm bảo cookie có thể truy cập từ localhost
+    },
+    onProxyReq: (proxyReq, req, res) => {
+        // Thêm token vào header nếu cần
+        if (req.cookies.token) {
+            proxyReq.setHeader('Cookie', `token=${req.cookies.token}`);
+        }
+    }
+}))
+
 app.listen(4000, () => {
     console.log("API Gateway service is listening at http://localhost:4000")
 })

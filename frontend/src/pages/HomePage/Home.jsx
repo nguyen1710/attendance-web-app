@@ -17,28 +17,6 @@ function Home() {
   const [classrooms, setClassrooms] = useState([])
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchClasses = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:4000/classroom-service/api/classrooms/getClassrooms", {
-  //         withCredentials: true, // Gửi cookie cùng với yêu cầu
-  //       });
-
-  //       if (response.data.success) {
-  //         setClassRooms(response.data.classes); // Lưu danh sách lớp học vào state
-  //       }
-  //     } catch (error) {
-  //       if (error.response) {
-  //         setError(error.response.data.message); // Lưu thông báo lỗi từ backend
-  //       } else {
-  //         setError("Something went wrong. Please try again later.");
-  //       }
-  //     }
-  //   };
-
-  //   fetchClasses();
-  // }, []);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
 
