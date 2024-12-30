@@ -1,0 +1,29 @@
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./db/connectDB.js";  // Đảm bảo có phần mở rộng .js
+import attendanceRoutes from "./routes/attendance.route.js"
+import cookieParser from 'cookie-parser';
+import cors from 'cors'
+dotenv.config();
+const app = express()
+const port = process.env.PORT || 3004
+
+const corsOptions = {
+    origin: 'http://localhost:5173', // Chỉ cho phép frontend từ localhost:5173 truy cập
+    methods: 'GET, POST, PUT, DELETE', // Các phương thức HTTP được phép
+    allowedHeaders: 'Content-Type, Authorization', // Các header được phép
+  };
+
+app.use(cors(corsOptions));
+app.use(cookieParser()); // Đảm bảo dòng này được khai báo trước các route khác
+app.use(express.json())
+
+
+app.get('/', (req, res) => {
+    res.send("Hellooo port 3001")
+})
+app.use("/api/attendances", attendanceRoutes)
+app.listen(port, () => {
+    connectDB()
+    console.log(`Server is running on port ${port}`)
+})
