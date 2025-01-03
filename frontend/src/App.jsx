@@ -21,6 +21,8 @@ import SettingsPage from "./pages/SettingsPage";
 import ClassDetail from './pages/HomePage/ClassDetail.jsx'
 import AdminLogin from './components/admin/login/adminLogin.jsx';
 import ClassDetailUsers from './pages/HomePage/ClassDetailUsers.jsx'
+import AttendanceSession from './pages/Attendances/AttendanceSession.jsx'
+import AttendanceForm from './pages/Attendances/AttendanceForm.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
 
@@ -40,6 +42,7 @@ function App() {
         <Routes>
             <Route path="/classroom/:id" element={<ClassDetail />} />
             <Route path="/classroom/:id/users" element={<ClassDetailUsers />} />
+            <Route path="/classroom/attendance/:id" element={<AttendanceSession/>}/>
 
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />
@@ -49,8 +52,11 @@ function App() {
   }
 
   // Các route hoàn toàn độc lập
-  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/"];
-  const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
+  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/", "/attendance/form/:id"];
+  // const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
+  const isStandaloneRoute = standaloneRoutes.some(route =>
+    route === location.pathname || (route.includes("/:id") && location.pathname.startsWith(route.split("/:id")[0]))
+  );
 
   if (isStandaloneRoute) {
     // Nếu là route độc lập, render trực tiếp route đó
@@ -62,7 +68,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/verify" element={<VerifyEmail />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-
+          <Route path="/attendance/form/:id" element={<AttendanceForm/>}/>
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />
       </>

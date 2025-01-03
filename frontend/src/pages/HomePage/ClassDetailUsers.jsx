@@ -73,7 +73,7 @@ function ClassDetailUsers() {
             Add Student
           </button>
       </div>
-				<UsersTable userData={students}/>
+				<UsersTable title={"Users"} userData={students}/>
         <AddStudentDialog
           isOpen={isDialogOpen}
           onClose={closeDialog}

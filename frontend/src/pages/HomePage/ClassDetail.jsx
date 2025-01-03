@@ -19,10 +19,7 @@ function ClassDetail() {
     const { id } = useParams(); // Lấy ID từ URL
     const [classroom, setClassroom] = useState(null);
     const [attendances, setAttendance] = useState([])
-    
-    const [students, setStudents] = useState([])
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     console.log(id)
@@ -115,7 +112,7 @@ function ClassDetail() {
 				>
         {
           attendances.map((attendance) => (
-            <Link to={`/attendances/${attendance._id}`} key={attendance._id}>
+            <Link to={`/classroom/attendance/${attendance._id}`} key={attendance._id}>
               <ClassCard
                 name= {attendance?.name}
                 owner={classroom?.owner || 'N/A'}
