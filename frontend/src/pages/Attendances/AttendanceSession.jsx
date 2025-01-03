@@ -6,6 +6,8 @@ import SidebarHomePage from '~/components/common/SidebarHomePage';
 import Header from '~/components/common/Header';
 import { motion } from 'framer-motion';
 import UsersTable from '~/components/common/UsersTable';
+import {QRCode} from 'react-qrcode-logo'
+import logo from "~/public/img/logo.png"
 const AttendanceSession = () => {
 const [email, setEmail] = useState(localStorage.getItem('email'));
 const [username, setUsername] = useState(localStorage.getItem('username'));
@@ -71,11 +73,15 @@ const [username, setUsername] = useState(localStorage.getItem('username'));
                  {/* Hiển thị QR Code nếu có */}
                 {qrCode && (
                     <div className="flex justify-center mb-8">
-                    <img 
-                        src={qrCode} 
-                        alt="QR Code" 
-                        className="w-64 h-64"  // Điều chỉnh kích thước của QR code
-                    />
+                    < QRCode 
+                      value={qrCode} 
+                      size={200}
+                      logoWidth={40}
+                      logoImage={logo}
+                      fgColor='#f17ab6'
+                      bgColor='#fff'
+                      // eyeColor={['#9469d7','#efbd75', '#70c2b4' ]}
+                      />
                     </div>
                 )}
 

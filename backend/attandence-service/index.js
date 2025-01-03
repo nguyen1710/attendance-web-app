@@ -4,6 +4,9 @@ import connectDB from "./db/connectDB.js";  // Đảm bảo có phần mở rộ
 import attendanceRoutes from "./routes/attendance.route.js"
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
+import path from "path"
+import { fileURLToPath } from 'url';
+
 dotenv.config();
 const app = express()
 const port = process.env.PORT || 3004
@@ -13,6 +16,13 @@ const corsOptions = {
     methods: 'GET, POST, PUT, DELETE', // Các phương thức HTTP được phép
     allowedHeaders: 'Content-Type, Authorization', // Các header được phép
   };
+// Lấy __dirname trong ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Cấu hình express để phục vụ các tệp tĩnh trong thư mục public
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use(cors(corsOptions));
 app.use(cookieParser()); // Đảm bảo dòng này được khai báo trước các route khác
