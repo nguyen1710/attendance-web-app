@@ -10,7 +10,7 @@ import { Edit, Search, Trash2  } from "lucide-react";
 // 	{ id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Moderator", status: "Active" },
 // ];
 
-const UsersTable = ({userData}) => {
+const UsersTable = ({title, userData}) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState(userData);
 	const [users, setUsers] = useState(userData)
@@ -38,7 +38,7 @@ const UsersTable = ({userData}) => {
 			transition={{ delay: 0.2 }}
 		>
 			<div className='flex justify-between items-center mb-6'>
-				<h2 className='text-xl font-semibold text-gray-100'>Users</h2>
+				<h2 className='text-xl font-semibold text-gray-100'>{title}</h2>
 				<div className='relative'>
 					<input
 						type='text'
@@ -67,9 +67,6 @@ const UsersTable = ({userData}) => {
 							{/* <th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Status
 							</th> */}
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Actions
-							</th>
 						</tr>
 					</thead>
 
@@ -96,11 +93,6 @@ const UsersTable = ({userData}) => {
 
 								<td className='px-6 py-4 whitespace-nowrap'>
 									<div className='text-sm text-gray-300'>{user.email}</div>
-								</td>
-								<td className='px-6 py-4 whitespace-nowrap'>
-									<span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-800 text-blue-100'>
-										{user.role}
-									</span>
 								</td>
 {/* 
 								<td className='px-6 py-4 whitespace-nowrap'>
