@@ -34,15 +34,15 @@ function App() {
     // Nếu là route độc lập, render trực tiếp route đó
     return (
 
-      <div  className='flex h-screen bg-blue-900 text-gray-100 overflow-hidden'>
+      <div className='flex h-screen bg-[#E4E6EB] text-black overflow-hidden'>
         <div className='fixed inset-0 z-10'>
-            <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
-            <div className='absolute inset-0 backdrop-blur-sm' />
+          <div className='absolute inset-0 ' />
+          <div className='absolute inset-0 backdrop-blur-sm' />
         </div>
         <Routes>
-            <Route path="/classroom/:id" element={<ClassDetail />} />
-            <Route path="/classroom/:id/users" element={<ClassDetailUsers />} />
-            <Route path="/classroom/attendance/:id" element={<AttendanceSession/>}/>
+            <Route path="/classroom/:classId" element={<ClassDetail />} />
+            <Route path="/classroom/:classId/users" element={<ClassDetailUsers />} />
+            <Route path="/classroom/:classId/attendance/:attendanceId" element={<AttendanceSession/>}/>
 
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />

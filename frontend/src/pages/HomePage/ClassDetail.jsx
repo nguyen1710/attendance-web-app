@@ -11,18 +11,18 @@ import SidebarHomePage from '../../components/common/SidebarHomePage';
 import { Link } from 'react-router-dom';
 import { CirclePlus } from 'lucide-react';
 import CreateAttendance from '../Dialog/CreateAttendance';
-
+import TabClassRoom from '../../components/common/TabClassRoom';
 function ClassDetail() {
     const navigate = useNavigate();
     const [email, setEmail] = useState(localStorage.getItem('email'));
     const [username, setUsername] = useState(localStorage.getItem('username'));
-    const { id } = useParams(); // Lấy ID từ URL
+    const { classId } = useParams(); // Lấy ID từ URL
     const [classroom, setClassroom] = useState(null);
     const [attendances, setAttendance] = useState([])
 
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    console.log(id)
+    // console.log(id)
 
     const closeDialog = () => setIsDialogOpen(false);
     const openDialog = () => setIsDialogOpen(true);
@@ -35,7 +35,7 @@ function ClassDetail() {
         } else {
           // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
           axios
-            .get(`http://localhost:4000/classroom-service/api/classrooms/getClassroom/${id}`, {
+            .get(`http://localhost:4000/classroom-service/api/classrooms/getClassroom/${classId}`, {
               headers: {
                 Authorization: `Bearer ${token}`, // Gửi token trong header
               },
@@ -64,7 +64,7 @@ function ClassDetail() {
         } else {
           // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
           axios
-            .get(`http://localhost:4000/attandence-service/api/attendances/getAllAttendances/${id}`, {
+            .get(`http://localhost:4000/attandence-service/api/attendances/getAllAttendances/${classId}`, {
               headers: {
                 Authorization: `Bearer ${token}`, // Gửi token trong header
               },
@@ -91,14 +91,16 @@ function ClassDetail() {
     <>
     <SidebarHomePage />
         <div className='flex-1 overflow-auto relative z-10'>
-        <Header username={username} email={email}/>
+        <Header username={username} email={email} title={classroom?.name}/>
+        <TabClassRoom classId={classId} currentTab={'attendance'}/>
 
-			<main className='w-full mx-auto py-6 px-4 lg:px-8'>
-        <div className="flex justify-end">
+
+			<main className='w-full mx-auto py-6 px-4 lg:px-8 '>
+        <div className="flex justify-end mb-3">
             <button
               type="button"
               onClick={openDialog}
-              className="flex items-center text-white bg-primary-100 hover:bg-primary-300 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              className="flex items-center text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
             >
               <CirclePlus className="w-5 h-5 mr-2" />
               New Attendance
@@ -112,7 +114,7 @@ function ClassDetail() {
 				>
         {
           attendances.map((attendance) => (
-            <Link to={`/classroom/attendance/${attendance._id}`} key={attendance._id}>
+            <Link to={`/classroom/${classId}/attendance/${attendance._id}`} key={attendance._id}>
               <ClassCard
                 name= {attendance?.name}
                 owner={classroom?.owner || 'N/A'}
@@ -130,10 +132,10 @@ function ClassDetail() {
         <CreateAttendance
           isOpen={isDialogOpen}
           onClose={closeDialog}
-          classroomId={id}
+          classroomId={classId}
           refreshData={() => {
             axios
-              .get(`http://localhost:4000/attandence-service/api/attendances/getAllAttendances/${id}`, {
+              .get(`http://localhost:4000/attandence-service/api/attendances/getAllAttendances/${classId}`, {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },

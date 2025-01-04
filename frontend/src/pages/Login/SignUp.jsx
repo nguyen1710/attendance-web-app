@@ -181,7 +181,7 @@ function SignUp() {
                 <div className="!mt-8">
                 <button
                     type="submit"
-                    className="w-full shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-primary-100 hover:bg-blue-700 focus:outline-none"
+                    className="w-full shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none"
                     onClick={handleSubmit}
                 >
                     Sign up

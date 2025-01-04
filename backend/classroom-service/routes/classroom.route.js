@@ -19,9 +19,9 @@ router.get("/getClassrooms", getAllClassrooms)
 
 router.post("/add-student", addStudent)
 
-router.get("/getClassroom/:id", getDetailClass)
+router.get("/getClassroom/:classId", getDetailClass)
 
-router.get("/getUserFromClass/:id", getUserFromClass)
+router.get("/getUserFromClass/:classId", getUserFromClass)
 
 // Route xử lý file Excel
 router.post('/upload-excel', upload, handleExcelUpload);
