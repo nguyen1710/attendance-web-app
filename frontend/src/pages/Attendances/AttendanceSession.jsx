@@ -17,7 +17,7 @@ const [username, setUsername] = useState(localStorage.getItem('username'));
   const [attendees, setAttendees] = useState([])
 
   const navigate = useNavigate()
-  const {id} = useParams()
+  const {classId,attendanceId } = useParams()
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,7 +28,7 @@ const [username, setUsername] = useState(localStorage.getItem('username'));
     } else {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
-        .get(`http://localhost:4000/attandence-service/api/attendances/getAttendance/${id}`, {
+        .get(`http://localhost:4000/attandence-service/api/attendances/getAttendance/${attendanceId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Gửi token trong header
           },
@@ -66,7 +66,7 @@ const [username, setUsername] = useState(localStorage.getItem('username'));
         <>
         <SidebarHomePage />
             <div className='flex-1 overflow-auto relative z-10'>
-            <Header username={username} email={email}/>
+            <Header username={username} email={email} title="Attendence"/>
 
                 <main className='w-full mx-auto py-6 px-4 lg:px-8'>
 

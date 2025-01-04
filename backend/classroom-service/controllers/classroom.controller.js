@@ -196,9 +196,9 @@ export const handleExcelUpload = async (req, res) => {
 export const getDetailClass = [authMiddleware, async (req, res) => {
     try {
         // const { id } = req.params
-        const { id } = req.params
+        const { classId } = req.params
 
-        const classroom = await Classroom.findById(id)
+        const classroom = await Classroom.findById(classId)
         if(!classroom) {
             return res.status(404).json({
                 success: "false",
@@ -222,9 +222,9 @@ export const getDetailClass = [authMiddleware, async (req, res) => {
 export const getUserFromClass = [authMiddleware, async (req, res) => {
     try {
         // const { id } = req.params
-        const { id } = req.params
+        const { classId } = req.params
 
-        const classroom = await Classroom.findById(id)
+        const classroom = await Classroom.findById(classId)
         if(!classroom) {
             return res.status(404).json({
                 success: "false",

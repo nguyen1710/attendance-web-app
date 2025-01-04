@@ -10,11 +10,12 @@ import UsersTable from '../../components/common/UsersTable';
 import SidebarHomePage from '../../components/common/SidebarHomePage';
 import { CirclePlus } from 'lucide-react';
 import AddStudentDialog from '../Dialog/AddStudentDialog';
+import TabClassRoom from '../../components/common/TabClassRoom';
 function ClassDetailUsers() {
     const navigate = useNavigate();
     const [email, setEmail] = useState(localStorage.getItem('email'));
     const [username, setUsername] = useState(localStorage.getItem('username'));
-    const { id } = useParams(); // Lấy ID từ URL
+    const { classId } = useParams(); // Lấy ID từ URL
     const [classroom, setClassroom] = useState(null);
     const [students, setStudents] = useState([])
     const [loading, setLoading] = useState(true);
@@ -35,7 +36,7 @@ function ClassDetailUsers() {
         } else {
           // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
           axios
-            .get(`http://localhost:4000/classroom-service/api/classrooms/getUserFromClass/${id}`, {
+            .get(`http://localhost:4000/classroom-service/api/classrooms/getUserFromClass/${classId}`, {
               headers: {
                 Authorization: `Bearer ${token}`, // Gửi token trong header
               },
@@ -61,13 +62,14 @@ function ClassDetailUsers() {
     <SidebarHomePage/>
         <div className='flex-1 overflow-auto relative z-10'>
         <Header username={username} email={email}/>
+        <TabClassRoom classId={classId} currentTab={'user'}/>
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
         <div className="flex justify-end">
           <button
             type="button"
             onClick={openDialog}
-            className="flex items-center text-white bg-primary-100 hover:bg-primary-300 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            className="flex items-center text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
           >
             <CirclePlus className="w-5 h-5 mr-2" />
             Add Student
@@ -77,7 +79,7 @@ function ClassDetailUsers() {
         <AddStudentDialog
           isOpen={isDialogOpen}
           onClose={closeDialog}
-          id={id}
+          id={classId}
 
         />
 			</main>

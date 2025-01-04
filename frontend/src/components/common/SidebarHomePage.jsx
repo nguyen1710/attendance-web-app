@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import Logo from "~/public/img/logo.png"
 const SidebarHomePage = () => {
   const navigate = useNavigate();
 
@@ -40,13 +40,13 @@ const SidebarHomePage = () => {
       });
   };
 
-  const { id } = useParams();
+  const { classId } = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation(); // Get the current location (route)
   const SIDEBAR_ITEMS = [
     { name: "Home", icon: House, color: "#6366f1", href: `/` },
-    { name: "Attendence", icon: BarChart2, color: "#6366f1", href: `/classroom/${id}` },
-    { name: "Users", icon: Users, color: "#6366f1", href: `/classroom/${id}/users` },
+    { name: "Attendence", icon: BarChart2, color: "#6366f1", href: `/classroom/${classId}` },
+    { name: "Users", icon: Users, color: "#6366f1", href: `/classroom/${classId}/users` },
     { name: "Log out", icon: LogOut, color: "#6366f1", href: "/#", onClick: handleLogout },
   
   ];
@@ -54,26 +54,63 @@ const SidebarHomePage = () => {
   return (
     <motion.div
       className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
-        isSidebarOpen ? "w-64" : "w-20"
+        isSidebarOpen || window.innerWidth >= 1024 ? "w-64" : "w-15"
       }`}
       animate={{ width: isSidebarOpen ? 256 : 80 }}
     >
-      <div className="h-full bg-gray-800 bg-opacity-50 backdrop-blur-md p-3 flex flex-col ">
+      <div className="h-screen bg-[#f9fafb] flex flex-col">
+              <AnimatePresence>
+                  {isSidebarOpen ? (
+                    <motion.span
+                      className="ml-4 whitespace-nowrap"
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.2, delay: 0.3 }}
+                    >
+                      
+                  
+            
+                        <div className="flex items-center">
+                          <img src={Logo} className="w-20 h-20 mt-3 ml-[-8px]" alt="Windster Logo" />
+                          <span className="self-center text-xl font-bold whitespace-nowrap">NN Innovation</span>
+                        </div>
+                        
+                      
+                    </motion.span>
+                  ): (
+                    <motion.div
+                      className=" whitespace-nowrap"
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.2, delay: 0.3 }}
+                    >
+                      <div className="flex items-center">
+                        <img src={Logo} className="w-20 h-20 mt-3" alt="NN Logo" /> {/* Logo nhỏ khi đóng */}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+        
+          {/* Hiển thị Logo nếu Sidebar mở */}
+
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded-full hover:bg-gray-700 transition-colors max-w-fit"
+          className="p-2 hover:bg-gray-200 transition-colors max-w-full"
         >
-          <Menu size={24} />
+          <Menu className="flex items-center ml-4" size={24} />
         </motion.button>
-
+        
+          
         <nav className="mt-8 flex-grow">
           {SIDEBAR_ITEMS.map((item) => (
             item.name === "Log out" ? ( // Xử lý riêng cho nút Logout
               <motion.div
                 key={item.name}
-                className="flex items-center p-4 text-sm font-medium hover:bg-gray-700 transition-colors mb-2 cursor-pointer"
+                className="flex items-center p-4 ml-3 max-w-full text-sm font-medium hover:bg-gray-200 transition-colors mb-2"
                 onClick={item.onClick} // Gọi hàm logout khi nhấn
               >
                 <item.icon
@@ -92,7 +129,10 @@ const SidebarHomePage = () => {
                       exit={{ opacity: 0, width: 0 }}
                       transition={{ duration: 0.2, delay: 0.3 }}
                     >
+                      
+                   
                       {item.name}
+                      
                     </motion.span>
                   )}
                 </AnimatePresence>
@@ -100,10 +140,10 @@ const SidebarHomePage = () => {
             ) : (
               <Link key={item.href} to={item.href}>
               <motion.div
-                className={`flex items-center p-4 text-sm font-medium hover:bg-gray-700 transition-colors mb-2 ${
+                className={`flex items-center p-4 ml-3 text-sm font-medium hover:bg-gray-200 transition-colors mb-2 ${
                   location.pathname === item.href
-                    ? "font-bold border-r-4 border-[#6366f1] text-gray-100"
-                    : "text-gray-400"
+                    ? "font-bold border-r-4 border-[#6366f1] "
+                    : "text-black"
                 }`}
                 whileHover={{ backgroundColor: '#d1d5db' }}
                 whileTap={{
