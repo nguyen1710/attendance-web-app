@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ClassroomSchema = new mongoose.Schema({
   owner: {type: String, require: true},
@@ -19,4 +19,4 @@ const ClassroomSchema = new mongoose.Schema({
 
 const Classroom = mongoose.model("Classroom", ClassroomSchema);
 
-module.exports = Classroom;
+export default Classroom;
