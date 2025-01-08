@@ -9,9 +9,9 @@ import UsersTable from '~/components/common/UsersTable';
 import {QRCode} from 'react-qrcode-logo'
 import logo from "~/public/img/logo.png"
 const AttendanceSession = () => {
-const [email, setEmail] = useState(localStorage.getItem('email'));
-const [username, setUsername] = useState(localStorage.getItem('username'));
-//   const [classroomId, setClassroomId] = useState('');
+  const [email, setEmail] = useState(localStorage.getItem('email'));
+  const [username, setUsername] = useState(localStorage.getItem('username'));
+  //   const [classroomId, setClassroomId] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [nonAttendees, setNonAttendees] = useState([])
   const [attendees, setAttendees] = useState([])

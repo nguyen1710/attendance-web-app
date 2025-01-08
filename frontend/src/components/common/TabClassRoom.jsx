@@ -34,12 +34,12 @@ function TabClassRoom({ classId, currentTab }) {
           </li>
           <li className="me-2">
             <a
-              href="#"
+              href={`/classroom/${classId}/submission`}
               className={`inline-block p-4 border-b-2 border-transparent rounded-t-lg 
-                ${activeTab === 'request' ? 'text-blue-600 border-blue-600' : 'hover:bg-gray-200 hover:text-blue-500 dark:hover:bg-gray-600 dark:hover:text-blue-500'}`}
-              onClick={() => handleTabClick('request')}
+                ${activeTab === 'submission' ? 'text-blue-600 border-blue-600' : 'hover:bg-gray-200 hover:text-blue-500 dark:hover:bg-gray-600 dark:hover:text-blue-500'}`}
+              onClick={() => handleTabClick('submission')}
             >
-              Request
+              Submission
             </a>
           </li>
         </ul>
