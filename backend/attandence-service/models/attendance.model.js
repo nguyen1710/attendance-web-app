@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const attendanceSessionSchema = new mongoose.Schema({
   classroomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Classroom', required: true },
@@ -10,4 +10,5 @@ const attendanceSessionSchema = new mongoose.Schema({
   nonAttendees: [String],  // Danh sách email chưa điểm danh
 });
 
-module.exports = mongoose.model('AttendanceSession', attendanceSessionSchema);
+const AttendanceSession = mongoose.model('AttendanceSession', attendanceSessionSchema);
+export default AttendanceSession;

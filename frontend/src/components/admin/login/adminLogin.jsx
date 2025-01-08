@@ -22,7 +22,8 @@ function adminLogin() {
         toast.success(response.data.message);
         localStorage.setItem("email", response.data.user.email);
         localStorage.setItem("username", response.data.user.username);
-
+        localStorage.setItem('imageUrl', response.data.user.imageUrl);
+        localStorage.setItem("userInfo", JSON.stringify(response.data.user));
         // Navigate to the admin dashboard
         navigate("/admin");
       }

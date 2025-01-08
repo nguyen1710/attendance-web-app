@@ -1,4 +1,4 @@
-import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users, LogOut } from "lucide-react";
+import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart,User, TrendingUp, LogOut, Users2, BookIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
@@ -6,12 +6,13 @@ import { Link, useLocation } from "react-router-dom";
 
 const SIDEBAR_ITEMS = [
   { name: "Overview", icon: BarChart2, color: "#6366f1", href: "/admin" },
-  { name: "Products", icon: ShoppingBag, color: "#6366f1", href: "/admin/products" },
-  { name: "Users", icon: Users, color: "#6366f1", href: "/admin/users" },
+  { name: "Clients", icon: Users2, color: "#6366f1", href: "/admin/clients" },
+  { name: "Classroom", icon: BookIcon, color: "#6366f1", href: "/admin/users" },
   { name: "Sales", icon: DollarSign, color: "#6366f1", href: "/admin/sales" },
   { name: "Orders", icon: ShoppingCart, color: "#6366f1", href: "/admin/orders" },
   { name: "Analytics", icon: TrendingUp, color: "#6366f1", href: "/admin/analytics" },
   { name: "Settings", icon: Settings, color: "#6366f1", href: "/admin/settings" },
+  { name: "Profile", icon: User, color: "#6366f1", href: "/admin/profile" },
   { name: "Log out", icon: LogOut, color: "#6366f1", href: "/admin/logout" },
 
 ];
@@ -28,12 +29,12 @@ const Sidebar = () => {
       }`}
       animate={{ width: isSidebarOpen ? 256 : 80 }}
     >
-      <div className="h-full bg-gray-800 bg-opacity-50 backdrop-blur-md p-3 flex flex-col ">
+      <div className="h-full bg-[#ffffff] p-3 flex flex-col ">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded-full hover:bg-gray-700 transition-colors max-w-fit"
+          className="p-2 rounded-full bg-[#000000]  hover:bg-gray-700  max-w-fit"
         >
           <Menu size={24} />
         </motion.button>
@@ -44,7 +45,7 @@ const Sidebar = () => {
               <motion.div
                 className={`flex items-center p-4 text-sm font-medium hover:bg-gray-700 transition-colors mb-2 ${
                   location.pathname === item.href
-                    ? "font-bold border-r-4 border-[#6366f1] text-gray-100"
+                    ? "font-bold border-r-4 border-[#6366f1] text-black"
                     : "text-gray-400"
                 }`}
                 whileHover={{ backgroundColor: '#d1d5db' }}
