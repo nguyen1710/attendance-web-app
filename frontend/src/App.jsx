@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { useState } from 'react'
 import { Route, Routes, useLocation} from 'react-router-dom'
 // import Classroom from '../../backend/classroom-service/models/classroom.model'
@@ -18,11 +19,14 @@ import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
-import ClassDetail from './pages/HomePage/ClassDetail.jsx'
 import AdminLogin from './components/admin/login/adminLogin.jsx';
+
+//classroom
 import ClassDetailUsers from './pages/HomePage/ClassDetailUsers.jsx'
 import AttendanceSession from './pages/Attendances/AttendanceSession.jsx'
 import AttendanceForm from './pages/Attendances/AttendanceForm.jsx'
+import ClassDetail from './pages/HomePage/ClassDetail.jsx'
+import SubmissionPage from './pages/Submission/SubmissionPage.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
 
@@ -43,7 +47,7 @@ function App() {
             <Route path="/classroom/:classId" element={<ClassDetail />} />
             <Route path="/classroom/:classId/users" element={<ClassDetailUsers />} />
             <Route path="/classroom/:classId/attendance/:attendanceId" element={<AttendanceSession/>}/>
-
+            <Route path="/classroom/:classId/submission" element={<SubmissionPage/>}/>
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />
 

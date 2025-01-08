@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./db/connectDB.js";  // Đảm bảo có phần mở rộng .js
 import attendanceRoutes from "./routes/attendance.route.js"
+import submissionRotes from "./routes/submission.route.js"
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import path from "path"
@@ -32,7 +33,9 @@ app.use(express.json())
 app.get('/', (req, res) => {
     res.send("Hellooo port 3001")
 })
+
 app.use("/api/attendances", attendanceRoutes)
+app.use("/api/submissions", submissionRotes)
 app.listen(port, () => {
     connectDB()
     console.log(`Server is running on port ${port}`)
