@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -61,7 +62,7 @@ function ClassDetailUsers() {
     <>
     <SidebarHomePage/>
         <div className='flex-1 overflow-auto relative z-10'>
-        <Header username={username} email={email}/>
+        <Header username={username} email={email} title={"Users"}/>
         <TabClassRoom classId={classId} currentTab={'user'}/>
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>

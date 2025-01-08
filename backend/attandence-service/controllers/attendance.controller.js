@@ -6,11 +6,6 @@ import User from "../models/user.model.js"
 import QRCode from "qrcode"
 import { createCanvas, loadImage } from "canvas"
 import bcrypt from "bcrypt"
-import path from "path"
-import { fileURLToPath } from 'url';
-import { Jimp } from "jimp";
-import fs from "fs"
-import QrCodeWithLogo from 'qrcode-with-logos'
 
 export const createAttendance = [authMiddleware, async (req, res) => {
     const {classroomId} = req.body
