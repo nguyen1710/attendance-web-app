@@ -12,17 +12,21 @@ import Sidebar from './components/common/Sidebar.jsx'
 
 //admin
 import OverviewPage from "./pages/OverviewPage";
-import ProductsPage from "./pages/ProductsPage";
+import ClientsPage from "./pages/ClientsPage.jsx";
 import UsersPage from "./pages/UsersPage";
 import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
+import ProfilePage from "./pages/ProfilePage.jsx";
+
 import ClassDetail from './pages/HomePage/ClassDetail.jsx'
 import AdminLogin from './components/admin/login/adminLogin.jsx';
-import ClassDetailUsers from './pages/HomePage/ClassDetailUsers.jsx'
-import AttendanceSession from './pages/Attendances/AttendanceSession.jsx'
-import AttendanceForm from './pages/Attendances/AttendanceForm.jsx'
+import ClassDetailUsers from './pages/HomePage/ClassDetailUsers.jsx';
+import AttendanceSession from './pages/Attendances/AttendanceSession.jsx';
+import AttendanceForm from './pages/Attendances/AttendanceForm.jsx';
+
+
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
 
@@ -76,7 +80,7 @@ function App() {
   }
   
   return (
-    <div  className='flex h-screen bg-blue-900 text-gray-100 overflow-hidden'>
+    <div  className='flex h-screen  text-gray-100 overflow-hidden'>
         <div className='fixed inset-0 z-10'>
             <div className='absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 opacity-80' />
             <div className='absolute inset-0 backdrop-blur-sm' />
@@ -86,12 +90,13 @@ function App() {
         <Routes>
 
             <Route path='/admin' element={<OverviewPage />} />
-            <Route path='/admin/products' element={<ProductsPage />} />
+            <Route path='/admin/clients' element={<ClientsPage />} />
             <Route path='/admin/users' element={<UsersPage />} />
             <Route path='/admin/sales' element={<SalesPage />} />
             <Route path='/admin/orders' element={<OrdersPage />} />
             <Route path='/admin/analytics' element={<AnalyticsPage />} />
             <Route path='/admin/settings' element={<SettingsPage />} />
+            <Route path='/admin/profile' element={<ProfilePage />} />
         </Routes>
     </div>
   )

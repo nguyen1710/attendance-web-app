@@ -37,6 +37,7 @@ export const login = async (req, res) => {
                 user: {
                     _id: user._id,
                     email: user.email,
+                    imageUrl: user.imageUrl || "",
                     username: user.username,
                     isVerified: user.isVerified,
                     lastLogin: user.lastLogin,
@@ -49,5 +50,16 @@ export const login = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });
+    }
+}
+
+
+export const getAllClients = async (req, res) => {
+    try {
+        const user = await User.find();
+        res.status(200).json(user);
+    }catch (error) {
+        console.error("Error retrieving clients:", error);
+        res.status(500).json({ message: "Error retrieving clients" });
     }
 }
