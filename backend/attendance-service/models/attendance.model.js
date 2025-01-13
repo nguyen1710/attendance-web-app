@@ -6,8 +6,13 @@ const attendanceSessionSchema = new mongoose.Schema({
   name: {type: String},
   desc: {type:String},
   date: { type: Date, default: Date.now },
-  attendees: [{ email: String, photo: String }],
-  nonAttendees: [String],  // Danh sách email chưa điểm danh
+  attendees: [{ email: String, photo: String , timestamp: Date}],
+  nonAttendees: [
+    {
+      email: { type: String, required: true },
+      excused: { type: Boolean, default: false },
+    }
+  ],  // Danh sách email chưa điểm danh
 });
 
 const AttendanceSession = mongoose.model('AttendanceSession', attendanceSessionSchema);

@@ -7,7 +7,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import path from "path"
 import { fileURLToPath } from 'url';
-
 dotenv.config();
 const app = express()
 const port = process.env.PORT || 3004
@@ -17,6 +16,9 @@ const corsOptions = {
     methods: 'GET, POST, PUT, DELETE', // Các phương thức HTTP được phép
     allowedHeaders: 'Content-Type, Authorization', // Các header được phép
   };
+
+
+
 // Lấy __dirname trong ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

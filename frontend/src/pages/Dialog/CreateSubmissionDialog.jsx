@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import socket from "~/socketio/socket.js"
 function CreateSubmissionDialog({ isOpen, onClose, classId, refreshData }) {
 //   const [name, setName] = useState("")
 //   const [desc, setDesc] = useState("")
@@ -31,14 +32,16 @@ function CreateSubmissionDialog({ isOpen, onClose, classId, refreshData }) {
         toast.success('Create new attendences successfully');
        
         setTitle(""); // Reset dữ liệu form
-        setContent("");
+        setContent("")
         setError(""); // Reset dữ liệu form
-        setFromDate("");
+        setFromDate("")
         setToDate(""); // Reset dữ liệu form
-        setEvidence("");
+        setEvidence("")
         // onClose(); // Đóng dialog
         // window.location.reload(); // Làm mới toàn bộ trang
-        refreshData();
+        refreshData()
+        socket.emit("notification", {notification: response?.data.notification})
+
         onClose
       }
     } catch (error) {

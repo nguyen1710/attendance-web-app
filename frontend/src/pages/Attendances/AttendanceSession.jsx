@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import SidebarHomePage from '~/components/common/SidebarHomePage';
 import Header from '~/components/common/Header';
 import { motion } from 'framer-motion';
-import UsersTable from '~/components/common/UsersTable';
+import AttendingTable from '~/components/common/AttendingTable';
 import {QRCode} from 'react-qrcode-logo'
 import logo from "~/public/img/logo.png"
 const AttendanceSession = () => {
@@ -50,7 +50,7 @@ const AttendanceSession = () => {
         });
     }
   }, [navigate]);
-  console.log(attendees)
+  console.log("Attenđesssss",attendees)
   console.log(nonAttendees)
   return (
     // <div>
@@ -92,9 +92,9 @@ const AttendanceSession = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-              <UsersTable title={"Attendees"} userData={attendees}/>
+              <AttendingTable title={"Attendees"} userData={attendees}/>
 
-              <UsersTable title={"Non Attendees"} userData={nonAttendees}/>
+              <AttendingTable title={"Absent"} userData={nonAttendees}/>
         
         
                 </motion.div>
