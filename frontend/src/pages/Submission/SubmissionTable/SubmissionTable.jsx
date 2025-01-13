@@ -7,11 +7,10 @@ import axios from "axios";
 import CreateSubmissionDialog from "~/pages/Dialog/CreateSubmissionDialog";
 import SelectedSubmissionDialog from "../../Dialog/SelectedSubmissionDialog";
 
-function SubmissionTablle({ submissionsData }) {
+function SubmissionTablle({ submissionsData , classOwner}) {
     const [submissions, setSubmissions] = useState(submissionsData);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedSubmission, setSelectedSubmission] = useState(null); // Store the selected submission
-
     const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
     const closeModal = () => {
@@ -67,28 +66,6 @@ function SubmissionTablle({ submissionsData }) {
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
       };
-
-    const refreshData = () => {
-        axios
-        .get(`http://localhost:4000/attandence-service/api/submissions/getSubmissions/${classId}`, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        })
-        .then((response) => {
-        if (response.data.success) {
-            const sortedSubmissions = [...response.data.submissions].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            setSubmissions(sortedSubmissions);
-            setIsDialogOpen(false)
-        } else {
-            toast.error(response.data.message);
-        }
-        })
-        .catch((error) => {
-        console.log(error);
-        toast.error(error.response.data.message);
-        });
-    }
                 
     return (
         <>
@@ -305,6 +282,8 @@ function SubmissionTablle({ submissionsData }) {
                     fromDate={selectedSubmission.fromDate}
                     toDate={selectedSubmission.toDate}
                     evidence={selectedSubmission.evidence}
+                    classOwner={classOwner}
+                    status={selectedSubmission.status}
                     refreshData={() => {
                         axios
                           .get(`http://localhost:4000/attandence-service/api/submissions/getSubmissions/${classId}`, {

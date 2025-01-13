@@ -6,6 +6,7 @@ import User from "../models/user.model.js"
 import QRCode from "qrcode"
 import { createCanvas, loadImage } from "canvas"
 import bcrypt from "bcrypt"
+import { Submission } from "../models/submission.model.js"
 
 export const createAttendance = [authMiddleware, async (req, res) => {
     const {classroomId} = req.body
@@ -25,12 +26,30 @@ export const createAttendance = [authMiddleware, async (req, res) => {
             return res.status(403).json({ success: false, message: 'You dont have permission to create attendance session.'})
         }
         const emails = classroom.studentEmails
+
+        // Tìm các đơn nghỉ phép đã được duyệt có liên quan đến lớp học
+        const approvedSubmissions = await Submission.find({
+            classId: classroomId,
+            status: 'Approved',
+            fromDate: { $lte: new Date() }, // Ngày bắt đầu <= ngày tạo session
+            toDate: { $gte: new Date() },   // Ngày kết thúc >= ngày tạo session
+        });
+
+        // Lấy danh sách email có đơn nghỉ phép hợp lệ
+        const excusedEmails = approvedSubmissions.map(submission => submission.userEmail);
+
+        // Tạo danh sách nonAttendees, đánh dấu "excused" cho user có đơn nghỉ phép
+        const nonAttendees = emails.map(email => ({
+            email,
+            excused: excusedEmails.includes(email),
+        }));
+
         const session = new AttendanceSession({
             owner: req.userEmail,
             classroomId,
             name,
             desc,
-            nonAttendees: emails,
+            nonAttendees: nonAttendees,
           });
       
           await session.save();
@@ -95,7 +114,9 @@ export const checkAttendance = async (req, res) => {
     const {email, password} = req.body
     try {
         const session = await AttendanceSession.findById(id)
-        if (!session.nonAttendees.includes(email)) {
+        const nonAttendee = session.nonAttendees.find(nonAttendee => nonAttendee.email === email);
+
+        if (!nonAttendee) {
             return res.status(400).json({ message: 'Email not in attendance list' });
             }
 
@@ -103,8 +124,8 @@ export const checkAttendance = async (req, res) => {
         console.log("hello")
 
         if (result.success) {
-            session.nonAttendees = session.nonAttendees.filter(e => e !== email);
-            session.attendees.push({ email});
+            session.nonAttendees = session.nonAttendees.filter(nonAttendee => nonAttendee.email !== email);
+            session.attendees.push({ email, timestamp: new Date()});
 
             await session.save();
             res.status(200).json({
@@ -224,43 +245,63 @@ const generateQRCode = async (qrData, logoPath) => {
         return null;
     }
 };
-export const getAttendance = [authMiddleware, async (req,res) => {
-    const {id} = req.params
-    try {
-        const attendance = await AttendanceSession.findById(id)
 
-        if(!attendance) {
-            return res.status(404).json({success: false, message: "Session not found"})
+export const getAttendance = [authMiddleware, async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Tìm attendance session dựa vào ID
+        const attendance = await AttendanceSession.findById(id);
+
+        if (!attendance) {
+            return res.status(404).json({ success: false, message: "Session not found" });
         }
-        const nonAttendeesEmails = attendance.nonAttendees;
+
+        // Lấy danh sách email từ `nonAttendees` và `attendees`
+        const nonAttendeesEmails = attendance.nonAttendees.map(item => item.email);
         const attendeesEmails = attendance.attendees.map(attendee => attendee.email);
 
+        // Tìm thông tin người dùng từ email
         const nonAttendees = await User.find({ email: { $in: nonAttendeesEmails } })
-                                    .select('email username')
-
-        // Lấy thông tin người chưa tham gia
+                                       .select('email username');
         const attendees = await User.find({ email: { $in: attendeesEmails } })
-                                 .select('email username')
+                                    .select('email username');
 
+        // Thêm thông tin `excused` vào danh sách nonAttendees
+        const nonAttendeesWithStatus = attendance.nonAttendees.map(nonAttendee => {
+            const userInfo = nonAttendees.find(user => user.email === nonAttendee.email);
+            return {
+                email: userInfo?.email || nonAttendee.email,
+                username: userInfo?.username || null,
+                excused: nonAttendee.excused
+            };
+        });
 
-        const qrData = `http://localhost:5173/attendance/form/${attendance._id}`; // Dữ liệu QR
+        const attendeesWithDetails = attendance.attendees.map(attendee => {
+            const userInfo = attendees.find(user => user.email === attendee.email);
+            return {
+                email: attendee.email,
+                username: userInfo?.username || null,
+                timestamp: attendee.timestamp,
+            };
+        });
 
-        // const qrCodeBase64 = await generateQRCodeWithLogo(qrCodeUrl, 'path/to/your/logo.png');
+        // Tạo QR Code URL
+        const qrData = `http://localhost:5173/attendance/form/${attendance._id}`;
 
-        // const qrCodeImage = await generateQRCode(qrData, logoPath);
-        // const qrCode = await QRCode.toDataURL(`http://localhost:5173/attendance/form/${attendance._id}`)
+        // Trả về kết quả
         return res.status(200).json({
-            success: true, 
+            success: true,
             session: {
                 name: attendance.name,
                 desc: attendance.desc,
-                nonAttendees: nonAttendees,
-                attendees: attendees,
+                nonAttendees: nonAttendeesWithStatus,
+                attendees: attendeesWithDetails,
                 date: attendance.date,
                 qrCode: qrData
-            }})
+            }
+        });
     } catch (error) {
-        console.error('Error getting attandence:', error.message);
+        console.error('Error getting attendance:', error.message);
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
-}]
+}];

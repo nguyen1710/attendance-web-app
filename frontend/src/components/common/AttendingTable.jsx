@@ -80,10 +80,30 @@ const UsersTable = ({title, userData}) => {
                                     </p>
                                 </th>
                                 
+                                <th className="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                    <p className="flex items-center justify-between gap-2 font-sans text-sm font-normal leading-none text-slate-500">
+                                        {title === "Attendees" ? "Time" : "Status"}
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="2"
+                                            stroke="currentColor"
+                                            aria-hidden="true"
+                                            className="w-4 h-4"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                                            ></path>
+                                        </svg>
+                                    </p>
+                                </th>
                                 
-                                {/* <th className="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                                <th className="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
                                     <p className="flex items-center justify-between gap-2 font-sans text-sm font-normal leading-none text-slate-500"></p>
-                                </th> */}
+                                </th>
                             </tr>
                         </thead>
 
@@ -109,10 +129,31 @@ const UsersTable = ({title, userData}) => {
                                                     </div>
                                                 </div>
                                             </td>
-                                            
                                             {/* <td className="p-4 border-b border-slate-200">
-											{title === "Attendees" ? <a>Bằng chứng</a> : <a>Điểm danh</a>}
+                                                <div className="flex flex-col">
+                                                    <p className="text-sm font-semibold text-slate-700">
+                                                        {user.title}
+                                                    </p>
+                                                    <p className="text-sm text-slate-500">
+                                                        {truncateContent(user.content, 30)}
+                                                    </p>
+                                                </div>
                                             </td> */}
+                                            <td className="p-4 border-b border-slate-200">
+                                                <div className="w-max">
+                                                    {/* <div className={`relative grid items-center px-2 py-1 font-sans text-xs font-bold ${getStatusColor(user.status)} uppercase rounded-md select-none whitespace-nowrap`}> */}
+                                                    <div className={`relative grid items-center px-2 py-1  uppercase rounded-md select-none whitespace-nowrap`}>
+                                                       
+													   {title === "Attendees" ? formatDateTime(user.timestamp) : (user.excused ? <span className="text-green-500 font-sans text-xs font-bold ">Vắng có phép</span> : <span className="text-red-500 font-sans text-xs font-bold ">Vắng không phép</span>)}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            {/* <td className="p-4 border-b border-slate-200">
+                                                <p className="text-sm text-slate-500">{formatDate(user.createdAt)}</p>
+                                            </td> */}
+                                            <td className="p-4 border-b border-slate-200">
+											{title === "Attendees" ? <a>Bằng chứng</a> : <a>Điểm danh</a>}
+                                            </td>
                                         </tr>
                                         
                                     );

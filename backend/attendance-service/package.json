@@ -19,6 +19,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
     "jimp": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
@@ -26,6 +27,7 @@
     "path": "^0.12.7",
     "qrcode": "^1.5.4",
     "qrcode-with-logos": "^1.1.1",
+    "socket.io": "^4.8.1",
     "url": "^0.11.4"
   }
 }
