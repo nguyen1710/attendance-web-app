@@ -6,7 +6,7 @@ import axios from "axios";
 
 
 const ProfilePage = () => {
-    const savedUserInfo = localStorage.getItem('userInfo');
+    const savedUserInfo = localStorage.getItem('adminInfo');
     const user = JSON.parse(savedUserInfo);
 
     const initialUserInfo = {
@@ -114,7 +114,7 @@ const ProfilePage = () => {
             setUserInfo(updatedUserInfo);
 
             // Lưu userInfo vào localStorage
-            localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+            localStorage.setItem('adminInfo', JSON.stringify(updatedUserInfo));
 
 
             const response = await axios.put("http://localhost:4000/admin-service/api/admin/updateProfile", updatedUserInfo);
