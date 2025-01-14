@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ClassCard from '~/components/common/ClassCard';
+import AttendanceCard from '~/components/common/AttendanceCard'
 import { motion } from "framer-motion";
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -83,7 +83,7 @@ function ClassDetail() {
         }
       }, [navigate]);
       
-      console.log(classroom)
+      console.log("classroom", classroom)
       console.log(attendances)
 
     //   console.log(students)
@@ -96,7 +96,7 @@ function ClassDetail() {
 
 
 			<main className='w-full mx-auto py-6 px-4 lg:px-8 '>
-        <div className="flex justify-end mb-3">
+        {email.replace(/"/g, "") === classroom?.owner ? (<div className="flex justify-end mb-3">
             <button
               type="button"
               onClick={openDialog}
@@ -105,7 +105,8 @@ function ClassDetail() {
               <CirclePlus className="w-5 h-5 mr-2" />
               New Attendance
             </button>
-        </div>
+        </div>) : null}
+        
       <motion.div
 					className='grid grid-cols-1 gap-5 mb-8'
 					initial={{ opacity: 0, y: 20 }}
@@ -115,11 +116,11 @@ function ClassDetail() {
         {
           attendances.map((attendance) => (
             <Link to={`/classroom/${classId}/attendance/${attendance._id}`} key={attendance._id}>
-              <ClassCard
+              <AttendanceCard
                 name= {attendance?.name}
                 owner={classroom?.owner || 'N/A'}
                 desc={attendance?.desc}
-                color="#6366F1"
+                color="#6366f1"
               />
             </Link>
             

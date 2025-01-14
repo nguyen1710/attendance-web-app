@@ -1,6 +1,6 @@
 import authMiddleware from "../middlewares/authMiddleware.js"
 import Classroom from "../models/classroom.model.js"
-import mongoose from "mongoose"
+import mongoose, { isObjectIdOrHexString } from "mongoose"
 import AttendanceSession from "../models/attendance.model.js"
 import User from "../models/user.model.js"
 import QRCode from "qrcode"
@@ -113,13 +113,29 @@ export const updateSubmission = [ authMiddleware, async (req, res) => {
         submission.fromDate = newFromDate
         submission.toDate = newToDate 
         submission.status = newStatus 
+        
+        const classroom = await Classroom.findById(submission.classId)
+        if(classroom.owner === req.userEmail) {
+          const notification = new Notification({
+            receiver: submission.userEmail,
+            title: newTitle,
+            className: classroom?.name,
+            sender: req.userEmail,
+            classId: classroom._id,
+            isResponse: true
+        })
+          await notification.save()
+            // Lưu lại các thay đổi
+          await submission.save();
 
-    
-        // Lưu lại các thay đổi
+          // Trả về kết quả thành công
+          return res.json({ success: true, message: 'Submission updated successfully', notification: notification });
+        }
         await submission.save();
-    
+
         // Trả về kết quả thành công
-        res.json({ success: true, message: 'Submission updated successfully' });
+        return res.json({ success: true, message: 'Submission updated successfully' });
+       
       } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
