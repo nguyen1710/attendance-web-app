@@ -1,9 +1,43 @@
 import Header from "../components/common/Header";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 
 
 const ProfilePage = () => {
+    const savedUserInfo = localStorage.getItem('userInfo');
+    const user = JSON.parse(savedUserInfo);
+
+    const initialUserInfo = {
+        username: user.username,
+		imageUrl: user.imageUrl,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        city: user.city,
+        country: user.country,
+        currentPassword: user.password,
+        newPassword: '',
+        confirmPassword: '',
+    };
+
+    const [userInfo, setUserInfo] = useState({initialUserInfo});
+
+	useEffect(() => {
+        setUserInfo({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            address: user.address,
+            currentPassword: user.password,
+            newPassword: "",
+            confirmPassword: "",
+            imageUrl: user.imageUrl || "",
+        });
+        
+    }, []);
 
 	const [passwordVisible, setPasswordVisible] = useState({
         currentPassword: false,
@@ -18,31 +52,97 @@ const ProfilePage = () => {
         }));
     };
 
+	const handleSave = async (event) => {
+        event.preventDefault();
 
-	const [userInfo, setUserInfo] = useState({
-        firstName: '',
-        lastName: '',
-		imageUrl: '',
-        email: '',
-        phone: '',
-        address: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        country: '',
-    });
+    
+        try {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(userInfo.email)) {
+                toast.error("Invalid email format!");
+                return;
+            }else if(!userInfo.username.trim()) {
+                toast.error("Username cannot be empty!");
+                return;
+            }else if (!userInfo.email.trim()) {
+                toast.error("Email cannot be empty!");
+                return;
+            }else if (!userInfo.phone.trim()) {
+                toast.error("Phone cannot be empty!");
+                console.log("phone empty")
+                return;
+            }else if (!userInfo.address.trim()) {
+                toast.error("Email cannot be empty!");
+                console.log("address empty")
+                return;
+            }else if (userInfo.newPassword !== userInfo.confirmPassword) {
+                toast.error("Passwords do not match!");
+                console.log("not match")
+                return;
+            }
 
-	useEffect(() => {
-        const savedUserInfo = localStorage.getItem('userInfo');
-        if (savedUserInfo) {
-            setUserInfo(JSON.parse(savedUserInfo));
+            let uploadedImageUrl = userInfo.imageUrl; // Giữ URL cũ nếu không có ảnh mới
+    
+            if (userInfo.image) {
+                // Chỉ upload ảnh nếu có ảnh mới
+                const data = new FormData();
+                data.append("image", userInfo.image);
+    
+                const imageUploadResponse = await fetch(
+                    "https://api.imgbb.com/1/upload?key=db96fd24d507bc171c6696ffb0bc1f6f",
+                    { method: "POST", body: data }
+                );
+    
+                const imageUploadData = await imageUploadResponse.json();
+    
+                if (imageUploadData.success) {
+                    uploadedImageUrl = imageUploadData.data.url;
+                } else {
+                    console.error("Image upload failed:", imageUploadData);
+                    toast.error("Tải ảnh lên thất bại, vui lòng thử lại.", { position: "top-right" });
+                    return; // Ngừng tiến trình nếu upload ảnh thất bại
+                }
+            }
+
+            // Cập nhật lại userInfo với thông tin mới
+            const updatedUserInfo = {
+                ...userInfo,
+                password: userInfo.newPassword || userInfo.currentPassword,
+                imageUrl: uploadedImageUrl, // Cập nhật URL ảnh mới (nếu có)
+            };
+
+            setUserInfo(updatedUserInfo);
+
+            // Lưu userInfo vào localStorage
+            localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+
+
+            const response = await axios.put("http://localhost:4000/admin-service/api/admin/updateProfile", updatedUserInfo);
+
+            if (response.status === 200) {
+                toast.success(response.data.message);
+            } else {
+                toast.error("Failed to update profile.");
+            }
+        } catch (error) {
+            console.error("Error saving user data:", error);
+            toast.error("An error occurred. Please try again.");
         }
-    }, []);
-
-	const handleSave = () => {
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
-        alert('User info saved');
     };
+    
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setUserInfo({
+                ...userInfo,
+                image: file, // Store the image file in the state
+                imageUrl: imageUrl,
+            });
+        }
+    };
+    
 
 
 
@@ -57,7 +157,7 @@ const ProfilePage = () => {
             <div className="mb-6">
                 <div className="flex items-center gap-4">
 					<img
-						src={"https://via.placeholder.com/150"}
+						src={userInfo.imageUrl || "https://via.placeholder.com/150"}
 						alt="Profile"
 						className="w-20 h-20 rounded-full object-cover border border-gray-300"
 					/>
@@ -65,7 +165,16 @@ const ProfilePage = () => {
 					<div className="text-black text-xs sm:text-sm ">
 					<label className="block text-black font-bold ">Profile Photo</label>
 					<label className="block text-gray-400 font-semibold mb-2">Recommended image size is 150px x 150px</label>
-					<button className="bg-orange-500 font-bold text-white px-4 py-2 rounded mr-5">Upload</button>
+					<label className="bg-orange-500 font-bold text-white px-4 py-2 rounded cursor-pointer">
+                        Upload
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleImageUpload}
+                        />
+                    </label>
+
 					<button className="text-gray-600">Cancel</button>	
 					</div>
 					
@@ -90,7 +199,7 @@ const ProfilePage = () => {
                         type="email"
                         className="w-full border border-gray-300 rounded p-2"
                         placeholder="Enter Email"
-						value={userInfo.email}
+						value={userInfo.email || ""}
 						onChange={(e) => setUserInfo({ ...userInfo, email: e.target.value })}
                     />
                 </div>
@@ -100,6 +209,8 @@ const ProfilePage = () => {
                         type="text"
                         className="w-full border border-gray-300 rounded p-2"
                         placeholder="Enter Phone"
+                        value={userInfo.phone}
+						onChange={(e) => setUserInfo({ ...userInfo, phone: e.target.value })}
                     />
                 </div>
             </div>
@@ -115,6 +226,8 @@ const ProfilePage = () => {
                         type="text"
                         className="w-full border border-gray-300 rounded p-2"
                         placeholder="Enter Address"
+                        value={userInfo.address}
+						onChange={(e) => setUserInfo({ ...userInfo, address: e.target.value })}
                     />
                 </div>
                 <div>
@@ -123,15 +236,11 @@ const ProfilePage = () => {
                         type="text"
                         className="w-full border border-gray-300 rounded p-2"
                         placeholder="Enter City"
+                        value={userInfo.city || ""}
+						onChange={(e) => setUserInfo({ ...userInfo, city: e.target.value })}
                     />
                 </div>
-                <div>
-                    <label className="block font-medium mb-2">Country</label>
-                    <select className="w-full border border-gray-300 rounded p-2">
-                        <option>Select Country</option>
-                        {/* Add more options here */}
-                    </select>
-                </div>
+                
             </div>
 
 			<div className="border-t border-gray-200 my-3"></div>
@@ -146,8 +255,9 @@ const ProfilePage = () => {
                         type={passwordVisible.currentPassword ? "text" : "password"}
                         className="w-full border border-gray-300 rounded p-2 pr-10"
                         placeholder="Enter Current Password"
-						onChange={(e) => setUserInfo({ ...userInfo, password: e.target.value })}
-                    />
+                        value={userInfo.currentPassword|| ''}
+                        onChange={(e) => setUserInfo({ ...userInfo, currentPassword: e.target.value })}
+                        />
                     <button
                         type="button"
                         onClick={() => togglePasswordVisibility("currentPassword")}
@@ -170,6 +280,8 @@ const ProfilePage = () => {
                         type={passwordVisible.newPassword ? "text" : "password"}
                         className="w-full border border-gray-300 rounded p-2 pr-10"
                         placeholder="Enter New Password"
+                        value={userInfo.newPassword || ''}
+                        onChange={(e) => setUserInfo({ ...userInfo, newPassword: e.target.value })}
                     />
                     <button
                         type="button"
@@ -193,6 +305,9 @@ const ProfilePage = () => {
                         type={passwordVisible.confirmPassword ? "text" : "password"}
                         className="w-full border border-gray-300 rounded p-2 pr-10"
                         placeholder="Confirm Password"
+                        value={userInfo.confirmPassword || ''}
+                        onChange={(e) => setUserInfo({ ...userInfo, confirmPassword: e.target.value })}
+
                     />
                     <button
                         type="button"
@@ -214,10 +329,16 @@ const ProfilePage = () => {
 
             <div className="flex justify-end gap-4">
                 <button className="text-gray-800 rounded px-4 py-2 rounded">Cancel</button>
-                <button className="bg-orange-500 text-white px-4 py-2 rounded">Save</button>
+                <button className="bg-orange-500 text-white px-4 py-2 rounded"
+                    type="submit"
+                    onClick={handleSave}
+                >   
+                    Save
+                </button>
             </div>
         </div>
 			</main>
+
 		</div>
 	);
 };

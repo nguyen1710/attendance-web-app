@@ -14,6 +14,7 @@ import Sidebar from './components/common/Sidebar.jsx'
 //admin
 import OverviewPage from "./pages/OverviewPage";
 import ClientsPage from "./pages/ClientsPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 import UsersPage from "./pages/UsersPage";
 import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
@@ -95,6 +96,7 @@ function App() {
             <Route path='/admin/settings' element={<SettingsPage />} />
             <Route path='/admin/profile' element={<ProfilePage />} />
         </Routes>
+        <Toaster position="top-right" reverseOrder={false} />
     </div>
   )
 }
