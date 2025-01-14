@@ -8,6 +8,7 @@ const notificationSchema = new mongoose.Schema({
   className: { type: String, required: true },   // Nội dung thông báo
   status: { type: String, default: 'Unread' }, // Trạng thái: Đọc hoặc chưa đọc
   createdAt: { type: Date, default: Date.now }, // Thời gian tạo thông báo
+  isResponse: { type: Boolean, default: false}
 });
 
 const Notification = mongoose.model('Notification', notificationSchema);

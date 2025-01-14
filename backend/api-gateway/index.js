@@ -92,19 +92,20 @@ io.on('connection', function(client) {
     // Xử lý gửi thông báo
     client.on("notification", async function (data) {
         console.log("Notification received:", data);
-        const { title, receiver, sender, className, classId, _id } = data.notification;
+        const { title, receiver, sender, className, classId, _id, isResponse } = data.notification;
 
         // Tìm socketId của người nhận dựa trên email
         const recipientSocketId = users.get(receiver);
-        const message = `User ${sender} has applied ${title} to class ${className}`
+        // const message = `User ${sender} has applied ${title} to class ${className}`
         if (recipientSocketId) {
         // Gửi thông báo đến người nhận
-            client.to(recipientSocketId).emit("notification", {title, receiver, sender, className, classId, _id});
-            console.log(`Notification sent to ${receiver}: ${message}`);
+            client.to(recipientSocketId).emit("notification", {title, receiver, sender, className, classId, _id, isResponse});
+            console.log(`Notification sent to ${receiver}: ${sender}`);
         } else {
             console.log(`User with email ${receiver} not found.`);
         }
     });
+
     // Xử lý khi user ngắt kết nối
     client.on("disconnect", () => {
         for (const [email, id] of users.entries()) {
@@ -116,8 +117,6 @@ io.on('connection', function(client) {
         }
     });
 });
-// io.listen(5000)
-app.set('io', io);
 
 
 server.listen(4000, () => {

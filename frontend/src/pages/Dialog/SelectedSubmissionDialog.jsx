@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import socket from "~/socketio/socket";
+
 function SelectedSubmissionDialog({
     isOpen,
     onClose,
@@ -59,6 +61,8 @@ function SelectedSubmissionDialog({
     
           if (response.data.success) {
             toast.success('Update new attendences successfully');
+            socket.emit("notification", {notification: response?.data.notification})
+            
             refreshData();
             onClose
           }

@@ -207,11 +207,12 @@ export const loginWithGoogle = async (req, res) => {
         }
 
         // Tạo token JWT và set cookie
-        generateTokenAndSetCookie(res, user.email, user.role);
+        const token_web = generateTokenAndSetCookie(res, user.email, user.role);
 
         res.status(200).json({
             success: true,
             message: "Login with Google successful",
+            token: token_web,
             user: {
                 _id: user._id,
                 email: user.email,

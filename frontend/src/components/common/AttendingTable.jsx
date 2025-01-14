@@ -10,7 +10,7 @@ import { Edit, Search, Trash2  } from "lucide-react";
 // 	{ id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Moderator", status: "Active" },
 // ];
 
-const UsersTable = ({title, userData}) => {
+const UsersTable = ({title, userData, numberOfStudents}) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState(userData);
 	const [users, setUsers] = useState(userData)
@@ -50,7 +50,7 @@ const UsersTable = ({title, userData}) => {
                     <div className="flex items-center justify-between ">
                         <div>
                             <h3 className="text-lg font-semibold text-slate-800">{title} List</h3>
-                            <p className="text-slate-500">List of users</p>
+                            <p className="text-slate-500">List of {title}: {userData.length}/{numberOfStudents}</p>
                         </div>
     
                     </div>

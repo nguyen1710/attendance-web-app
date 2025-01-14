@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const EditClientForm = ({ client, onSave, onCancel }) => {
   const [editedClient, setEditedClient] = useState(client);
@@ -14,19 +16,107 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
       [field]: !prev[field],
     }));
   };
+  
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedClient((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    setEditedClient({
+        _id:editedClient._id,
+        username: editedClient.username,
+        email: editedClient.email,
+        phone: editedClient.phone,
+        address: editedClient.address,
+        currentPassword: editedClient.password,
+        newPassword: "",
+        confirmPassword: "",
+        imageUrl: editedClient.imageUrl || "",
+    });
+    
+}, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    onSave(editedClient); // Save the changes to the parent component
+    
+    try {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(editedClient.email)) {
+          toast.error("Invalid email format!");
+          return;
+      }else if(!editedClient.username.trim()) {
+          toast.error("Username cannot be empty!");
+          return;
+      }else if (!editedClient.email.trim()) {
+          toast.error("Email cannot be empty!");
+          return;
+      }else if (!editedClient.phone.trim()) {
+          toast.error("Phone cannot be empty!");
+          console.log("phone empty")
+          return;
+      }else if (!editedClient.address.trim()) {
+          toast.error("Email cannot be empty!");
+          console.log("address empty")
+          return;
+      }else if (editedClient.newPassword !== editedClient.confirmPassword) {
+          toast.error("Passwords do not match!");
+          console.log("not match")
+          return;
+      }
+
+      let uploadedImageUrl = editedClient.imageUrl; // Giữ URL cũ nếu không có ảnh mới
+
+      if (editedClient.image) {
+          // Chỉ upload ảnh nếu có ảnh mới
+          const data = new FormData();
+          data.append("image", editedClient.image);
+
+          const imageUploadResponse = await fetch(
+              "https://api.imgbb.com/1/upload?key=db96fd24d507bc171c6696ffb0bc1f6f",
+              { method: "POST", body: data }
+          );
+
+          const imageUploadData = await imageUploadResponse.json();
+
+          if (imageUploadData.success) {
+              uploadedImageUrl = imageUploadData.data.url;
+          } else {
+              console.error("Image upload failed:", imageUploadData);
+              toast.error("Tải ảnh lên thất bại, vui lòng thử lại.", { position: "top-right" });
+              return; // Ngừng tiến trình nếu upload ảnh thất bại
+          }
+      }
+
+      // Cập nhật lại userInfo với thông tin mới
+      const updatedUserInfo = {
+        ...editedClient,
+          password: editedClient.newPassword || editedClient.password,
+          imageUrl: uploadedImageUrl, // Cập nhật URL ảnh mới (nếu có)
+      };
+
+      setEditedClient(updatedUserInfo);
+
+      const response = await axios.put("http://localhost:4000/admin-service/api/admin/updateProfile", updatedUserInfo);
+
+      if (response.status === 200) {
+          toast.success(response.data.message);
+      } else {
+          toast.error("Failed to update profile.");
+      }
+    } catch (error) {
+        console.error("Error saving user data:", error);
+        toast.error("An error occurred. Please try again.");
+    }
   };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setEditedClient({
+            ...editedClient,
+            image: file, // Store the image file in the state
+            imageUrl: imageUrl,
+        });
+    }
+};
 
   return (
     <div className="bg-white shadow-md rounded-lg p-8 w-3/4 py-8 max-h-screen overflow-y-auto mt-12" >
@@ -35,18 +125,24 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
       <div className="mb-6">
         <div className="flex items-center gap-4">
           <img
-            src={"https://via.placeholder.com/150"}
-            alt="Profile"
-            className="w-20 h-20 rounded-full object-cover border border-gray-300"
-          />
+						src={editedClient.imageUrl || "https://via.placeholder.com/150"}
+						alt="Profile"
+						className="w-20 h-20 rounded-full object-cover border border-gray-300"
+					/>
           <div className="text-black text-xs sm:text-sm ">
             <label className="block text-black font-bold ">Profile Photo</label>
             <label className="block text-gray-400 font-semibold mb-2">
               Recommended image size is 150px x 150px
             </label>
-            <button className="bg-orange-500 font-bold text-white px-4 py-2 rounded mr-5">
+            <label className="bg-orange-500 font-bold text-white px-4 py-2 rounded cursor-pointer">
               Upload
-            </button>
+              <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+              />
+            </label>
             <button className="text-gray-600">Cancel</button>
           </div>
         </div>
@@ -61,7 +157,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
             className="w-full border border-gray-300 rounded p-2"
             placeholder="Enter Username"
             value={editedClient.username}
-            onChange={handleInputChange}
+						onChange={(e) => setEditedClient({ ...editedClient, username: e.target.value })}
             name="username"
           />
         </div>
@@ -72,7 +168,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
             className="w-full border border-gray-300 rounded p-2"
             placeholder="Enter Email"
             value={editedClient.email}
-            onChange={handleInputChange}
+            onChange={(e) => setEditedClient({ ...editedClient, email: e.target.value })}
             name="email"
           />
         </div>
@@ -82,8 +178,8 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
             type="text"
             className="w-full border border-gray-300 rounded p-2"
             placeholder="Enter Phone"
-            value={editedClient.phone}
-            onChange={handleInputChange}
+            value={editedClient.phone || ""}
+            onChange={(e) => setEditedClient({ ...editedClient, phone: e.target.value })}
             name="phone"
           />
         </div>
@@ -99,34 +195,21 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
             type="text"
             className="w-full border border-gray-300 rounded p-2"
             placeholder="Enter Address"
-            value={editedClient.address}
-            onChange={handleInputChange}
+            value={editedClient.address || ""}
+            onChange={(e) => setEditedClient({ ...editedClient, address: e.target.value })}
             name="address"
           />
         </div>
-        <div>
+        {/* <div>
           <label className="block font-medium mb-2">City</label>
           <input
             type="text"
             className="w-full border border-gray-300 rounded p-2"
             placeholder="Enter City"
             value={editedClient.city}
-            onChange={handleInputChange}
             name="city"
           />
-        </div>
-        <div>
-          <label className="block font-medium mb-2">Country</label>
-          <select
-            className="w-full border border-gray-300 rounded p-2"
-            value={editedClient.country}
-            onChange={handleInputChange}
-            name="country"
-          >
-            <option>Select Country</option>
-            {/* Add more options here */}
-          </select>
-        </div>
+        </div> */}
       </div>
 
       <div className="border-t border-gray-200 my-3"></div>
@@ -138,9 +221,12 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
           <label className="block font-medium mb-2">Current Password</label>
           <div className="relative">
             <input
-              type={passwordVisible.currentPassword ? "text" : "password"}
+              // type={passwordVisible.currentPassword ? "text" : "password"}
+              type="password"
               className="w-full border border-gray-300 rounded p-2 pr-10"
               placeholder="Enter Current Password"
+              value={editedClient.currentPassword|| ''}
+              disabled={true}
             />
             <button
               type="button"
@@ -168,6 +254,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
               type={passwordVisible.newPassword ? "text" : "password"}
               className="w-full border border-gray-300 rounded p-2 pr-10"
               placeholder="Enter New Password"
+              onChange={(e) => setEditedClient({ ...editedClient, newPassword: e.target.value })}
             />
             <button
               type="button"
@@ -195,6 +282,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
               type={passwordVisible.confirmPassword ? "text" : "password"}
               className="w-full border border-gray-300 rounded p-2 pr-10"
               placeholder="Confirm New Password"
+              onChange={(e) => setEditedClient({ ...editedClient, confirmPassword: e.target.value })}
             />
             <button
               type="button"
