@@ -1,94 +1,243 @@
-import { Bell, User, Settings, LogOut } from "lucide-react"; // Importing notification icon
-import { useState } from "react";
+// export default Header;
+import { Bell, User, Settings, LogOut } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+// import {io} from "socket.io-client"
+import socket from "~/socketio/socket.js"
+import axios from "axios";
+const Header = ({ title }) => {
+  const [hasNotification, setHasNotification] = useState(true);
+  const [isNotiOpen, setIsNotiOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [username] = useState(localStorage.getItem("username") || "Guest");
+  const [email] = useState(localStorage.getItem("email") || "guest@example.com");
+  const [imageUrl] = useState(
+    localStorage.getItem("imageUrl") || "https://via.placeholder.com/150"
+  );
+  const [notifications, setNotifications] = useState([])
 
-const Header = ({ title}) => {
-	const [hasNotification, setHasNotification] = useState(true); 
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [username, setUsername] = useState(localStorage.getItem("username"));
-	const [email, setEmail] = useState(localStorage.getItem("email"));
-	const [imageUrl, setImageUrl] = useState(localStorage.getItem("imageUrl"));
+  const notiRef = useRef(null); // Tạo ref cho vùng thông báo
 
-	return (
-		<header className="max-w-full bg-[#ffffff] text-black">
-			<div className="max-w-full mx-full py-2 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-				<h1 className="text-2xl font-semibold text-black">{title}</h1>
+  // Lắng nghe sự kiện "notification" từ server
+  useEffect(() => {
+    socket.on('notification', (data) => {
+      // Thêm thông báo mới vào mảng notifications
+      setNotifications((prevNotifications) => [
+        {
+          _id: data._id,
+          sender: data.sender,
+          title: data.title,
+          classId: data.classId,
+          className: data.className,
+          status: 'Unread', // Mặc định là chưa đọc
+        },
+        ...prevNotifications,
+      ]);
+      setHasNotification(true)
+    });
+    // Dọn dẹp sự kiện khi component bị hủy
+    return () => {
+      socket.off('notification');
+    };
+  }, []);
 
-				<div className="flex items-center gap-6">
-		
-					<div className="relative">
-						{/* Bell Button */}
-						<button
-							className="p-1 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-200 relative"
-							aria-label="Notifications"
-							onClick={() => setHasNotification(false)} // Clear notification on click
-						>
-							<Bell className="h-3 w-3 text-gray-600" />
-						</button>
-						{/* Red Dot Positioned Near the Bell */}
-						{hasNotification && (
-							<span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-600 rounded-full border-2 border-white"></span>
-						)}
-					</div>
 
-					{/* Profile Image */}
-					<div className="relative">
-						<img
-							src={imageUrl || "https://via.placeholder.com/150"}
-							alt="Profile"
-							className="w-6 h-6 rounded-full object-cover border border-gray-300 cursor-pointer"
-							onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown
-						/>
+  // Xử lý sự kiện click ngoài thành phần thông báo
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notiRef.current && !notiRef.current.contains(event.target)) {
+        setIsNotiOpen(false); // Đóng menu thông báo
+      }
+    };
 
-						{/* Dropdown Menu */}
-						{isDropdownOpen && (
-							<div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-md text-sm z-50">
-								<div className="p-2 border-b flex items-center gap-3">
-									<img
-										src={imageUrl || "https://via.placeholder.com/150"}
-										alt="Profile"
-										className="w-10 h-10 rounded-full object-cover border border-gray-300"
-									/>
-									<div className="text-black text-xs sm:text-sm ">
-										<p className="font-medium">{username}</p>
-										<p className="text-gray-500 truncate max-w-[120px]">{email}</p>
-									</div>
-								</div>
-								<ul className="py-2">
-									<li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-										<User className="h-4 w-4 text-gray-600" />
-										My Profile
-									</li>
-									<li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-										<Settings className="h-4 w-4 text-gray-600" />
-										Settings
-									</li>
-									<li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-										<span className="h-3 w-3 rounded-full bg-green-500"></span>
-										Status
-									</li>
-									<li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-										📄 My Account
-									</li>
-									<li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-										❓ Knowledge Base
-									</li>
-								</ul>
-								<div className="py-2 border-t">
-									<button
-										className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600 flex items-center"
-										onClick={() => alert("Logging out...")} // Replace with logout logic
-									>
-										<LogOut className="h-4 w-4 text-red-600 mr-2" /> Logout
-									</button>
-								</div>
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
-		</header>
-	);
+  socket.on("notification", (data) => {
+    console.log(data)
+  })
+  const handleMarkAsRead = async (notiId) => {
+    event.preventDefault(); // Ngăn chuyển trang ngay lập tức
+
+    console.log(notiId)
+    setNotifications((prevNotis) =>
+      prevNotis.map((noti) =>
+        noti._id === notiId ? { ...noti, status: "Read" } : noti
+      )
+    );
+  
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:4000/attandence-service/api/submissions/getNotification`,
+        { notiId }, // Gửi notiId để cập nhật trạng thái
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+  
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+          // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
+      axios
+        .get(`http://localhost:4000/attandence-service/api/submissions/getNotification`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Gửi token trong header
+          },
+        })
+        .then((response) => {
+          if (response.data.success) {
+            const sortedNoti =  response.data.notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            setNotifications(sortedNoti);
+          } else {
+            console.log(response.data.error)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    },
+   [])
+    console.log("noti", notifications)
+
+  // const bgNoti
+  return (
+    <header className="max-w-full bg-white text-black">
+      <div className="max-w-full mx-auto py-2 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <h1 className="text-2xl font-semibold text-black">{title}</h1>
+
+        <div className="flex items-center gap-6">
+          {/* Notification Bell */}
+          <div className="relative">
+            <button
+              className="p-1 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-200 relative"
+              aria-label="Notifications"
+              onClick={() => {
+                setIsNotiOpen((prev) => !prev);
+                setHasNotification(false); // Clear notifications
+              }}
+            >
+              <Bell className="h-4 w-4 text-gray-600" />
+              {hasNotification && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-600 rounded-full border-2 border-white"></span>
+              )}
+            </button>
+
+            {/* Notification Dropdown */}
+            {isNotiOpen && (
+              <div
+                className="absolute right-0 mt-2 w-80 max-w-sm bg-white rounded-lg shadow-lg divide-y divide-gray-100 z-50"
+                aria-labelledby="dropdownNotificationButton"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="px-4 py-2 font-semibold text-gray-700 bg-gray-50 rounded-t-lg">
+                  Notifications
+                </div>
+                <div className="divide-y divide-gray-100">
+                  {notifications.map((noti) => (
+                    <a
+                      key={noti._id}
+                      onClick={async (event) => {
+                        event.preventDefault(); // Ngăn chuyển trang ngay lập tức
+                        await handleMarkAsRead(noti._id); // Gọi API
+                        // Chuyển hướng sau khi cập nhật
+                        window.location.href = `http://localhost:5173/classroom/${noti.classId}/submission`;
+                      }}
+                      className={`flex cursor-pointer items-center px-4 cursor py-3 ${noti.status === "Unread" ? "bg-gray-200 hover:bg-gray-300" : "hover:bg-gray-100"} transition duration-200`}
+                    >
+                      <img
+                        className="w-11 h-11 rounded-full flex-shrink-0"
+                        src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+                        alt={`${noti.receiver}'s profile`}
+                      />
+                      <div className="ml-3 w-full">
+                        <div className="text-sm text-gray-500">
+                          User {" "}<span className="font-semibold text-gray-900">
+                            {noti.sender}
+                          </span>{" "} has applied
+                          {" "}<span className="font-semibold text-gray-900">
+                            {noti.title}
+                          </span>{" "} to class 
+                          {" "}<span className="font-semibold text-gray-900">
+                            {noti.className}
+                          </span>{" "}
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Profile Dropdown */}
+          <div className="relative">
+            <img
+              src={imageUrl}
+              alt="Profile"
+              className="w-6 h-6 rounded-full object-cover border border-gray-300 cursor-pointer"
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
+            />
+            {isDropdownOpen && (
+              <div
+                className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-md text-sm z-50"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-2 border-b flex items-center gap-3">
+                  <img
+                    src={imageUrl}
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full object-cover border border-gray-300"
+                  />
+                  <div>
+                    <p className="font-medium">{username}</p>
+                    <p className="text-gray-500 truncate max-w-[120px]">
+                      {email}
+                    </p>
+                  </div>
+                </div>
+                <ul className="py-2">
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+                    <User className="h-4 w-4 text-gray-600" />
+                    My Profile
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+                    <Settings className="h-4 w-4 text-gray-600" />
+                    Settings
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
+                    <span className="h-3 w-3 rounded-full bg-green-500"></span>
+                    Status
+                  </li>
+                </ul>
+                <div className="py-2 border-t">
+                  <button
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600 flex items-center"
+                    onClick={() => alert("Logging out...")} // Replace with logout logic
+                  >
+                    <LogOut className="h-4 w-4 text-red-600 mr-2" />
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export default Header;

@@ -7,7 +7,7 @@ import QRCode from "qrcode"
 import { createCanvas, loadImage } from "canvas"
 import bcrypt from "bcrypt"
 import { Submission } from "../models/submission.model.js"
-
+import Notification from "../models/notification.model.js"
 export const createSubmission = [ authMiddleware, async (req, res) => {
     const {classId} = req.params
     const { title, content, evidence, fromDate, toDate } = req.body;
@@ -28,11 +28,22 @@ export const createSubmission = [ authMiddleware, async (req, res) => {
         });
 
         const message = `User ${user.username} has applied ${title} to class ${classroom.name}`
+        const notification = new Notification({
+            receiver: classroom?.owner,
+            title: title,
+            className: classroom?.name,
+            sender: user.username,
+            classId: classId
+        })
 
+        await notification.save()
         await newSubmission.save();
+
+
         return res.status(201).json({
             success: true,
-            message: message,
+            notification: notification,
+            owner: classroom?.owner,
             submission: newSubmission
         })
     } catch (error) {
@@ -86,10 +97,10 @@ export const getSubmissions = [authMiddleware, async (req, res) => {
 
 
 export const updateSubmission = [ authMiddleware, async (req, res) => {
-    const { newTitle, newContent, newFromDate, newToDate, newEvidence, submissionId } = req.body;
+    const { newTitle, newContent, newFromDate, newToDate, newEvidence, submissionId, newStatus } = req.body;
     try {
         // Tìm submission cần cập nhật theo submissionId
-        console.log(newTitle, newContent, newFromDate, newToDate, newEvidence, submissionId)
+        console.log(newTitle, newContent, newFromDate, newToDate, newEvidence, submissionId, newStatus)
         const submission = await Submission.findById(submissionId);
         
         if (!submission) {
@@ -101,6 +112,8 @@ export const updateSubmission = [ authMiddleware, async (req, res) => {
         submission.content = newContent 
         submission.fromDate = newFromDate
         submission.toDate = newToDate 
+        submission.status = newStatus 
+
     
         // Lưu lại các thay đổi
         await submission.save();
@@ -113,3 +126,53 @@ export const updateSubmission = [ authMiddleware, async (req, res) => {
       }
     
 }]
+
+export const deleteSubmission = [authMiddleware, async (req, res) => {
+      const { submissionId } = req.params; // Lấy submissionId từ body request
+      try {
+        // Tìm submission cần xóa theo submissionId
+        const submission =  await Submission.findByIdAndDelete(submissionId);
+
+        console.log(submission)
+        if (!submission) {
+          return res.status(404).json({ message: 'Submission not found' });
+        }
+  
+        // Trả về kết quả thành công
+        return res.json({ success: true, message: 'Submission deleted successfully' });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+      }
+    }
+  ];
+  
+
+
+// Lấy tất cả thông báo
+export const getAllNotifications = [ authMiddleware, async (req, res) => {
+    try {
+        const userEmail = req.userEmail;
+        const { notiId } = req.body;
+        console.log("notiId", notiId)
+      if (notiId) {
+        // Nếu có `notiId`, cập nhật trạng thái thành "Read"
+        await Notification.updateOne(
+          { _id: notiId },
+          { $set: { status: "Read" } }
+        );
+      }
+        const notifications = await Notification.find({receiver: userEmail}); // Lấy tất cả thông báo
+        return res.status(200).json({
+            success: true,
+            notifications, // Trả về danh sách thông báo
+        });
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+  }]
+

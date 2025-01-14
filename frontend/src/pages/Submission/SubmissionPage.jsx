@@ -15,7 +15,7 @@ function SubmissionPage() {
   const [username, setUsername] = useState(localStorage.getItem('username'));
   const { classId } = useParams(); // Lấy ID từ URL
   const [submission, setSubmission] = useState(null)
-
+  const [classOwner, setClassOwner] = useState("")
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -33,6 +33,7 @@ function SubmissionPage() {
         .then((response) => {
           if (response.data.success) {
             setSubmission(response.data.submissions);
+            setClassOwner(response.data.classOwner)
             toast.success(response.data.message);
           } else {
             toast.error(response.data.message);
@@ -70,7 +71,7 @@ function SubmissionPage() {
 
         /> */}
 
-          <SubmissionTable submissionsData={submission}/>
+          <SubmissionTable submissionsData={submission} classOwner={classOwner}/>
 
 
 

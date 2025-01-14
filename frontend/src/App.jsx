@@ -7,10 +7,10 @@ import Home from './pages/HomePage/Home.jsx'
 import SignUp from './pages/Login/SignUp.jsx'
 import VerifyEmail from './pages/Login/VerifyEmail.jsx'
 import { Toaster } from 'react-hot-toast'
-
+import socket from './socketio/socket.js'
 import Sidebar from './components/common/Sidebar.jsx'
-
-
+import SubmissionPage from './pages/Submission/SubmissionPage.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
 //admin
 import OverviewPage from "./pages/OverviewPage";
 import ClientsPage from "./pages/ClientsPage.jsx";
@@ -27,7 +27,7 @@ import AttendanceSession from './pages/Attendances/AttendanceSession.jsx'
 import AttendanceForm from './pages/Attendances/AttendanceForm.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
-
+  
   // const classroomRoutes = ["/classroom"];
   // const isClassroomRoute = classroomRoutes.includes(location.pathname);
   const isClassroomRoute = location.pathname.startsWith("/classroom");

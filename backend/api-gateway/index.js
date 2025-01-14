@@ -1,5 +1,7 @@
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import express from 'express'
+import { Server } from "socket.io";
+import http from 'http'
 
 const app = express()
 
@@ -70,7 +72,54 @@ app.use('/attandence-service', createProxyMiddleware({
         }
     }
 }))
+const users = new Map();
+const server = http.createServer(app);
+const io = new Server(server, {
+    connectionStateRecovery: {},
+    cors: {
+        origin: "http://localhost:5173", // Cho phép kết nối từ localhost:5173
+        methods: ["GET", "POST"],
+    }
+});
 
-app.listen(4000, () => {
+io.on('connection', function(client) {
+    console.log("A new user connect,", client.id)
+    client.on("register", (data) => {
+        users.set(data.email, client.id); // Thêm user vào Map
+        console.log(`User registered: ${data.email} -> ${client.id}`);
+        console.log(users)
+      });
+    // Xử lý gửi thông báo
+    client.on("notification", async function (data) {
+        console.log("Notification received:", data);
+        const { title, receiver, sender, className, classId, _id } = data.notification;
+
+        // Tìm socketId của người nhận dựa trên email
+        const recipientSocketId = users.get(receiver);
+        const message = `User ${sender} has applied ${title} to class ${className}`
+        if (recipientSocketId) {
+        // Gửi thông báo đến người nhận
+            client.to(recipientSocketId).emit("notification", {title, receiver, sender, className, classId, _id});
+            console.log(`Notification sent to ${receiver}: ${message}`);
+        } else {
+            console.log(`User with email ${receiver} not found.`);
+        }
+    });
+    // Xử lý khi user ngắt kết nối
+    client.on("disconnect", () => {
+        for (const [email, id] of users.entries()) {
+        if (id === client.id) {
+            users.delete(email); // Xóa user khỏi Map
+            console.log(`User disconnected: ${email}`);
+            break;
+        }
+        }
+    });
+});
+// io.listen(5000)
+app.set('io', io);
+
+
+server.listen(4000, () => {
     console.log("API Gateway service is listening at http://localhost:4000")
 })
