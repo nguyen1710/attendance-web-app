@@ -23,14 +23,14 @@ function adminLogin() {
         localStorage.setItem("email", response.data.user.email);
         localStorage.setItem("username", response.data.user.username);
         localStorage.setItem('imageUrl', response.data.user.imageUrl);
-        localStorage.setItem("userInfo", JSON.stringify(response.data.user));
+        localStorage.setItem("adminInfo", JSON.stringify(response.data.user));
         // Navigate to the admin dashboard
         navigate("/admin");
       }
     } catch (error) {
       if (error.response) {
         // Display the error message from the backend
-        toast.error(error.response.data.message || "Login failed");
+        toast.error(error.response.data.message);
       } else {
         toast.error("Something went wrong. Please try again.");
       }

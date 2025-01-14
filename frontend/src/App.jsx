@@ -14,7 +14,6 @@ import ProfilePage from './pages/ProfilePage.jsx'
 //admin
 import OverviewPage from "./pages/OverviewPage";
 import ClientsPage from "./pages/ClientsPage.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx";
 import UsersPage from "./pages/UsersPage";
 import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";

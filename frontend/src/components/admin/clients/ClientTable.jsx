@@ -1,7 +1,8 @@
 import React from 'react';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, BanIcon, UnlockIcon } from 'lucide-react';
 
-const ClientTable = ({ clients, currentRows, handleEditClick }) => {
+const ClientTable = ({ clients, currentRows, handleEditClick,  handleDeleteClick, handleBlockClick, handleUnBlockClick, clientStatus }) => {
+
   return (
     <div className="overflow-x-auto text-gray-600">
       <table className="min-w-full border-collapse bg-white shadow-md">
@@ -16,9 +17,13 @@ const ClientTable = ({ clients, currentRows, handleEditClick }) => {
         </thead>
         <tbody>
           {currentRows.map((client) => (
-            <tr key={client.id} className="hover:bg-gray-50">
+            <tr key={client._id} className="hover:bg-gray-50">
               <td className="py-2 px-4 border-b flex items-center gap-2">
-                <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+                <img
+                  src={client.imageUrl || "https://via.placeholder.com/150"}
+                  alt="Profile"
+                  className="h-8 w-8 rounded-full object-cover border border-gray-300"
+                />
                 <div>
                   <div className="font-semibold">{client.username}</div>
                   <div className="text-sm text-gray-500">{client.role}</div>
@@ -29,12 +34,12 @@ const ClientTable = ({ clients, currentRows, handleEditClick }) => {
               <td className="py-2 px-4 border-b">
                 <span
                   className={`px-2 py-1 text-sm rounded-full font-semibold ${
-                    client.status === "Active"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
+                    client.status === "Inactive"
+                      ? "bg-red-100 text-red-600"
+                      : "bg-green-100 text-green-600"
                   }`}
                 >
-                  {client.status}
+                  { client.status}
                 </span>
               </td>
               <td className="py-2 px-4 border-b">
@@ -44,9 +49,28 @@ const ClientTable = ({ clients, currentRows, handleEditClick }) => {
                 >
                   <Edit size={18} />
                 </button>
-                <button className="text-red-500 hover:text-red-700">
+                <button 
+                  className="text-red-500 hover:text-red-700 mr-2"
+                  onClick={() => handleDeleteClick(client)} 
+                >
                   <Trash2 size={18} />
                 </button>
+                {
+                  client.status === "Active" ? (
+                    <button className="text-red-500 hover:text-red-700"
+                      onClick={() => handleBlockClick(client)}
+                    >
+                      <BanIcon size={18} />
+                    </button>
+                  ) : (
+                    <button className="text-green-500 hover:text-green-700"
+                      onClick={() => handleUnBlockClick(client)}
+                    >
+                      <UnlockIcon size={18} />
+                    </button>
+                  )
+                }
+                
               </td>
             </tr>
           ))}
