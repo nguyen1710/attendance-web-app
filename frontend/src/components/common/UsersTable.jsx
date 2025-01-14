@@ -50,7 +50,7 @@ const UsersTable = ({title, userData}) => {
                     <div className="flex items-center justify-between ">
                         <div>
                             <h3 className="text-lg font-semibold text-slate-800">{title} List</h3>
-                            <p className="text-slate-500">List of users</p>
+                            <p className="text-slate-500">List of {title.toLowerCase()}: {userData.length}</p>
                         </div>
     
                     </div>

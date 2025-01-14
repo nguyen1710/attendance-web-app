@@ -92,9 +92,9 @@ const AttendanceSession = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-              <AttendingTable title={"Attendees"} userData={attendees}/>
+              <AttendingTable title={"Attendees"} userData={attendees} numberOfStudents={attendees.length + nonAttendees.length}/>
 
-              <AttendingTable title={"Absent"} userData={nonAttendees}/>
+              <AttendingTable title={"Absent"} userData={nonAttendees} numberOfStudents={attendees.length + nonAttendees.length}/>
         
         
                 </motion.div>

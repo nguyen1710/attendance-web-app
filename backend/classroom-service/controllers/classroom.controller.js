@@ -38,46 +38,78 @@ export const createClassroom = [authMiddleware , async (req, res) => {
 }]
 
 export const getAllClassrooms = [authMiddleware, async (req, res) => {
-    try {
-        const userEmail = req.userEmail
-        const userRole = req.userRole
-        // console.log(typeof(userId))
-        if (userRole == 'teacher') {
-            const classrooms = await Classroom.find({teacherEmails: {$in : [userEmail]}})
-            console.log(req.userEmail)
-            if(classrooms.length == 0) {
-                return res.status(404).json({ success: false, message: 'Class not found' });
-            }
+    // try {
+    //     const userEmail = req.userEmail
+    //     const userRole = req.userRole
+    //     // console.log(typeof(userId))
+    //     if (userRole == 'teacher') {
+    //         const classrooms = await Classroom.find({teacherEmails: {$in : [userEmail]}})
+    //         console.log(req.userEmail)
+    //         if(classrooms.length == 0) {
+    //             return res.status(404).json({ success: false, message: 'Class not found' });
+    //         }
     
+    //         return res.status(200).json({
+    //             success: true,
+    //             message: 'Get classes successfully',
+    //             classes: classrooms
+    //         })
+    //     }
+
+    //     // const studentId = new mongoose.Types.ObjectId(req.userId);
+    //     const classrooms = await Classroom.find({
+    //         studentEmails: { 
+    //             $all: [userEmail]
+    //         }
+    //     })
+        
+    //     console.log(classrooms)
+    //     if(classrooms.length == 0) {
+    //         return res.status(200).json({ success: true, message: 'Class not found' });
+    //     }
+
+    //     return res.status(200).json({
+    //         success: true,
+    //         message: 'Get classes successfully',
+    //         classes: classrooms
+    //     })
+        
+        
+        
+    // } catch (error) {
+    //     console.error('Error get classroom:', error.message);
+    //     return res.status(500).json({ success: false, message: 'Internal server error' });
+    // }
+    try {
+        const userEmail = req.userEmail;
+
+        // Lấy tất cả các lớp mà user thuộc một trong các vai trò
+        const classrooms = await Classroom.find({
+            $or: [
+                { teacherEmails: { $in: [userEmail] } }, // Là teacher
+                { studentEmails: { $all: [userEmail] } }, // Là student
+                { ownerEmail: userEmail } // Là owner
+            ]
+        });
+
+        // Kiểm tra nếu danh sách lớp trống
+        if (classrooms.length === 0) {
             return res.status(200).json({
                 success: true,
-                message: 'Get classes successfully',
-                classes: classrooms
-            })
+                message: 'No classes found',
+                classes: []
+            });
         }
 
-        // const studentId = new mongoose.Types.ObjectId(req.userId);
-        const classrooms = await Classroom.find({
-            studentEmails: { 
-                $all: [userEmail]
-            }
-        })
-        
-        console.log(classrooms)
-        if(classrooms.length == 0) {
-            return res.status(404).json({ success: false, message: 'Class not found' });
-        }
-
+        // Trả về danh sách các lớp học
         return res.status(200).json({
             success: true,
             message: 'Get classes successfully',
             classes: classrooms
-        })
-        
-        
-        
+        });
+
     } catch (error) {
-        console.error('Error get classroom:', error.message);
+        console.error('Error getting classrooms:', error.message);
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }]
@@ -205,7 +237,7 @@ export const getDetailClass = [authMiddleware, async (req, res) => {
                 message: "Classroom not found"
             })
         }
-        console.log(classroom)
+        console.log(classroom.owner)
 
         return res.status(200).json({
             success: true,
@@ -240,18 +272,25 @@ export const getUserFromClass = [authMiddleware, async (req, res) => {
         console.log(classroom.studentEmails)
         const students = []
 
+        const teachers = []
+
         for (const email of classroom.studentEmails) {
             const student = await User.findOne({email: email})
             students.push(student)
         }
         // classroom.studentEmails.push(email)
         // await classroom.save()
-
+        for (const email of classroom.teacherEmails) {
+            const teacher = await User.findOne({email: email})
+            teachers.push(teacher)
+        }
         // sendInviteEmail(email,classroom.name)
         return res.status(200).json({
             success: true,
             message: ` Get classroom success`,
-            students: students
+            students: students,
+            teachers: teachers,
+            owner: classroom.owner
             
         });
     } catch (error) {

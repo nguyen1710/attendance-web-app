@@ -4,14 +4,15 @@ import toast from "react-hot-toast";
 import LoginImg from "~/public/img/authLanding.gif";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
+// import socket from "../../socketio/socket";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const value = localStorage.getItem("email");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -25,15 +26,13 @@ function Login() {
         localStorage.setItem("email", JSON.stringify(response.data.user.email))
         localStorage.setItem("username", JSON.stringify(response.data.user.username))
         console.log(response.data.message)
-        navigate('/')
+        window.location.href = '/';
       }
     } catch (error) {
-      if (error.response) {
+
         setErrorMessage(error.response.data.message);
         toast.error(error.response.data.message)
-      } else {
-        toast.error("Something went wrong. Please try again later.");
-      }
+
     }
   }
 
@@ -44,14 +43,16 @@ function Login() {
     });
       if(data.success) {
         toast.success(data.message)
+        localStorage.setItem("token", data.token); // Lưu token JWT
         localStorage.setItem("email", JSON.stringify(data.user.email))
         localStorage.setItem("username", JSON.stringify(data.user.username))
         console.log(data)
-        navigate('/')
+
+        window.location.href = '/';
       }
     } catch (error) {
       const data = error.response.data.message
-      console.log(data)
+      console.log("lỗi",data)
     }
   }
 

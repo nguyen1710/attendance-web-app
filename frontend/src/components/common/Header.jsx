@@ -29,6 +29,7 @@ const Header = ({ title }) => {
           classId: data.classId,
           className: data.className,
           status: 'Unread', // Mặc định là chưa đọc
+          isResponse: data.isResponse
         },
         ...prevNotifications,
       ]);
@@ -116,7 +117,7 @@ const Header = ({ title }) => {
   return (
     <header className="max-w-full bg-white text-black">
       <div className="max-w-full mx-auto py-2 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-black">{title}</h1>
+        <h1 className="text-2xl font-semibold text-black">{title}  </h1>
 
         <div className="flex items-center gap-6">
           {/* Notification Bell */}
@@ -162,19 +163,36 @@ const Header = ({ title }) => {
                         src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
                         alt={`${noti.receiver}'s profile`}
                       />
-                      <div className="ml-3 w-full">
-                        <div className="text-sm text-gray-500">
-                          User {" "}<span className="font-semibold text-gray-900">
-                            {noti.sender}
-                          </span>{" "} has applied
-                          {" "}<span className="font-semibold text-gray-900">
-                            {noti.title}
-                          </span>{" "} to class 
-                          {" "}<span className="font-semibold text-gray-900">
-                            {noti.className}
-                          </span>{" "}
+                      {
+                        noti.isResponse ? (<div className="ml-3 w-full">
+                          <div className="text-sm text-gray-500">
+                            User {" "}<span className="font-semibold text-gray-900">
+                              {noti.sender}
+                            </span>{" "} has responsed your
+                            {" "}<span className="font-semibold text-gray-900">
+                              {noti.title}
+                            </span>{" "} at class 
+                            {" "}<span className="font-semibold text-gray-900">
+                              {noti.className}
+                            </span>{" "}
+                          </div>
+                        </div>) : (
+                          <div className="ml-3 w-full">
+                          <div className="text-sm text-gray-500">
+                            User {" "}<span className="font-semibold text-gray-900">
+                              {noti.sender}
+                            </span>{" "} has applied
+                            {" "}<span className="font-semibold text-gray-900">
+                              {noti.title}
+                            </span>{" "} to class 
+                            {" "}<span className="font-semibold text-gray-900">
+                              {noti.className}
+                            </span>{" "}
+                          </div>
                         </div>
-                      </div>
+                        )
+
+                      }
                     </a>
                   ))}
                 </div>

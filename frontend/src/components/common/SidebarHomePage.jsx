@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Logo from "~/public/img/logo.png"
+import socket from "~/socketio/socket";
 const SidebarHomePage = () => {
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ const SidebarHomePage = () => {
           localStorage.removeItem('username');
           localStorage.removeItem('email');
           toast.success(response.data.message)
+          socket.disconnect()
           // Chuyển hướng về trang login
           navigate('/login');
         } else {
@@ -35,7 +37,7 @@ const SidebarHomePage = () => {
         }
       })
       .catch((error) => {
-        console.error('Logout error:', error);
+        console.log('Logout error:', error);
         alert('Error logging out');
       });
   };
@@ -47,7 +49,7 @@ const SidebarHomePage = () => {
     { name: "Home", icon: House, color: "#6366f1", href: `/` },
     { name: "Attendence", icon: BarChart2, color: "#6366f1", href: `/classroom/${classId}` },
     { name: "Users", icon: Users, color: "#6366f1", href: `/classroom/${classId}/users` },
-    { name: "Log out", icon: LogOut, color: "#6366f1", href: "/#", onClick: handleLogout },
+    { name: "Log out", icon: LogOut, color: "#6366f1", onClick: handleLogout },
   
   ];
 
@@ -110,7 +112,7 @@ const SidebarHomePage = () => {
             item.name === "Log out" ? ( // Xử lý riêng cho nút Logout
               <motion.div
                 key={item.name}
-                className="flex items-center p-4 ml-3 max-w-full text-sm font-medium hover:bg-gray-200 transition-colors mb-2"
+                className="flex items-center cursor-pointer p-4 ml-3 max-w-full cursor text-sm font-medium hover:bg-gray-200 transition-colors mb-2"
                 onClick={item.onClick} // Gọi hàm logout khi nhấn
               >
                 <item.icon
@@ -139,6 +141,7 @@ const SidebarHomePage = () => {
               </motion.div>
             ) : (
               <Link key={item.href} to={item.href}>
+              
               <motion.div
                 className={`flex items-center p-4 ml-3 text-sm font-medium hover:bg-gray-200 transition-colors mb-2 ${
                   location.pathname === item.href
@@ -147,7 +150,7 @@ const SidebarHomePage = () => {
                 }`}
                 whileHover={{ backgroundColor: '#d1d5db' }}
                 whileTap={{
-                  scale: 0.95,
+                  // scale: 0.95,
                   backgroundColor: '#d1d5db', 
                 }}
               >
