@@ -11,6 +11,18 @@ const userSchema = new mongoose.Schema({
         type:String,
         require:true
     },
+    phone:{ 
+        type: String, 
+        required: false 
+    },
+    address:{ 
+        type: String, 
+        required: false 
+    },
+    imageUrl:{ 
+        type: String, 
+        required: false 
+    },
     username: {
         type:String,
         require: true
