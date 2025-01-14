@@ -5,7 +5,13 @@ import axios from "axios";
 
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
+
+// import UsersTable from "../components/common/UsersTable";	
+import UserGrowthChart from "../components/admin/users/UserGrowthChart";
+import UserActivityHeatmap from "../components/admin/users/UserActivityHeatmap";
+import UserDemographicsChart from "../components/admin/users/UserDemographicsChart";
 import UserCard from "../components/admin/users/UserCard";
+
 import UserDetailsPage from "../components/admin/users/UserDetailsPage";
 
 const userStats = {
