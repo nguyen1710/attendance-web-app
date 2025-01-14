@@ -2,6 +2,7 @@ import User from "../models/admin.model.js";
 import Classroom from "../models/classroom.model.js";
 import dotenv from 'dotenv'
 import bcrypt from "bcrypt"
+import bcryptjs from "bcryptjs";
 
 dotenv.config()
 
@@ -20,8 +21,14 @@ export const login = async (req, res) => {
             });
         }
         
-        if (password !== user.password) {
-            return res.status(400).json({ success: false, message: "Invalid password" });
+        const isPasswordValid = await bcryptjs.compare(password, user.password)
+        if(!isPasswordValid) {
+            return res.status(400).json(
+                {
+                    success: false,
+                    message: "Invalid password"
+                }
+            )
         }
 
         if (user.role !== "admin") {
@@ -61,13 +68,72 @@ export const login = async (req, res) => {
 
 export const getAllClients = async (req, res) => {
     try {
-        const user = await User.find();
+        const user = await User.find({
+            role: { $ne: "admin" }
+        });
         res.status(200).json(user);
     }catch (error) {
         console.error("Error retrieving clients:", error);
         res.status(500).json({ message: "Error retrieving clients" });
     }
 }
+
+export const getNewClients = async (req, res) => {
+    try {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        const newClients = await User.find({
+            role: { $ne: "admin" },
+            createAt: { $gte: sevenDaysAgo }
+        }).select('-password') 
+          .sort({ createAt: -1 }); 
+
+        const response = {
+            count: newClients.length,
+            timeframe: "Last 7 days",
+            clients: newClients
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        console.error("Error retrieving new clients:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Error retrieving new clients",
+            error: error.message 
+        });
+    }
+};
+
+export const getClientsByStatus = async (req, res) => {
+    try {
+        const totalClients = await User.countDocuments({ role: { $ne: "admin" } });
+
+        const inactiveCount = await User.countDocuments({ role: { $ne: "admin" }, status: "Inactive" });
+
+        const activeCount = totalClients - inactiveCount;
+
+        res.status(200).json({
+            success: true,
+            message: "Client counts by status retrieved successfully",
+            active: activeCount,
+            inactive: inactiveCount
+            
+        });
+    } catch (error) {
+        console.error("Error retrieving client counts by status:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Error retrieving client counts by status",
+            error: error.message 
+        });
+    }
+};
+
+
+
+
 
 
 export const getAllClassrooms = async(req, res) => {
@@ -95,26 +161,22 @@ export const updateProfile = async(req, res) => {
     console.log(req.body);
 
     try {
-    // Tìm người dùng bằng email
     const user = await User.findOne({ _id });
     if (!user) {
         return res.status(404).json({ message: "User not found." });
     }
 
-    // Cập nhật thông tin người dùng
     if (imageUrl) user.imageUrl = imageUrl;
     if (username) user.username = username;
     if(email) user.email = email;
     if (phone) user.phone = phone;
     if (address) user.address = address;
 
-    // Hash mật khẩu mới nếu có thay đổi
     if (password) {
         const saltRounds = 10; // Độ mạnh của salt
         user.password = await bcrypt.hash(password, saltRounds);
     }
 
-    // Lưu thông tin người dùng vào cơ sở dữ liệu
     await user.save();
 
     return res.status(200).json({
@@ -131,3 +193,64 @@ export const updateProfile = async(req, res) => {
         });
     }
 }
+
+export const deleteClient = async (req, res) => {
+    const { clientId } = req.body;  
+
+    try {
+        const result = await User.deleteOne({ _id: clientId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Client not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Client deleted successfully!"
+        });
+
+    } catch (error) {
+        console.error("Error deleting client:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error deleting client.",
+            error: error.message,
+        });
+    }
+};
+
+
+export const blockClient = async (req, res) => {
+    const { clientId, status } = req.body;  
+
+
+    try {
+        const user = await User.findById(clientId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "Client not found"
+            });
+        }
+
+        if(status) user.status = status;
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Client blocked successfully!",
+        });
+    } catch (error) {
+        console.error("Error blocking client:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error blocking client.",
+            error: error.message,
+        });
+    }
+};
