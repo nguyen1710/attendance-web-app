@@ -1,4 +1,4 @@
-import { login, getAllClients, getAllClassrooms, updateProfile, getNewClients, deleteClient, blockClient, getClientsByStatus} from "../controllers/admin.controller.js";
+import { login, getAllClients, getAllClassrooms, updateProfile, getNewClients, deleteClient, blockClient, getClientsByStatus, getClientsByEmail, getAttendanceByClassroomId} from "../controllers/admin.controller.js";
 
 import express from "express"
 const router = express.Router()
@@ -8,7 +8,9 @@ router.get("/getAllClients", getAllClients);
 router.get("/getNewClients", getNewClients)
 router.get("/getClientsByStatus", getClientsByStatus);
 router.get("/getAllClassrooms", getAllClassrooms);
+router.post("/getClientsByEmail", getClientsByEmail);
 router.put("/updateProfile",updateProfile);
 router.delete("/deleteClient", deleteClient);
 router.put("/blockClient", blockClient);
+router.post("/getAttendanceByClassroomId", getAttendanceByClassroomId);
 export default router

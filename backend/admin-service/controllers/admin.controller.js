@@ -1,5 +1,7 @@
 import User from "../models/admin.model.js";
 import Classroom from "../models/classroom.model.js";
+import AttendanceSession from "../models/attendance.model.js";
+
 import dotenv from 'dotenv'
 import bcrypt from "bcrypt"
 import bcryptjs from "bcryptjs";
@@ -131,7 +133,19 @@ export const getClientsByStatus = async (req, res) => {
     }
 };
 
-
+export const getClientsByEmail = async(req, res) => {
+    const {email} = req.body;
+    try {
+        const client = await User.findOne({ email });
+        if (!client) {
+          return res.status(404).json({ success: false, message: 'Client not found.' });
+        }
+        res.status(200).json(client);
+    } catch (error) {
+    console.error('Error retrieving client:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
+    }
+}
 
 
 
@@ -254,3 +268,21 @@ export const blockClient = async (req, res) => {
         });
     }
 };
+
+export const getAttendanceByClassroomId = async (req, res) => {
+    const {classId} = req.body;
+    try {
+        
+        const attendance = await AttendanceSession.find({classroomId: classId});
+
+        if (!attendance || attendance.length === 0) {
+            return res.status(404).json({ message: "No attendance data found for this classroom." });
+        }
+
+        res.status(200).json(attendance);
+
+    }catch (error){
+        console.error("Error:", error)
+        res.status(500).json({message:"Error retrieving attendance"});
+    }
+}

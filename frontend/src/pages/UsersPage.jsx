@@ -27,6 +27,7 @@ const userStats = {
 	const [selectedUser, setSelectedUser] = useState(null);
   	const [error, setError] = useState(null);
 	const [classrooms, setClassrooms] = useState([]);
+	
 	useEffect(() => {
 		axios
 		  .get("http://localhost:4000/admin-service/api/admin/getAllClassrooms") // Địa chỉ API của bạn
@@ -41,6 +42,7 @@ const userStats = {
 
 	const handleUserClick = (user) => {
 		setSelectedUser(user); 
+		console.log(user);
 		setStep(2); 
 	  };
 	
@@ -49,22 +51,24 @@ const userStats = {
 		setSelectedUser(null); 
 	  };
 
+	
+
 	return (
 		<div className='flex-1 overflow-auto bg-[#ffffff] bg-opacity-90 relative z-10'>
-			<Header title='Users' />
+			<Header title='Classrooms' />
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
 			{step === 1 && (
 				<>
 					{/* STATS */}
-					<motion.div
+					{/* <motion.div
 					className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 					>
 					<StatCard
-						name="Total Users"
+						name="Total Classrooms"
 						icon={UsersIcon}
 						value={userStats.totalUsers.toLocaleString()}
 						color="#6366F1"
@@ -87,7 +91,8 @@ const userStats = {
 						value={userStats.churnRate}
 						color="#6366F1"
 					/>
-					</motion.div>
+					</motion.div> */}
+
 
 					{/* CLIENT GRID */}
 					<div className="flex justify-between items-center bg-white shadow-sm rounded-md p-4 mb-6 font-semibold text-gray-600">
