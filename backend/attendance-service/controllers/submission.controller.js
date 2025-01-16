@@ -25,6 +25,7 @@ export const createSubmission = [ authMiddleware, async (req, res) => {
             fromDate,
             toDate,
             evidence,
+            imageUrl: user.imageUrl
         });
 
         const message = `User ${user.username} has applied ${title} to class ${classroom.name}`

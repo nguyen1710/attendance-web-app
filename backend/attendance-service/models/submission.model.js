@@ -12,7 +12,7 @@ const submissionSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now },
     fromDate: { type: Date, default: Date.now },
     toDate: { type: Date, default: Date.now },
-
+    imageUrl: {type:String}
 });
 
 export const Submission = mongoose.model('Submission', submissionSchema);

@@ -145,6 +145,62 @@ export const checkAttendance = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
+export const checkAttendanceDirectly = async (req, res) => {
+    const { id } = req.params; // ID của session
+    const { email } = req.body; // Email của người cần cập nhật
+
+    try {
+        console.log("Checking attendance for email:", email);
+
+        // Lấy session theo ID
+        const session = await AttendanceSession.findById(id);
+        console.log(session)
+        // Nếu không tìm thấy session
+        if (!session) {
+            return res.status(404).json({
+                success: false,
+                message: 'Attendance session not found',
+            });
+        }
+
+        // Kiểm tra xem email có trong danh sách nonAttendees không
+        const nonAttendee = session.nonAttendees.find(
+            (nonAttendee) => nonAttendee.email === email
+        );
+
+        if (!nonAttendee) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email not in non-attendance list',
+            });
+        }
+
+        // Loại email khỏi danh sách nonAttendees
+        session.nonAttendees = session.nonAttendees.filter(
+            (nonAttendee) => nonAttendee.email !== email
+        );
+
+        // Thêm email vào danh sách attendees với timestamp hiện tại
+        session.attendees.push({ email, timestamp: new Date() });
+
+        // Lưu cập nhật vào cơ sở dữ liệu
+        await session.save();
+
+        // Trả về phản hồi thành công
+        return res.status(200).json({
+            success: true,
+            message: 'Attendance updated successfully',
+            session,
+        });
+    } catch (error) {
+        console.error('Error from checkAttendance:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+};
+
 
 export const getAllAttendances = [authMiddleware, async (req, res) => {
     const {id} = req.params
@@ -287,7 +343,7 @@ export const getAttendance = [authMiddleware, async (req, res) => {
 
         // Tạo QR Code URL
         const qrData = `http://localhost:5173/attendance/form/${attendance._id}`;
-
+        const classroom = await Classroom.findById(attendance.classroomId)
         // Trả về kết quả
         return res.status(200).json({
             success: true,
@@ -297,7 +353,9 @@ export const getAttendance = [authMiddleware, async (req, res) => {
                 nonAttendees: nonAttendeesWithStatus,
                 attendees: attendeesWithDetails,
                 date: attendance.date,
-                qrCode: qrData
+                qrCode: qrData,
+                classOwner: classroom.owner,
+                className: classroom.name
             }
         });
     } catch (error) {

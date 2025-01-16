@@ -24,12 +24,13 @@ import AdminLogin from './components/admin/login/adminLogin.jsx';
 import ClassDetailUsers from './pages/HomePage/ClassDetailUsers.jsx'
 import AttendanceSession from './pages/Attendances/AttendanceSession.jsx'
 import AttendanceForm from './pages/Attendances/AttendanceForm.jsx'
+import NotificationPage from './pages/Submission/NotificationPage.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
   
   // const classroomRoutes = ["/classroom"];
   // const isClassroomRoute = classroomRoutes.includes(location.pathname);
-  const isClassroomRoute = location.pathname.startsWith("/classroom");
+  const isClassroomRoute = location.pathname.startsWith("/classroom") || location.pathname.startsWith("/notifications");
 
   if (isClassroomRoute) {
     // Nếu là route độc lập, render trực tiếp route đó
@@ -45,6 +46,8 @@ function App() {
             <Route path="/classroom/:classId/users" element={<ClassDetailUsers />} />
             <Route path="/classroom/:classId/attendance/:attendanceId" element={<AttendanceSession/>}/>
             <Route path="/classroom/:classId/submission" element={<SubmissionPage/>}/>
+            <Route path="/notifications" element={<NotificationPage/>}/>
+
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />
 
@@ -53,7 +56,7 @@ function App() {
   }
 
   // Các route hoàn toàn độc lập
-  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/", "/attendance/form/:id"];
+  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/", "/attendance/form/:id", "/notifications"];
   // const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
   const isStandaloneRoute = standaloneRoutes.some(route =>
     route === location.pathname || (route.includes("/:id") && location.pathname.startsWith(route.split("/:id")[0]))
@@ -70,6 +73,7 @@ function App() {
           <Route path="/verify" element={<VerifyEmail />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/attendance/form/:id" element={<AttendanceForm/>}/>
+          
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />
       </>

@@ -11,7 +11,7 @@ const ClassCard = ({ classroom }) => {
       <div className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow">
       <div className="flex items-center space-x-4">
         <img
-          src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+          src={classroom.ownerAvatar}
           alt={classroom.name}
           className="w-14 h-14 rounded-full border-2 border-green-500"
         />
