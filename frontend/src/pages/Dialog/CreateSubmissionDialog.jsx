@@ -51,7 +51,7 @@ function CreateSubmissionDialog({ isOpen, onClose, classId, refreshData }) {
   };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div className="bg-white p-6 rounded-lg w-96 ">
+    <div className="bg-white p-6 rounded-lg w-96 w-[50%]">
         <h2 className="text-lg font-semibold mb-4">Create New Submission</h2>
         
         {/* Title Field */}

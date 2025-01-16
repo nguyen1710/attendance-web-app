@@ -14,8 +14,9 @@ const AttendanceSession = () => {
   //   const [classroomId, setClassroomId] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [nonAttendees, setNonAttendees] = useState([])
+  const [className, setClassName] = useState("")
   const [attendees, setAttendees] = useState([])
-
+  const [ owner, setOwner ] = useState("")
   const navigate = useNavigate()
   const {classId,attendanceId } = useParams()
 
@@ -38,8 +39,9 @@ const AttendanceSession = () => {
             setQrCode(response.data.session.qrCode);
             setNonAttendees(response.data.session.nonAttendees)
             setAttendees(response.data.session.attendees)
-
-            toast.success(response.data.message);
+            setOwner(response.data.session.classOwner)
+            setClassName(response.data.session.className)
+            toast.success("Check Attendance successfully!!!");
           } else {
             toast.error(response.data.message);
           }
@@ -50,19 +52,8 @@ const AttendanceSession = () => {
         });
     }
   }, [navigate]);
-  console.log("Attenđesssss",attendees)
-  console.log(nonAttendees)
-  return (
-    // <div>
-    //   <input
-    //     type="text"
-    //     value={classroomId}
-    //     onChange={(e) => setClassroomId(e.target.value)}
-    //     placeholder="Enter Classroom ID"
-    //   />
-    //   {qrCode && <img src={qrCode} alt="QR Code" />}
-    // </div>
 
+  return (
         <>
         <SidebarHomePage />
             <div className='flex-1 overflow-auto relative z-10'>
@@ -92,11 +83,7 @@ const AttendanceSession = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-              <AttendingTable title={"Attendees"} userData={attendees} numberOfStudents={attendees.length + nonAttendees.length}/>
-
-              <AttendingTable title={"Absent"} userData={nonAttendees} numberOfStudents={attendees.length + nonAttendees.length}/>
-        
-        
+              <AttendingTable title={"Attendees"}classOwner={owner} attendeesData={attendees} nonAttendeesData={nonAttendees} className={className}/>
                 </motion.div>
 
 

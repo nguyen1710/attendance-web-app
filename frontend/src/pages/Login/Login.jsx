@@ -25,6 +25,7 @@ function Login() {
         localStorage.setItem("token", response.data.token); // Lưu token JWT
         localStorage.setItem("email", JSON.stringify(response.data.user.email))
         localStorage.setItem("username", JSON.stringify(response.data.user.username))
+        localStorage.setItem("imageUrl", JSON.stringify(response.data.user.imageUrl))
         console.log(response.data.message)
         window.location.href = '/';
       }

@@ -113,7 +113,9 @@ const Header = ({ title }) => {
    [])
     console.log("noti", notifications)
 
-  // const bgNoti
+    const handleRedirect = () => {
+      window.location.href('/notifications'); // Chuyển hướng đến trang /notifications
+  };
   return (
     <header className="max-w-full bg-white text-black">
       <div className="max-w-full mx-auto py-2 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -147,7 +149,7 @@ const Header = ({ title }) => {
                   Notifications
                 </div>
                 <div className="divide-y divide-gray-100">
-                  {notifications.map((noti) => (
+                  {notifications.slice(0, 7).map((noti) => (
                     <a
                       key={noti._id}
                       onClick={async (event) => {
@@ -195,15 +197,20 @@ const Header = ({ title }) => {
                       }
                     </a>
                   ))}
+
                 </div>
+                {notifications.length === 0 ? null : (<div className="w-full hover:underline cursor-pointer px-4 py-2 font-semibold text-gray-700 bg-gray-50 rounded-t-lg rounded-b-lg " >
+                  <a href="/notifications">View all</a>
+                </div>)}
               </div>
+              
             )}
           </div>
 
           {/* Profile Dropdown */}
           <div className="relative">
             <img
-              src={imageUrl}
+              src={imageUrl.replace(/"/g, "")}
               alt="Profile"
               className="w-6 h-6 rounded-full object-cover border border-gray-300 cursor-pointer"
               onClick={() => setIsDropdownOpen((prev) => !prev)}

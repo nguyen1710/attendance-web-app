@@ -11,6 +11,18 @@ const userSchema = new mongoose.Schema({
         type:String,
         require:true
     },
+    phone:{ 
+        type: String, 
+        required: false 
+    },
+    address:{ 
+        type: String, 
+        required: false 
+    },
+    imageUrl:{ 
+        type: String, 
+        required: false 
+    },
     username: {
         type:String,
         require: true
@@ -31,17 +43,20 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    status:{
+        type: String,
+        default: "Active"
+    },
     role:{
         type: String, 
         // enum: ["admin", "teacher", "student"], 
-        default: "student"
+        default: "admin"
     },
     googleId: { type: String, unique: true }, // Thêm trường googleId
     resetPassordToken: String,
     resetPassordExpiresAt: Date,
     verificationToken: String,
     verificationTokenExpiresAt: Date,
-
 }, {timestamp:true})
 
 const User = mongoose.model('User', userSchema)

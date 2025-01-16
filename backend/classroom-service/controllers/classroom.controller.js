@@ -13,10 +13,6 @@ export const createClassroom = [authMiddleware , async (req, res) => {
             return res.status(400).json({ success: false, message: 'Classroom name is required' });
         }
 
-        if(req.userRole != "teacher") {
-            return res.status(403).json({ success: false, message: "Only teacher have permission" });
-        }
-
         const classroom = new Classroom({
             owner: req.userEmail,
             name: name,
@@ -38,48 +34,6 @@ export const createClassroom = [authMiddleware , async (req, res) => {
 }]
 
 export const getAllClassrooms = [authMiddleware, async (req, res) => {
-    // try {
-    //     const userEmail = req.userEmail
-    //     const userRole = req.userRole
-    //     // console.log(typeof(userId))
-    //     if (userRole == 'teacher') {
-    //         const classrooms = await Classroom.find({teacherEmails: {$in : [userEmail]}})
-    //         console.log(req.userEmail)
-    //         if(classrooms.length == 0) {
-    //             return res.status(404).json({ success: false, message: 'Class not found' });
-    //         }
-    
-    //         return res.status(200).json({
-    //             success: true,
-    //             message: 'Get classes successfully',
-    //             classes: classrooms
-    //         })
-    //     }
-
-    //     // const studentId = new mongoose.Types.ObjectId(req.userId);
-    //     const classrooms = await Classroom.find({
-    //         studentEmails: { 
-    //             $all: [userEmail]
-    //         }
-    //     })
-        
-    //     console.log(classrooms)
-    //     if(classrooms.length == 0) {
-    //         return res.status(200).json({ success: true, message: 'Class not found' });
-    //     }
-
-    //     return res.status(200).json({
-    //         success: true,
-    //         message: 'Get classes successfully',
-    //         classes: classrooms
-    //     })
-        
-        
-        
-    // } catch (error) {
-    //     console.error('Error get classroom:', error.message);
-    //     return res.status(500).json({ success: false, message: 'Internal server error' });
-    // }
     try {
         const userEmail = req.userEmail;
 
@@ -88,7 +42,7 @@ export const getAllClassrooms = [authMiddleware, async (req, res) => {
             $or: [
                 { teacherEmails: { $in: [userEmail] } }, // Là teacher
                 { studentEmails: { $all: [userEmail] } }, // Là student
-                { ownerEmail: userEmail } // Là owner
+                { owner: userEmail } // Là owner
             ]
         });
 
@@ -101,11 +55,22 @@ export const getAllClassrooms = [authMiddleware, async (req, res) => {
             });
         }
 
+         // Lấy thông tin avatar của owner cho mỗi lớp
+         const populatedClassrooms = await Promise.all(
+            classrooms.map(async (classroom) => {
+                const user = await User.findOne({ email: classroom.owner });
+                return {
+                    ...classroom._doc, // Chuyển đổi dữ liệu lớp học từ mongoose document
+                    ownerAvatar: user?.imageUrl || null, // Thêm trường ownerAvatar
+                };
+            })
+        );
+
         // Trả về danh sách các lớp học
         return res.status(200).json({
             success: true,
             message: 'Get classes successfully',
-            classes: classrooms
+            classes: populatedClassrooms
         });
 
     } catch (error) {

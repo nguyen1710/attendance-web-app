@@ -11,6 +11,18 @@ const userSchema = new mongoose.Schema({
         type:String,
         require:true
     },
+    phone:{ 
+        type: String, 
+        required: false 
+    },
+    address:{ 
+        type: String, 
+        required: false 
+    },
+    imageUrl:{ 
+        type: String, 
+        required: false 
+    },
     username: {
         type:String,
         require: true
@@ -30,6 +42,10 @@ const userSchema = new mongoose.Schema({
     isVerified:{
         type: Boolean,
         default: false
+    },
+    status:{
+        type: String,
+        default: "Active"
     },
     role:{
         type: String, 

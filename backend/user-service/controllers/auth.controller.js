@@ -159,6 +159,7 @@ export const login = async (req, res) => {
                 createAt: user.createAt,
                 updatedAt: user.updatedAt,
                 role: user.role.role,  // Đảm bảo bạn trả về trường role ở đây
+                imageUrl: user.imageUrl
                 }
             }
         )

@@ -1,5 +1,5 @@
 import express from "express"
-import { createAttendance, getAllAttendances, getAttendance, getFormAttendance, checkAttendance} from "../controllers/attendance.controller.js"
+import { createAttendance, getAllAttendances, getAttendance, getFormAttendance, checkAttendance, checkAttendanceDirectly} from "../controllers/attendance.controller.js"
 import cors from "cors"
 const router = express.Router()
 const corsOptionsPublic = {
@@ -12,6 +12,8 @@ const corsOptionsPublic = {
 router.post("/createAttandence", createAttendance)
 router.get("/getAllAttendances/:id", getAllAttendances)
 router.get("/getAttendance/:id", getAttendance)
+router.post("/checkAttendance/:id", checkAttendanceDirectly)
+
 router.get("/getFormAttend/:id", cors(corsOptionsPublic), getFormAttendance)
 router.post("/checkFormAttend/:id", cors(corsOptionsPublic), checkAttendance);
 
