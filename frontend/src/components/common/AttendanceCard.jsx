@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { BookText } from 'lucide-react';
-const ClassCard = ({ name, owner, color, desc }) => {
+const ClassCard = ({ name, owner, color, desc, method }) => {
 	return (
 		<motion.div
 			className='bg-white backdrop-blur-md overflow-hidden shadow-lg rounded-xl border-gray-900 mb-3'
@@ -12,7 +12,9 @@ const ClassCard = ({ name, owner, color, desc }) => {
 					{owner}
 				</span>
 				<p className='mt-1 text-3xl font-semibold text-black'>{name}</p>
-				<p className='mt-1  font-semibold text-black'>Description: {desc}</p>
+				<p className='mt-1  font-semi text-black'>Description: {desc}</p>
+				<p className='mt-1  font-semi text-black'>Method: {method ? method : "Normal"}</p>
+
 			</div>
 		</motion.div>
 	);

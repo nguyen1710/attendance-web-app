@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-function CreateAttendance({ isOpen, onClose, classroomId, refreshData }) {
+// eslint-disable-next-line react/prop-types
+function CreateAttendance({ isOpen, onClose, classroomId, method }) {
   const [name, setName] = useState("")
   const [desc, setDesc] = useState("")
   console.log("id class:",classroomId)
@@ -12,7 +13,7 @@ function CreateAttendance({ isOpen, onClose, classroomId, refreshData }) {
       // Gọi API để xử lý email
       const response = await axios.post(
         'http://localhost:4000/attandence-service/api/attendances/createAttandence', // Địa chỉ API của bạn
-        { classroomId, name, desc }, // Gửi email trong body của yêu cầu
+        { classroomId, name, desc, method }, // Gửi email trong body của yêu cầu
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Nếu cần gửi token xác thực
@@ -26,9 +27,7 @@ function CreateAttendance({ isOpen, onClose, classroomId, refreshData }) {
         setName(""); // Reset dữ liệu form
         setDesc("");
         // onClose(); // Đóng dialog
-        // window.location.reload(); // Làm mới toàn bộ trang
-        refreshData();
-        onClose
+        window.location.reload(); // Làm mới toàn bộ trang
       }
     } catch (error) {
       console.error('Error adding attend:', error);
@@ -38,7 +37,7 @@ function CreateAttendance({ isOpen, onClose, classroomId, refreshData }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
     <div className="bg-white p-6 rounded-lg w-96">
-      <h2 className="text-lg font-semibold mb-4">Create New Attendance</h2>
+      <h2 className="text-lg font-semibold mb-4">Create New {method} Attendance</h2>
       <div className="mb-4">
         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
         <input

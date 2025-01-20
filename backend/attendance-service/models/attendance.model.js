@@ -5,6 +5,7 @@ const attendanceSessionSchema = new mongoose.Schema({
   owner: {type: String},
   name: {type: String},
   desc: {type:String},
+  method: {type:String, defalut: 'Normal'},
   date: { type: Date, default: Date.now },
   attendees: [{ email: String, photo: String , timestamp: Date}],
   nonAttendees: [

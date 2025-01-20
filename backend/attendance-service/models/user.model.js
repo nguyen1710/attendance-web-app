@@ -47,6 +47,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "Active"
     },
+    idCard: {
+        type:String
+    },
     role:{
         type: String, 
         // enum: ["admin", "teacher", "student"], 
