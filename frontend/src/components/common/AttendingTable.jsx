@@ -16,28 +16,27 @@ import * as XLSX from "xlsx";
 // 	{ id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Moderator", status: "Active" },
 // ];
 
-const UsersTable = ({ title, attendeesData, nonAttendeesData, classOwner, className }) => {
+const UsersTable = ({
+  title,
+  attendeesData,
+  nonAttendeesData,
+  classOwner,
+  className,
+  methodAttend,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const { attendanceId } = useParams();
   // const [filteredUsers, setFilteredUsers] = useState(userData)
   const [attendees, setAttendees] = useState();
   const [nonAttendees, setNonAttendees] = useState();
-
+  const [idCard, setIdCard] = useState()
+  const [method, setMethod] = useState()
   useEffect(() => {
     setAttendees(attendeesData);
     setNonAttendees(nonAttendeesData);
-  }, [attendeesData, nonAttendeesData]);
-  // console.log("IDDD",attendanceId)
+    setMethod(methodAttend)
+  }, [attendeesData, nonAttendeesData, methodAttend]);
 
-  // console.log("Studnet",filteredUsers)
-  // const handleSearch = (e) => {
-  // 	const term = e.target.value.toLowerCase();
-  // 	setSearchTerm(term);
-  // 	const filtered = userData.filter(
-  // 		(user) => user.name.toLowerCase().includes(term) || user.email.toLowerCase().includes(term)
-  // 	);
-  // 	setFilteredUsers(filtered);
-  // };
   const numberOfStudents = attendeesData.length + nonAttendeesData.length;
 
   function formatDateTime(isoString) {
@@ -79,6 +78,47 @@ const UsersTable = ({ title, attendeesData, nonAttendeesData, classOwner, classN
       });
   };
 
+  const handleInputIdCardChange = (e) => {
+    const value = e.target.value;
+    setIdCard(value);
+    console.log(value)
+    // Kiểm tra nếu giá trị có 10 ký tự
+    if (value.length === 10) {
+      // Gọi API ở đây
+      handleCheckAttendanceByIdCard(value);
+    }
+  };
+
+  const handleCheckAttendanceByIdCard = async (value) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `http://localhost:4000/attandence-service/api/attendances/checkAttendanceByIdCard/${attendanceId}`,
+        { idCard: value },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+
+      if (response.data.success) {
+        // setSuccessMessage(response.data.message);
+        // Optionally, you can store the user data in state or localStorage
+        toast.success(response.data.message);
+        setIdCard("")
+        refreshData();
+        // navigate('/')
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+      setIdCard("")
+      console.error("Error data data:", error); // Bắt lỗi nếu có
+    }
+    // console.log(email)
+  };
+
   const handleCheckAttend = async (email) => {
     try {
       const token = localStorage.getItem("token");
@@ -108,52 +148,98 @@ const UsersTable = ({ title, attendeesData, nonAttendeesData, classOwner, classN
   };
 
   const checkPermission = (excuse) => {
-    if(excuse == true) {
-        return "Absent with Permission"
+    if (excuse == true) {
+      return "Absent with Permission";
     }
-    return "Absent no with Permission"
-  }
+    return "Absent no with Permission";
+  };
 
   const exportToExcel = () => {
     // Chuẩn bị dữ liệu
     const data = [
-        ...attendeesData.map((student) => ({
-            Name: student.username,
-            Email: student.email,
-            "Attendance Time": formatDateTime(student.timestamp),
-            "Excuse": "Attend", // Đã điểm danh thì không có phép
-        })),
-        ...nonAttendeesData.map((student) => ({
-            Name: student.username,
-            Email: student.email,
-            "Attendance Time": "N/A",
-            "Excuse": checkPermission(student.excused), // Không điểm danh thì có phép
-        })),
+      ...attendeesData.map((student) => ({
+        Name: student.username,
+        Email: student.email,
+        "Attendance Time": formatDateTime(student.timestamp),
+        Excuse: "Attend", // Đã điểm danh thì không có phép
+      })),
+      ...nonAttendeesData.map((student) => ({
+        Name: student.username,
+        Email: student.email,
+        "Attendance Time": "N/A",
+        Excuse: checkPermission(student.excused), // Không điểm danh thì có phép
+      })),
     ];
 
     // Tạo WorkBook và WorkSheet
     const worksheet = XLSX.utils.json_to_sheet(data);
-    XLSX.utils.sheet_add_aoa(worksheet, [[`Attendance Report: "${className}"`]], { origin: "A1" });
+    XLSX.utils.sheet_add_aoa(
+      worksheet,
+      [[`Attendance Report: "${className}"`]],
+      { origin: "A1" }
+    );
     worksheet["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }]; // Hợp nhất từ A1 đến D1
 
-    XLSX.utils.sheet_add_json(worksheet, data, { origin: "A2", skipHeader: false });
+    XLSX.utils.sheet_add_json(worksheet, data, {
+      origin: "A2",
+      skipHeader: false,
+    });
 
     const colWidths = Object.keys(data[0]).map((key) => ({
-        wch: Math.max(
-            key.length, // Độ dài tiêu đề cột
-            ...data.map((row) => (row[key] ? row[key].toString().length : 0)) // Độ dài dữ liệu
-        ),
+      wch: Math.max(
+        key.length, // Độ dài tiêu đề cột
+        ...data.map((row) => (row[key] ? row[key].toString().length : 0)) // Độ dài dữ liệu
+      ),
     }));
     worksheet["!cols"] = colWidths;
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
 
     // Xuất file
-    XLSX.writeFile(workbook, `Attendance_${className}_${new Date().toISOString().split("T")[0]}.xlsx`);
-};
-
+    XLSX.writeFile(
+      workbook,
+      `Attendance_${className}_${new Date().toISOString().split("T")[0]}.xlsx`
+    );
+  };
+  console.log(nonAttendeesData);
   return (
     <>
+      {method === "IDCard" ? (
+        <div className="flex justify-end ">
+          <div className="flex-col">
+            <label
+              htmlFor="IDCard"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Card Input here
+            </label>
+            <div className="relative mb-6">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 16"
+                >
+                  <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
+                  <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                maxLength="10"
+                id="IDCard"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="ID"
+                value={idCard}
+                onChange={handleInputIdCardChange}
+              />
+            </div>
+
+          </div>
+        </div>
+      ) : null}
       <div className="relative flex flex-col w-full h-full text-slate-700 bg-white shadow-md rounded-xl bg-clip-border">
         <div className="relative mx-4 mt-4 overflow-hidden text-slate-700 bg-white rounded-none bg-clip-border">
           <div className="flex items-center justify-between ">
@@ -227,7 +313,7 @@ const UsersTable = ({ title, attendeesData, nonAttendeesData, classOwner, classN
                       <td className="p-4 border-b border-slate-200">
                         <div className="flex items-center gap-3">
                           <img
-                            src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+                            src={user.imageUrl}
                             alt="John Michael"
                             className="relative inline-block h-9 w-9 !rounded-full object-cover object-center"
                           />
@@ -358,7 +444,7 @@ const UsersTable = ({ title, attendeesData, nonAttendeesData, classOwner, classN
                       <td className="p-4 border-b border-slate-200">
                         <div className="flex items-center gap-3">
                           <img
-                            src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+                            src={user.imageUrl}
                             alt="John Michael"
                             className="relative inline-block h-9 w-9 !rounded-full object-cover object-center"
                           />
@@ -429,18 +515,16 @@ const UsersTable = ({ title, attendeesData, nonAttendeesData, classOwner, classN
         </div>
       </div>
       <div className="relative w-full">
-
-      <button
-        type="button"
-        onClick={exportToExcel}
-        // disabled={isUploading}
-        className=" absolute right-0 text-center text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-      >
-        Export Exel
-        {/* {isUploading ? "Uploading..." : "Import Excel Students"} */}
-      </button>
+        <button
+          type="button"
+          onClick={exportToExcel}
+          // disabled={isUploading}
+          className=" absolute right-0 text-center text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        >
+          Export Exel
+          {/* {isUploading ? "Uploading..." : "Import Excel Students"} */}
+        </button>
       </div>
-
     </>
   );
 };

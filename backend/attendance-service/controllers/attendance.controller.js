@@ -10,7 +10,7 @@ import { Submission } from "../models/submission.model.js"
 
 export const createAttendance = [authMiddleware, async (req, res) => {
     const {classroomId} = req.body
-    const {name, desc} = req.body
+    const {name, desc, method} = req.body
     try {
         if(!name || !desc) {
             return res.status(400).json({ success: false, message: 'Name and desc is required' });
@@ -38,17 +38,21 @@ export const createAttendance = [authMiddleware, async (req, res) => {
         // Lấy danh sách email có đơn nghỉ phép hợp lệ
         const excusedEmails = approvedSubmissions.map(submission => submission.userEmail);
 
+       
+        // console.log(userMap["doxiyo2971@kelenson.com"])
         // Tạo danh sách nonAttendees, đánh dấu "excused" cho user có đơn nghỉ phép
         const nonAttendees = emails.map(email => ({
             email,
             excused: excusedEmails.includes(email),
         }));
 
+
         const session = new AttendanceSession({
             owner: req.userEmail,
             classroomId,
             name,
             desc,
+            method,
             nonAttendees: nonAttendees,
           });
       
@@ -201,6 +205,71 @@ export const checkAttendanceDirectly = async (req, res) => {
     }
 };
 
+export const checkAttendanceByIdCard = async (req, res) => {
+    const { id } = req.params; // ID của session
+    const { idCard } = req.body; // Email của người cần cập nhật
+
+    try {
+        console.log("Checking attendance for idCard:", idCard);
+
+        // Lấy session theo ID
+        const session = await AttendanceSession.findById(id);
+        console.log(session)
+        // Nếu không tìm thấy session
+        if (!session) {
+            return res.status(404).json({
+                success: false,
+                message: 'Attendance session not found',
+            });
+        }
+
+        const user = await User.findOne({idCard: idCard})
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+        const email = user.email
+
+        // Kiểm tra xem email có trong danh sách nonAttendees không
+        const nonAttendee = session.nonAttendees.find(
+            (nonAttendee) => nonAttendee.email === email
+        );
+
+        if (!nonAttendee) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email not in non-attendance list',
+            });
+        }
+
+        // Loại email khỏi danh sách nonAttendees
+        session.nonAttendees = session.nonAttendees.filter(
+            (nonAttendee) => nonAttendee.email !== email
+        );
+
+        // Thêm email vào danh sách attendees với timestamp hiện tại
+        session.attendees.push({ email, timestamp: new Date() });
+
+        // Lưu cập nhật vào cơ sở dữ liệu
+        await session.save();
+
+        // Trả về phản hồi thành công
+        return res.status(200).json({
+            success: true,
+            message: 'Attendance updated successfully',
+            session,
+        });
+    } catch (error) {
+        console.error('Error from checkAttendance:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+};
+
 
 export const getAllAttendances = [authMiddleware, async (req, res) => {
     const {id} = req.params
@@ -218,90 +287,6 @@ export const getAllAttendances = [authMiddleware, async (req, res) => {
     }
 }]
 
-//   // Function to generate QR code with logo (assuming logo path is 'path/to/your/logo.png')
-//   async function generateQRCodeWithLogo(url) {
-//     try {
-//         let qrCodeData;
-//         try {
-//             qrCodeData = await QRCode.toDataURL(url, { errorCorrectionLevel: 'H' });
-//             console.log("qrCodeData:", qrCodeData.slice(0, 100)); // Chỉ in 100 ký tự đầu để tránh in quá nhiều
-//         } catch (qrCodeError) {
-//             console.error("Lỗi tạo QR code:", qrCodeError);
-//             return null;
-//         }
-
-//         const qrCode = await Jimp.read(Buffer.from(qrCodeData.split(',')[1], 'base64'));
-//         console.log("qrCode:", qrCode);
-//         const __filename = fileURLToPath(import.meta.url);
-//         const __dirname = path.dirname(__filename);
-//         const logoPath = path.join(__dirname, '..', 'public', 'img', 'logo.png');
-//         console.log("logoPath:", logoPath);
-//         if (!fs.existsSync(logoPath)) {
-//             throw new Error(`Lỗi: File logo không tồn tại tại đường dẫn: ${logoPath}`);
-//         }
-
-//         const logo = await Jimp.read(logoPath);
-//         console.log("logo:", logo);
-//         if (!logo) {
-//             throw new Error(`Không thể đọc logo tại đường dẫn: ${logoPath}`);
-//         }
-//         if (!qrCode) {
-//             throw new Error(`Không thể tạo qrCode`);
-//         }
-
-//         logo.resize(qrCode.getWidth() / 3, AUTO);
-
-//         const x = (qrCode.getWidth() - logo.getWidth()) / 2;
-//         const y = (qrCode.getHeight() - logo.getHeight()) / 2;
-
-//         qrCode.composite(logo, x, y);
-
-//         return await qrCode.getBase64Async(MIME_PNG);
-//     } catch (error) {
-//         console.error('Lỗi tạo mã QR code với logo:', error);
-//         return null;
-//     }
-//   }
-
-const generateQRCode = async (qrData, logoPath) => {
-    try {
-        const qrCodeOptions = {
-            errorCorrectionLevel: 'H', // Mức độ sửa lỗi (cao nhất)
-        };
-
-        const qrCodeDataURL = await QRCode.toDataURL(qrData, qrCodeOptions);
-        const qrCodeImage = await loadImage(qrCodeDataURL);
-
-        const canvas = createCanvas(qrCodeImage.width, qrCodeImage.height);
-        const ctx = canvas.getContext('2d');
-
-        ctx.drawImage(qrCodeImage, 0, 0);
-
-        if (logoPath) {
-            try {
-                const logo = await loadImage(logoPath);
-
-                // Tính toán vị trí và kích thước logo
-                const logoSize = Math.min(canvas.width, canvas.height) * 0.25; // 25% kích thước QR code
-                const x = (canvas.width - logoSize) / 2;
-                const y = (canvas.height - logoSize) / 2;
-
-                ctx.drawImage(logo, x, y, logoSize, logoSize);
-            } catch (logoError) {
-                console.error("Lỗi khi tải logo:", logoError);
-                // Xử lý lỗi, ví dụ: bỏ qua logo hoặc trả về lỗi
-            }
-        }
-
-        const qrCodeBase64 = canvas.toDataURL('image/png');
-        return qrCodeBase64;
-
-    } catch (error) {
-        console.error('Lỗi tạo mã QR:', error);
-        return null;
-    }
-};
-
 export const getAttendance = [authMiddleware, async (req, res) => {
     const { id } = req.params;
     try {
@@ -318,9 +303,15 @@ export const getAttendance = [authMiddleware, async (req, res) => {
 
         // Tìm thông tin người dùng từ email
         const nonAttendees = await User.find({ email: { $in: nonAttendeesEmails } })
-                                       .select('email username');
+                                       .select('email username imageUrl');
         const attendees = await User.find({ email: { $in: attendeesEmails } })
-                                    .select('email username');
+                                    .select('email username imageUrl');
+
+        // const users = await User.find({ email: { $in: emails } }); // Giả sử bảng User chứa email và imageUrl
+        // const userMap = users.reduce((map, user) => {
+        //     map[user.email] = user.imageUrl || null; // Lưu imageUrl hoặc null
+        //     return map;
+        // }, {});
 
         // Thêm thông tin `excused` vào danh sách nonAttendees
         const nonAttendeesWithStatus = attendance.nonAttendees.map(nonAttendee => {
@@ -328,6 +319,7 @@ export const getAttendance = [authMiddleware, async (req, res) => {
             return {
                 email: userInfo?.email || nonAttendee.email,
                 username: userInfo?.username || null,
+                imageUrl: userInfo?.imageUrl || null,
                 excused: nonAttendee.excused
             };
         });
@@ -337,12 +329,15 @@ export const getAttendance = [authMiddleware, async (req, res) => {
             return {
                 email: attendee.email,
                 username: userInfo?.username || null,
+                imageUrl: userInfo?.imageUrl || null,
                 timestamp: attendee.timestamp,
             };
         });
 
+        console.log(nonAttendeesWithStatus)
+
         // Tạo QR Code URL
-        const qrData = `http://localhost:5173/attendance/form/${attendance._id}`;
+        const qrData = attendance.method === "QR" ? `http://localhost:5173/attendance/form/${attendance._id}` : null;
         const classroom = await Classroom.findById(attendance.classroomId)
         // Trả về kết quả
         return res.status(200).json({
@@ -355,7 +350,8 @@ export const getAttendance = [authMiddleware, async (req, res) => {
                 date: attendance.date,
                 qrCode: qrData,
                 classOwner: classroom.owner,
-                className: classroom.name
+                className: classroom.name,
+                method: attendance.method
             }
         });
     } catch (error) {
