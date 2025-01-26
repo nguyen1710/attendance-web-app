@@ -21,7 +21,7 @@ function NotificationPage() {
         } else {
           // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
           axios
-            .get(`http://localhost:4000/attandence-service/api/submissions/getNotification`, {
+            .get(`http://localhost:4000/attendance-service/api/submissions/getNotification`, {
               headers: {
                 Authorization: `Bearer ${token}`, // Gửi token trong header
               },

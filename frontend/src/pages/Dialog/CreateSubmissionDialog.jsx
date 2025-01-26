@@ -19,7 +19,7 @@ function CreateSubmissionDialog({ isOpen, onClose, classId, refreshData }) {
     try {
       // Gọi API để xử lý email
       const response = await axios.post(
-        `http://localhost:4000/attandence-service/api/submissions/createSubmission/${classId}`, // Địa chỉ API của bạn
+        `http://localhost:4000/attendance-service/api/submissions/createSubmission/${classId}`, // Địa chỉ API của bạn
         { title, content, evidence, fromDate, toDate }, // Gửi email trong body của yêu cầu
         {
           headers: {

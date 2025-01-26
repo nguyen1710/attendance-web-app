@@ -67,7 +67,7 @@ function ClassDetail() {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
         .get(
-          `http://localhost:4000/attandence-service/api/attendances/getAllAttendances/${classId}`,
+          `http://localhost:4000/attendance-service/api/attendances/getAllAttendances/${classId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gửi token trong header
@@ -146,7 +146,7 @@ function ClassDetail() {
             refreshData={() => {
               axios
                 .get(
-                  `http://localhost:4000/attandence-service/api/attendances/getAllAttendances/${classId}`,
+                  `http://localhost:4000/attendance-service/api/attendances/getAllAttendances/${classId}`,
                   {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,25 +1,29 @@
 // export default Header;
-import { Bell, User, Settings, LogOut } from "lucide-react";
+import { Bell, User, Settings, LogOut, Gem } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 // import {io} from "socket.io-client"
-import socket from "~/socketio/socket.js"
+import socket from "~/socketio/socket.js";
 import axios from "axios";
+import {  useNavigate } from "react-router-dom";
 const Header = ({ title }) => {
+  const navigate = useNavigate()
   const [hasNotification, setHasNotification] = useState(true);
   const [isNotiOpen, setIsNotiOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [username] = useState(localStorage.getItem("username") || "Guest");
-  const [email] = useState(localStorage.getItem("email") || "guest@example.com");
+  const [email] = useState(
+    localStorage.getItem("email") || "guest@example.com"
+  );
   const [imageUrl] = useState(
     localStorage.getItem("imageUrl") || "https://via.placeholder.com/150"
   );
-  const [notifications, setNotifications] = useState([])
+  const [notifications, setNotifications] = useState([]);
 
   const notiRef = useRef(null); // Tạo ref cho vùng thông báo
 
   // Lắng nghe sự kiện "notification" từ server
   useEffect(() => {
-    socket.on('notification', (data) => {
+    socket.on("notification", (data) => {
       // Thêm thông báo mới vào mảng notifications
       setNotifications((prevNotifications) => [
         {
@@ -28,19 +32,18 @@ const Header = ({ title }) => {
           title: data.title,
           classId: data.classId,
           className: data.className,
-          status: 'Unread', // Mặc định là chưa đọc
-          isResponse: data.isResponse
+          status: "Unread", // Mặc định là chưa đọc
+          isResponse: data.isResponse,
         },
         ...prevNotifications,
       ]);
-      setHasNotification(true)
+      setHasNotification(true);
     });
     // Dọn dẹp sự kiện khi component bị hủy
     return () => {
-      socket.off('notification');
+      socket.off("notification");
     };
   }, []);
-
 
   // Xử lý sự kiện click ngoài thành phần thông báo
   useEffect(() => {
@@ -57,69 +60,68 @@ const Header = ({ title }) => {
   }, []);
 
   socket.on("notification", (data) => {
-    console.log(data)
-  })
+    console.log(data);
+  });
   const handleMarkAsRead = async (notiId) => {
     event.preventDefault(); // Ngăn chuyển trang ngay lập tức
 
-    console.log(notiId)
+    console.log(notiId);
     setNotifications((prevNotis) =>
       prevNotis.map((noti) =>
         noti._id === notiId ? { ...noti, status: "Read" } : noti
       )
     );
-  
+
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4000/attandence-service/api/submissions/getNotification`,
+        `http://localhost:4000/attendance-service/api/submissions/getNotification`,
         { notiId }, // Gửi notiId để cập nhật trạng thái
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-
+      );
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
   };
-  
-  
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-          // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
-      axios
-        .get(`http://localhost:4000/attandence-service/api/submissions/getNotification`, {
+    // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
+    axios
+      .get(
+        `http://localhost:4000/attendance-service/api/submissions/getNotification`,
+        {
           headers: {
             Authorization: `Bearer ${token}`, // Gửi token trong header
           },
-        })
-        .then((response) => {
-          if (response.data.success) {
-            const sortedNoti =  response.data.notifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+      )
+      .then((response) => {
+        if (response.data.success) {
+          const sortedNoti = response.data.notifications.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
 
-            setNotifications(sortedNoti);
-          } else {
-            console.log(response.data.error)
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        });
-    },
-   [])
-    console.log("noti", notifications)
+          setNotifications(sortedNoti);
+        } else {
+          console.log(response.data.error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  console.log("noti", notifications);
 
-    const handleRedirect = () => {
-      window.location.href('/notifications'); // Chuyển hướng đến trang /notifications
-  };
   return (
     <header className="max-w-full bg-white text-black">
       <div className="max-w-full mx-auto py-2 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-black">{title}  </h1>
+        <h1 className="text-2xl font-semibold text-black">{title} </h1>
 
         <div className="flex items-center gap-6">
           {/* Notification Bell */}
@@ -158,52 +160,61 @@ const Header = ({ title }) => {
                         // Chuyển hướng sau khi cập nhật
                         window.location.href = `http://localhost:5173/classroom/${noti.classId}/submission`;
                       }}
-                      className={`flex cursor-pointer items-center px-4 cursor py-3 ${noti.status === "Unread" ? "bg-gray-200 hover:bg-gray-300" : "hover:bg-gray-100"} transition duration-200`}
+                      className={`flex cursor-pointer items-center px-4 cursor py-3 ${
+                        noti.status === "Unread"
+                          ? "bg-gray-200 hover:bg-gray-300"
+                          : "hover:bg-gray-100"
+                      } transition duration-200`}
                     >
                       <img
                         className="w-11 h-11 rounded-full flex-shrink-0"
                         src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
                         alt={`${noti.receiver}'s profile`}
                       />
-                      {
-                        noti.isResponse ? (<div className="ml-3 w-full">
+                      {noti.isResponse ? (
+                        <div className="ml-3 w-full">
                           <div className="text-sm text-gray-500">
-                            User {" "}<span className="font-semibold text-gray-900">
+                            User{" "}
+                            <span className="font-semibold text-gray-900">
                               {noti.sender}
-                            </span>{" "} has responsed your
-                            {" "}<span className="font-semibold text-gray-900">
-                              {noti.title}
-                            </span>{" "} at class 
-                            {" "}<span className="font-semibold text-gray-900">
-                              {noti.className}
                             </span>{" "}
-                          </div>
-                        </div>) : (
-                          <div className="ml-3 w-full">
-                          <div className="text-sm text-gray-500">
-                            User {" "}<span className="font-semibold text-gray-900">
-                              {noti.sender}
-                            </span>{" "} has applied
-                            {" "}<span className="font-semibold text-gray-900">
+                            has responsed your{" "}
+                            <span className="font-semibold text-gray-900">
                               {noti.title}
-                            </span>{" "} to class 
-                            {" "}<span className="font-semibold text-gray-900">
+                            </span>{" "}
+                            at class{" "}
+                            <span className="font-semibold text-gray-900">
                               {noti.className}
                             </span>{" "}
                           </div>
                         </div>
-                        )
-
-                      }
+                      ) : (
+                        <div className="ml-3 w-full">
+                          <div className="text-sm text-gray-500">
+                            User{" "}
+                            <span className="font-semibold text-gray-900">
+                              {noti.sender}
+                            </span>{" "}
+                            has applied{" "}
+                            <span className="font-semibold text-gray-900">
+                              {noti.title}
+                            </span>{" "}
+                            to class{" "}
+                            <span className="font-semibold text-gray-900">
+                              {noti.className}
+                            </span>{" "}
+                          </div>
+                        </div>
+                      )}
                     </a>
                   ))}
-
                 </div>
-                {notifications.length === 0 ? null : (<div className="w-full hover:underline cursor-pointer px-4 py-2 font-semibold text-gray-700 bg-gray-50 rounded-t-lg rounded-b-lg " >
-                  <a href="/notifications">View all</a>
-                </div>)}
+                {notifications.length === 0 ? null : (
+                  <div className="w-full hover:underline cursor-pointer px-4 py-2 font-semibold text-gray-700 bg-gray-50 rounded-t-lg rounded-b-lg ">
+                    <a href="/notifications">View all</a>
+                  </div>
+                )}
               </div>
-              
             )}
           </div>
 
@@ -241,6 +252,12 @@ const Header = ({ title }) => {
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
                     <Settings className="h-4 w-4 text-gray-600" />
                     Settings
+                  </li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2" >
+                    <a className="flex gap-2" href="/upgrade">
+                      <Gem className="h-4 w-4 text-gray-600 " />
+                      Upgrade
+                    </a>
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
                     <span className="h-3 w-3 rounded-full bg-green-500"></span>

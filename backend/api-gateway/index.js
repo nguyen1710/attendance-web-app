@@ -2,11 +2,17 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import express from 'express'
 import { Server } from "socket.io";
 import http from 'http'
-
+import cors from 'cors'
 const app = express()
 
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true, // Cho phép cookie
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
+
 app.use('/user-service', createProxyMiddleware({
-    target: 'http://localhost:3000',
+    target: 'http://user-service:3000',
     pathRewrite: {
         '^/user-service': ''
     },
@@ -23,7 +29,7 @@ app.use('/user-service', createProxyMiddleware({
 }))
 
 app.use('/classroom-service', createProxyMiddleware({
-    target: 'http://localhost:3001',
+    target: 'http://classroom-service:3001',
     pathRewrite: {
         '^/classroom-service': ''
     },
@@ -40,7 +46,7 @@ app.use('/classroom-service', createProxyMiddleware({
 }))
 
 app.use('/admin-service', createProxyMiddleware({
-    target: 'http://localhost:3002',
+    target: 'http://admin-service:3002',
     pathRewrite: {
         '^/admin-service': ''
     },
@@ -56,10 +62,10 @@ app.use('/admin-service', createProxyMiddleware({
     }
 }))
 
-app.use('/attandence-service', createProxyMiddleware({
-    target: 'http://localhost:3003',
+app.use('/attendance-service', createProxyMiddleware({
+    target: 'http://attendance-service:3003',
     pathRewrite: {
-        '^/attandence-service': ''
+        '^/attendance-service': ''
     },
     changeOrigin: true, // Để thay đổi nguồn của yêu cầu đến
     cookieDomainRewrite: {

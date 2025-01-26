@@ -3,7 +3,6 @@ import Classroom from "../models/classroom.model.js";
 import AttendanceSession from "../models/attendance.model.js";
 
 import dotenv from 'dotenv'
-import bcrypt from "bcrypt"
 import bcryptjs from "bcryptjs";
 
 dotenv.config()
@@ -188,7 +187,7 @@ export const updateProfile = async(req, res) => {
 
     if (password) {
         const saltRounds = 10; // Độ mạnh của salt
-        user.password = await bcrypt.hash(password, saltRounds);
+        user.password = await bcryptjs.hash(password, saltRounds);
     }
 
     await user.save();

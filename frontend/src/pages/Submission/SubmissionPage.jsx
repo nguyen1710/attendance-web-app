@@ -25,7 +25,7 @@ function SubmissionPage() {
     } else {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
-        .get(`http://localhost:4000/attandence-service/api/submissions/getSubmissions/${classId}`, {
+        .get(`http://localhost:4000/attendance-service/api/submissions/getSubmissions/${classId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Gửi token trong header
           },

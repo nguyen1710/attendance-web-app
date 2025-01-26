@@ -50,7 +50,7 @@ function SelectedSubmissionDialog({
         try {
           // Gọi API để xử lý email
           const response = await axios.put(
-            `http://localhost:4000/attandence-service/api/submissions/updateSubmission/`, // Địa chỉ API của bạn
+            `http://localhost:4000/attendance-service/api/submissions/updateSubmission/`, // Địa chỉ API của bạn
             { newTitle, newContent, newFromDate, newToDate, newEvidence, submissionId, newStatus}, // Gửi email trong body của yêu cầu
             {
               headers: {

@@ -3,11 +3,8 @@ import authMiddleware from "../middlewares/authMiddleware.js"
 import Classroom from "../models/classroom.model.js"
 import AttendanceSession from "../models/attendance.model.js"
 import User from "../models/user.model.js"
-import QRCode from "qrcode"
-import { createCanvas, loadImage } from "canvas"
-import bcrypt from "bcrypt"
 import { Submission } from "../models/submission.model.js"
-
+import bcryptjs from 'bcryptjs'
 export const createAttendance = [authMiddleware, async (req, res) => {
     const {classroomId} = req.body
     const {name, desc, method} = req.body
@@ -101,7 +98,7 @@ const checkPassword = async (email, password) => {
         }
 
         // So sánh mật khẩu với giá trị lưu trong cơ sở dữ liệu
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        const isPasswordCorrect = await bcryptjs.compare(password, user.password);
 
         if (isPasswordCorrect) {
             return { success: true, message: `User ${user.username} has successfully checked in. ` };
@@ -282,7 +279,7 @@ export const getAllAttendances = [authMiddleware, async (req, res) => {
         return res.status(200).json({ success: true, data: attendances, message: "Get attendances success" });
 
     } catch (error) {
-        console.error('Error creating attandence:', error.message);
+        console.error('Error creating attandence:', error);
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }]

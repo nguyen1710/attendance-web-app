@@ -30,9 +30,9 @@ function Login() {
         window.location.href = '/';
       }
     } catch (error) {
-
-        setErrorMessage(error.response.data.message);
-        toast.error(error.response.data.message)
+        // setErrorMessage(error.response.data.message);
+        // toast.error(error.response.data.message)
+        console.log(error)
 
     }
   }

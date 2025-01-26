@@ -303,7 +303,7 @@ function SubmissionTablle({ submissionsData , classOwner}) {
                     status={selectedSubmission.status}
                     refreshData={() => {
                         axios
-                          .get(`http://localhost:4000/attandence-service/api/submissions/getSubmissions/${classId}`, {
+                          .get(`http://localhost:4000/attendance-service/api/submissions/getSubmissions/${classId}`, {
                             headers: {
                               Authorization: `Bearer ${localStorage.getItem("token")}`,
                             },

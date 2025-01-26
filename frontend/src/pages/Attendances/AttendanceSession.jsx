@@ -32,7 +32,7 @@ const AttendanceSession = () => {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
         .get(
-          `http://localhost:4000/attandence-service/api/attendances/getAttendance/${attendanceId}`,
+          `http://localhost:4000/attendance-service/api/attendances/getAttendance/${attendanceId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gửi token trong header
@@ -72,11 +72,11 @@ const AttendanceSession = () => {
                     <QRCode
                       value={qrCode}
                       size={200}
-                      logoWidth={40}
+                      logoWidth={50}
                       logoImage={logo}
                       fgColor="#f17ab6"
                       bgColor="#fff"
-                      // eyeColor={['#9469d7','#efbd75', '#70c2b4' ]}
+                      eyeColor={['#9469d7','#efbd75', '#70c2b4' ]}
                     />
                   </div>
                 )}
