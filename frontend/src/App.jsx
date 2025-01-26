@@ -17,20 +17,23 @@ import ClientsPage from "./pages/ClientsPage.jsx";
 import UsersPage from "./pages/UsersPage";
 import SalesPage from "./pages/SalesPage";
 import OrdersPage from "./pages/OrdersPage";
+import AdminLogin from './components/admin/login/adminLogin.jsx';
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
+
+//client
 import ClassDetail from './pages/HomePage/ClassDetail.jsx'
-import AdminLogin from './components/admin/login/adminLogin.jsx';
 import ClassDetailUsers from './pages/HomePage/ClassDetailUsers.jsx'
 import AttendanceSession from './pages/Attendances/AttendanceSession.jsx'
 import AttendanceForm from './pages/Attendances/AttendanceForm.jsx'
 import NotificationPage from './pages/Submission/NotificationPage.jsx'
+import UpgradePage from './pages/Upgrade/UpgradePage.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
   
   // const classroomRoutes = ["/classroom"];
   // const isClassroomRoute = classroomRoutes.includes(location.pathname);
-  const isClassroomRoute = location.pathname.startsWith("/classroom") || location.pathname.startsWith("/notifications");
+  const isClassroomRoute = location.pathname.startsWith("/classroom") || location.pathname.startsWith("/notifications") || location.pathname.startsWith("/upgrade");
 
   if (isClassroomRoute) {
     // Nếu là route độc lập, render trực tiếp route đó
@@ -47,6 +50,7 @@ function App() {
             <Route path="/classroom/:classId/attendance/:attendanceId" element={<AttendanceSession/>}/>
             <Route path="/classroom/:classId/submission" element={<SubmissionPage/>}/>
             <Route path="/notifications" element={<NotificationPage/>}/>
+            <Route path="/upgrade" element={<UpgradePage/>}/>
 
         </Routes>
         <Toaster position="top-right" reverseOrder={false} />

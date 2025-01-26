@@ -1,0 +1,89 @@
+version: "3.9"
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  admin-service:
+    build:
+      context: ./backend/admin-service
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./backend/admin-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  user-service:
+    build:
+      context: ./backend/user-service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/user-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  classroom-service:
+    build:
+      context: ./backend/classroom-service
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/classroom-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  attendance-service:
+    build:
+      context: ./backend/attendance-service
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./backend/attendance-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend/api-gateway:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

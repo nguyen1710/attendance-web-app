@@ -14,7 +14,7 @@ function AttendanceForm() {
         const fetchData = async () => {
             try {
                 // Gửi yêu cầu GET tới API
-                const response = await axios.get(`http://localhost:4000/attandence-service/api/attendances/getFormAttend/${id}`);
+                const response = await axios.get(`http://localhost:4000/attendance-service/api/attendances/getFormAttend/${id}`);
                 if(response.data.success) {
                     console.log(response)
                     setClassname(response.data.data.classroomName)
@@ -33,7 +33,7 @@ function AttendanceForm() {
         e.preventDefault()
 
         try {
-            const response = await axios.post(`http://localhost:4000/attandence-service/api/attendances/checkFormAttend/${id}`, {email, password})
+            const response = await axios.post(`http://localhost:4000/attendance-service/api/attendances/checkFormAttend/${id}`, {email, password})
             console.log(response)
 
             if (response.data.success) {

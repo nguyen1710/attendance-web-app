@@ -28,7 +28,7 @@ function NotificationTable({ notificationsData }) {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4000/attandence-service/api/submissions/getNotification`,
+        `http://localhost:4000/attendance-service/api/submissions/getNotification`,
         { notiId }, // Gửi notiId để cập nhật trạng thái
         {
           headers: {

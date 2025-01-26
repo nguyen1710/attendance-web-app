@@ -56,7 +56,7 @@ const UsersTable = ({
   const refreshData = () => {
     axios
       .get(
-        `http://localhost:4000/attandence-service/api/attendances/getAttendance/${attendanceId}`,
+        `http://localhost:4000/attendance-service/api/attendances/getAttendance/${attendanceId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -93,7 +93,7 @@ const UsersTable = ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:4000/attandence-service/api/attendances/checkAttendanceByIdCard/${attendanceId}`,
+        `http://localhost:4000/attendance-service/api/attendances/checkAttendanceByIdCard/${attendanceId}`,
         { idCard: value },
         {
           headers: {
@@ -123,7 +123,7 @@ const UsersTable = ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:4000/attandence-service/api/attendances/checkAttendance/${attendanceId}`,
+        `http://localhost:4000/attendance-service/api/attendances/checkAttendance/${attendanceId}`,
         { email },
         {
           headers: {
@@ -157,13 +157,13 @@ const UsersTable = ({
   const exportToExcel = () => {
     // Chuẩn bị dữ liệu
     const data = [
-      ...attendeesData.map((student) => ({
+      ...attendees.map((student) => ({
         Name: student.username,
         Email: student.email,
         "Attendance Time": formatDateTime(student.timestamp),
         Excuse: "Attend", // Đã điểm danh thì không có phép
       })),
-      ...nonAttendeesData.map((student) => ({
+      ...nonAttendees.map((student) => ({
         Name: student.username,
         Email: student.email,
         "Attendance Time": "N/A",
