@@ -1,6 +1,7 @@
-# attendancec-web-app
+ attendancec-web-app
 
-Dự Án Công Nghệ Thông Tin 1
+# Dự Án Công Nghệ Thông Tin 1
+### Information Technology Project 1
 
 # 🌟 **How ​​to Install a Project Using Docker**
 
@@ -19,7 +20,7 @@ Before you start, make sure you have installed:
 ---
 
 ## 📂 **How ​​to Install**
-1. **Clone the project to your computer:**
+1. **Clone or Download the project to your computer:**
 ```bash
 git clone https://github.com/nguyen1710/attendance-web-app.git
 ```
@@ -50,9 +51,9 @@ docker-compose up
 ```
 
 4. **Access the application on the browser:**
-- Normally the application will run at `http://localhost:<5173>`.
+- Normally the application will run at `http://localhost:5173`.
 
-- Replace `<5173>` with the port declared in the `docker-compose.yml` file.
+- Replace `5173` with the port declared in the `docker-compose.yml` file.
 
 5. **Stop Docker containers:**
 To stop running containers, you can use the command:
@@ -64,10 +65,10 @@ docker-compose down
 
 ## 📫 **Contact**
 If you have any questions or encounter difficulties during the installation process, please contact:
-- **Author**: [Your Name](https://github.com/nguyen1710)
+- **Author**: [Thanh Nguyen - Khoa Nam](https://github.com/nguyen1710)
 - **Email**: nguyenthanhnguyen17102003@gmail.com
 
 ---
 
 Thank you for using our project! 😊
-```
+
