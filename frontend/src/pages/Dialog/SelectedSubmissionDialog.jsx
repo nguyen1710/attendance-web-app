@@ -78,7 +78,7 @@ function SelectedSubmissionDialog({
           try{
             console.log(submissionId);
           const response = await axios.delete(
-            `http://localhost:4000/attandence-service/api/submissions/deleteSubmission/${submissionId}`, // Địa chỉ API của bạn
+            `http://localhost:4000/attendance-service/api/submissions/deleteSubmission/${submissionId}`, // Địa chỉ API của bạn
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`, // Nếu cần gửi token xác thực
