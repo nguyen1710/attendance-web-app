@@ -35,10 +35,10 @@ const UserCard = ({ user, onClick }) => {
       <p className="mt-3 text-sm text-gray-600">
         Project: <span className="font-medium">{user.name}</span>
       </p>
-      <p className="mt-3 text-sm text-gray-600">
+      {/* <p className="mt-3 text-sm text-gray-600">
         Room code: <span className="font-medium">{user.roomCode}</span>
       </p>
-      
+       */}
       <div className="mt-3 text-xs text-gray-500">{user.owner}</div>
     </div>
   );
