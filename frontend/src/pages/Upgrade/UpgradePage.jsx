@@ -1,16 +1,34 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import Header from "~/components/common/Header";
 import PaymentDialog from "./PaymentDialog";
+import axios from "axios"
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function UpgradePage() {
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [username, setUsername] = useState(localStorage.getItem("username"));
-  const [amount, setAmount] = useState("");
-  const [info, setInfo] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   // console.log(id)
 
-  const closeDialog = () => setIsDialogOpen(false);
-  const openDialog = () => setIsDialogOpen(true);
+  const handleUpgade = async (amount, orderInfo) => {
+    try {
+      const response = await axios.post(`${API_URL_BASE}/user-service/api/upgrade/payment`, {amount, orderInfo})
+      if (response.data.success) {
+        // setSuccessMessage(response.data.message);
+        // Optionally, you can store the user data in state or localStorage
+        toast.success("Please redirect to paying page")
+        // navigate()
+        window.location.href = response.data.result.payUrl;
+      }
+    } catch (error) {
+        // setErrorMessage(error.response.data.message);
+        console.log(error)
+        
+    }
+  }
   return (
     <>
       <div className="flex-1 overflow-auto relative z-10">
@@ -187,11 +205,8 @@ function UpgradePage() {
                 </li>
               </ul>
               <a
-                href="#"
                 onClick={() => {
-                  openDialog();
-                  setAmount("1000");
-                  setInfo(`${email.replace(/"/g, "")} update to level 2`);
+                  handleUpgade(1000, `${email} upgrade account to level 2`)
                 }}
                 className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-cyan-900"
               >
@@ -305,11 +320,8 @@ function UpgradePage() {
                 </li>
               </ul>
               <a
-                href="#"
                 onClick={() => {
-                  openDialog();
-                  setAmount("2000");
-                  setInfo(`${email.replace(/"/g, "")} update to level 3`);
+                  handleUpgade(2000, `${email} upgrade account to level 3`)
                 }}
                 className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-cyan-900"
               >
@@ -320,12 +332,12 @@ function UpgradePage() {
         </main>
       </div>
 
-      <PaymentDialog
+      {/* <PaymentDialog
         isOpen={isDialogOpen}
         onClose={closeDialog}
         amount={amount}
         info={info}
-      />
+      /> */}
     </>
   );
 }
