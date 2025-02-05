@@ -127,7 +127,7 @@ const Header = ({ title }) => {
 
     // Gửi yêu cầu logout đến backend
     axios
-      .post(`${API_URL_BASE}http://localhost:4000/user-service/api/auth/logout`, {}, {
+      .post(`${API_URL_BASE}/user-service/api/auth/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`, // Gửi token trong header
         }
