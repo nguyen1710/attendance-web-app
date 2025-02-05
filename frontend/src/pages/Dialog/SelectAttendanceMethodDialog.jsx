@@ -9,6 +9,7 @@ function SelectAttendanceMethodDialog({ isOpen, onClose }) {
   const [name, setName] = useState("")
   const [desc, setDesc] = useState("")
   const [ method, setMethod ] = useState("")
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     // console.log(id)
     const {classId} = useParams()
@@ -18,34 +19,6 @@ function SelectAttendanceMethodDialog({ isOpen, onClose }) {
     };
     const openDialog = () => setIsDialogOpen(true);
   if (!isOpen) return null;
-  // const handleCreate = async () => {
-  //   try {
-  //     // Gọi API để xử lý email
-  //     const response = await axios.post(
-  //       'http://localhost:4000/attandence-service/api/attendances/createAttandence', // Địa chỉ API của bạn
-  //       { classroomId, name, desc }, // Gửi email trong body của yêu cầu
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("token")}`, // Nếu cần gửi token xác thực
-  //         },
-  //       }
-  //     );
-
-  //     if (response.data.success) {
-  //       toast.success('Create new attendences successfully');
-       
-  //       setName(""); // Reset dữ liệu form
-  //       setDesc("");
-  //       // onClose(); // Đóng dialog
-  //       // window.location.reload(); // Làm mới toàn bộ trang
-  //       refreshData();
-  //       onClose
-  //     }
-  //   } catch (error) {
-  //     console.error('Error adding attend:', error);
-  //     toast.error(error.response.data.message);
-  //   }
-  // };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
     <div className="bg-white p-6 rounded-lg w-[50%]">

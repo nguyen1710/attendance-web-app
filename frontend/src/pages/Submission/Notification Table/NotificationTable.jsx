@@ -1,14 +1,11 @@
 // export default SubmissionTablle;
 
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import toast from "react-hot-toast";
 import axios from "axios";
-import CreateSubmissionDialog from "~/pages/Dialog/CreateSubmissionDialog";
-import SelectedSubmissionDialog from "../../Dialog/SelectedSubmissionDialog";
-
+import { useEffect } from "react";
 function NotificationTable({ notificationsData }) {
   const [notifications, setNotifications] = useState(notificationsData);
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+
   // Lắng nghe sự kiện "notification" từ server
   useEffect(() => {
     // Sắp xếp nếu notificationsData là một mảng
@@ -28,7 +25,7 @@ function NotificationTable({ notificationsData }) {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4000/attendance-service/api/submissions/getNotification`,
+        `${API_URL_BASE}/attendance-service/api/submissions/getNotification`,
         { notiId }, // Gửi notiId để cập nhật trạng thái
         {
           headers: {

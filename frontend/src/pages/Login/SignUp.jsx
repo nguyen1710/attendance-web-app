@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Logo from "~/public/img/logo.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -10,6 +10,7 @@ function SignUp() {
     const [username, setUsername] = useState("");
     const [errors, setErrors] = useState({})
     const [isChecked, setIsChecked] = useState(false);
+    const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
     const navigate = useNavigate();
 
     const validation = () => {
@@ -36,7 +37,7 @@ function SignUp() {
             const isValid = validation()
 
             if(isValid) {
-                const response = await axios.post("http://localhost:4000/user-service/api/auth/signup", {email, username, password})
+                const response = await axios.post(`${API_URL_BASE}/user-service/api/auth/signup`, {email, username, password})
                 if(response.data.success) {
                     toast.success(response.data.message)
                     localStorage.setItem("token", response.data.token); // Lưu token JWT
@@ -87,7 +88,7 @@ function SignUp() {
                     required
                 />
                 {errors.email && (
-                    <p className="text-warning text-sm mt-1">{errors.email}</p>
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                 )}
                 </div>
 
@@ -108,7 +109,7 @@ function SignUp() {
                     required
                 />
                 {errors.username && (
-                    <p className="text-warning text-sm mt-1">{errors.username}</p>
+                    <p className="text-red-500 text-sm mt-1">{errors.username}</p>
                 )}
                 </div>
 
@@ -129,7 +130,7 @@ function SignUp() {
                     required
                 />
                 {errors.password && (
-                    <p className="text-warning text-sm mt-1">{errors.password}</p>
+                    <p className="text-red-500 text-sm mt-1">{errors.password}</p>
                 )}
                 </div>
                 <div>
@@ -149,7 +150,7 @@ function SignUp() {
                     required
                 />
                 {errors.confirmPassword && (
-                    <p className="text-warning text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-1">
                     {errors.confirmPassword}
                 </p>)}
                 </div>
@@ -174,7 +175,7 @@ function SignUp() {
                     </a>
                     </label>
                     {errors.isChecked && (
-              <p className="text-warning text-sm mt-2">{errors.isChecked}</p>
+              <p className="text-red-500 text-sm mt-2">{errors.isChecked}</p>
             )}
                 </div>
                 </div>
@@ -189,7 +190,7 @@ function SignUp() {
                 </div>
                 <div className="text-sm font-medium text-gray-500">
                 Already have an account?{" "}
-                <a href="#" className="text-teal-500 hover:underline">
+                <a href="/login" className="text-teal-500 hover:underline">
                     Login here
                 </a>
                 </div>

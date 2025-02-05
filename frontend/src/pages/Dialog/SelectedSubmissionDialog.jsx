@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
 import axios from 'axios';
 import socket from "~/socketio/socket";
 
@@ -23,6 +23,8 @@ function SelectedSubmissionDialog({
     const [newFromDate, setNewFromDate] = useState(fromDate || "");
     const [newToDate, setNewToDate] = useState(toDate || "");
     const [newStatus, setNewStatus] = useState(status || "");
+    const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+
     // console.log("class owner" , classOwner)
     // c localStorage.getItem('email').replace(/"/g, ""))
     const formatDate = (isoDate) => {
@@ -50,7 +52,7 @@ function SelectedSubmissionDialog({
         try {
           // Gọi API để xử lý email
           const response = await axios.put(
-            `http://localhost:4000/attendance-service/api/submissions/updateSubmission/`, // Địa chỉ API của bạn
+            `${API_URL_BASE}/attendance-service/api/submissions/updateSubmission/`, // Địa chỉ API của bạn
             { newTitle, newContent, newFromDate, newToDate, newEvidence, submissionId, newStatus}, // Gửi email trong body của yêu cầu
             {
               headers: {
@@ -78,7 +80,7 @@ function SelectedSubmissionDialog({
           try{
             console.log(submissionId);
           const response = await axios.delete(
-            `http://localhost:4000/attendance-service/api/submissions/deleteSubmission/${submissionId}`, // Địa chỉ API của bạn
+            `${API_URL_BASE}/attendance-service/api/submissions/deleteSubmission/${submissionId}`, // Địa chỉ API của bạn
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`, // Nếu cần gửi token xác thực

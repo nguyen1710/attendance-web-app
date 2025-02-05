@@ -6,7 +6,7 @@ import Login from './pages/Login/Login.jsx'
 import Home from './pages/HomePage/Home.jsx'
 import SignUp from './pages/Login/SignUp.jsx'
 import VerifyEmail from './pages/Login/VerifyEmail.jsx'
-import { Toaster } from 'react-hot-toast'
+// import { Toaster } from 'react-hot-toast'
 import socket from './socketio/socket.js'
 import Sidebar from './components/common/Sidebar.jsx'
 import SubmissionPage from './pages/Submission/SubmissionPage.jsx'
@@ -20,6 +20,7 @@ import OrdersPage from "./pages/OrdersPage";
 import AdminLogin from './components/admin/login/adminLogin.jsx';
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
+import { ToastContainer } from 'react-toastify';
 
 //client
 import ClassDetail from './pages/HomePage/ClassDetail.jsx'
@@ -53,7 +54,8 @@ function App() {
             <Route path="/upgrade" element={<UpgradePage/>}/>
 
         </Routes>
-        <Toaster position="top-right" reverseOrder={false} />
+        {/* <Toaster position="top-right" reverseOrder={false} /> */}
+        <ToastContainer />
 
     </div>
     );
@@ -79,7 +81,8 @@ function App() {
           <Route path="/attendance/form/:id" element={<AttendanceForm/>}/>
           
         </Routes>
-        <Toaster position="top-right" reverseOrder={false} />
+        {/* <Toaster position="top-right" reverseOrder={false} /> */}
+        <ToastContainer />
       </>
     );
   }
@@ -103,7 +106,8 @@ function App() {
             <Route path='/admin/settings' element={<SettingsPage />} />
             <Route path='/admin/profile' element={<ProfilePage />} />
         </Routes>
-        <Toaster position="top-right" reverseOrder={false} />
+        {/* <Toaster position="top-right" reverseOrder={false} /> */}
+        <ToastContainer />
     </div>
   )
 }

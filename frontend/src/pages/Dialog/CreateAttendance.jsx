@@ -1,18 +1,19 @@
 // Dialog.js
 import React, { useState } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
 import axios from 'axios';
 // eslint-disable-next-line react/prop-types
 function CreateAttendance({ isOpen, onClose, classroomId, method }) {
   const [name, setName] = useState("")
   const [desc, setDesc] = useState("")
   console.log("id class:",classroomId)
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   if (!isOpen) return null;
   const handleCreate = async () => {
     try {
       // Gọi API để xử lý email
       const response = await axios.post(
-        'http://localhost:4000/attendance-service/api/attendances/createAttandence', // Địa chỉ API của bạn
+        `${API_URL_BASE}/attendance-service/api/attendances/createAttandence`, // Địa chỉ API của bạn
         { classroomId, name, desc, method }, // Gửi email trong body của yêu cầu
         {
           headers: {

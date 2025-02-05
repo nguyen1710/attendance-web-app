@@ -4,18 +4,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import Logo from "~/public/img/logo.png"
 import socket from "~/socketio/socket";
 const SidebarHomePage = () => {
   const navigate = useNavigate();
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
   const handleLogout = () => {
     const token = localStorage.getItem('token');
 
     // Gửi yêu cầu logout đến backend
     axios
-      .post('http://localhost:4000/user-service/api/auth/logout', {}, {
+      .post(`${API_URL_BASE}/user-service/api/auth/logout`, {}, {
         headers: {
           Authorization: `Bearer ${token}`, // Gửi token trong header
         }

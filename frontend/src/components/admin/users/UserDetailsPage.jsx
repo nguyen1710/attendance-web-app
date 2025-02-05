@@ -8,6 +8,7 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
   const [clients, setClients] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [visibleContent, setVisibleContent] = useState({});
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
   const toggleContent = (clientId) => {
     setVisibleContent((prevState) => ({
@@ -19,7 +20,7 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
   useEffect(() => {
 		console.log(selectedUser);
     axios
-      .post("http://localhost:4000/admin-service/api/admin/getAttendanceByClassroomId", { classId: selectedUser._id }) 
+      .post(`${API_URL_BASE}/admin-service/api/admin/getAttendanceByClassroomId`, { classId: selectedUser._id }) 
       .then((response) => {
         setClients(response.data); 
         console.log(response.data);

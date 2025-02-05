@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import SidebarHomePage from "~/components/common/SidebarHomePage";
 import Header from "~/components/common/Header";
 import { motion } from "framer-motion";
@@ -21,7 +21,7 @@ const AttendanceSession = () => {
   const [owner, setOwner] = useState("");
   const navigate = useNavigate();
   const { classId, attendanceId } = useParams();
-
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   useEffect(() => {
     const token = localStorage.getItem("token");
     // console.log("token",token)
@@ -32,7 +32,7 @@ const AttendanceSession = () => {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
         .get(
-          `http://localhost:4000/attendance-service/api/attendances/getAttendance/${attendanceId}`,
+          `${API_URL_BASE}/attendance-service/api/attendances/getAttendance/${attendanceId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gửi token trong header

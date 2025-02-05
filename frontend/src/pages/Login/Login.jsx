@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import LoginImg from "~/public/img/authLanding.gif";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
@@ -12,12 +12,13 @@ function Login() {
   const value = localStorage.getItem("email");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
-      const response = await axios.post("http://localhost:4000/user-service/api/auth/login", {email, password})
+      const response = await axios.post(`${API_URL_BASE}/user-service/api/auth/login`, {email, password})
       if (response.data.success) {
         // setSuccessMessage(response.data.message);
         // Optionally, you can store the user data in state or localStorage
@@ -31,15 +32,14 @@ function Login() {
       }
     } catch (error) {
         // setErrorMessage(error.response.data.message);
-        // toast.error(error.response.data.message)
-        console.log(error)
-
+        toast.error(error.response.data.message)
+        
     }
   }
 
   const handleSuccess = async (response) => {
     try {
-      const { data } = await axios.post('http://localhost:4000/user-service/api/auth/google-auth', {
+      const { data } = await axios.post(`${API_URL_BASE}/user-service/api/auth/google-auth`, {
         token: response.credential,
     });
       if(data.success) {
@@ -47,13 +47,12 @@ function Login() {
         localStorage.setItem("token", data.token); // Lưu token JWT
         localStorage.setItem("email", JSON.stringify(data.user.email))
         localStorage.setItem("username", JSON.stringify(data.user.username))
-        console.log(data)
 
         window.location.href = '/';
       }
     } catch (error) {
       const data = error.response.data.message
-      console.log("lỗi",data)
+        console.log("lỗi",data)
     }
   }
 
@@ -67,7 +66,7 @@ function Login() {
       <div className="min-h-screen flex fle-col items-center justify-center py-6 px-4">
         <div className="grid md:grid-cols-2 items-center gap-4 max-w-6xl w-full">
           <div className="border border-gray-300 rounded-lg p-6 max-w-md shadow-[0_2px_22px_-4px_rgba(93,96,127,0.2)] max-md:mx-auto">
-            <form className="space-y-4" method="POST" onSubmit={handleSubmit}>
+            <form className="space-y-4" method="POST">
               <div className="mb-8">
                 <h3 className="text-gray-800 text-3xl font-extrabold">
                   Sign in
@@ -167,6 +166,7 @@ function Login() {
                 <button
                   type="submit"
                   className="w-full shadow-xl py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none"
+                  onClick={handleSubmit}
                 >
                   Log in
                 </button>

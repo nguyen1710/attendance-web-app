@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import AttendanceCard from "~/components/common/AttendanceCard";
 import { motion } from "framer-motion";
 import axios from "axios";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import Header from "../../components/common/Header";
 import SidebarHomePage from "../../components/common/SidebarHomePage";
 import { Link } from "react-router-dom";
@@ -18,6 +18,7 @@ function ClassDetail() {
   const { classId } = useParams(); // Lấy ID từ URL
   const [classroom, setClassroom] = useState(null);
   const [attendances, setAttendance] = useState([]);
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   // console.log(id)
@@ -34,7 +35,7 @@ function ClassDetail() {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
         .get(
-          `http://localhost:4000/classroom-service/api/classrooms/getClassroom/${classId}`,
+          `${API_URL_BASE}/classroom-service/api/classrooms/getClassroom/${classId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gửi token trong header
@@ -67,7 +68,7 @@ function ClassDetail() {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
         .get(
-          `http://localhost:4000/attendance-service/api/attendances/getAllAttendances/${classId}`,
+          `${API_URL_BASE}/attendance-service/api/attendances/getAllAttendances/${classId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Gửi token trong header
@@ -146,7 +147,7 @@ function ClassDetail() {
             refreshData={() => {
               axios
                 .get(
-                  `http://localhost:4000/attendance-service/api/attendances/getAllAttendances/${classId}`,
+                  `${API_URL_BASE}/attendance-service/api/attendances/getAllAttendances/${classId}`,
                   {
                     headers: {
                       Authorization: `Bearer ${localStorage.getItem("token")}`,
