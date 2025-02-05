@@ -1,15 +1,16 @@
 // Dialog.js
 import React, { useState } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
 import axios from 'axios';
 function AddStudentDialog({ isOpen, onClose, id}) {
   const [email, setEmail] = useState("")
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   if (!isOpen) return null;
   const handleAddEmail = async () => {
     try {
       // Gọi API để xử lý email
       const response = await axios.post(
-        'http://localhost:4000/classroom-service/api/classrooms/add-student', // Địa chỉ API của bạn
+        `${API_URL_BASE}/classroom-service/api/classrooms/add-student`, // Địa chỉ API của bạn
         { id, email }, // Gửi email trong body của yêu cầu
         {
           headers: {

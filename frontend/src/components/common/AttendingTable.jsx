@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { color, motion } from "framer-motion";
 import { Edit, Search, Trash2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -31,6 +31,8 @@ const UsersTable = ({
   const [nonAttendees, setNonAttendees] = useState();
   const [idCard, setIdCard] = useState()
   const [method, setMethod] = useState()
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+
   useEffect(() => {
     setAttendees(attendeesData);
     setNonAttendees(nonAttendeesData);
@@ -56,7 +58,7 @@ const UsersTable = ({
   const refreshData = () => {
     axios
       .get(
-        `http://localhost:4000/attendance-service/api/attendances/getAttendance/${attendanceId}`,
+        `${API_URL_BASE}/attendance-service/api/attendances/getAttendance/${attendanceId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -93,7 +95,7 @@ const UsersTable = ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:4000/attendance-service/api/attendances/checkAttendanceByIdCard/${attendanceId}`,
+        `${API_URL_BASE}/attendance-service/api/attendances/checkAttendanceByIdCard/${attendanceId}`,
         { idCard: value },
         {
           headers: {
@@ -123,7 +125,7 @@ const UsersTable = ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `http://localhost:4000/attendance-service/api/attendances/checkAttendance/${attendanceId}`,
+        `${API_URL_BASE}/attendance-service/api/attendances/checkAttendance/${attendanceId}`,
         { email },
         {
           headers: {

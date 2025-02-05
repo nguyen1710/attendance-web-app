@@ -4,10 +4,11 @@ import axios from "axios";
 const UserCard = ({ user, onClick }) => {
   const [clients, setClients] = useState([]);
   const [error, setError] = useState(null);
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
   useEffect(() => {
     axios
-      .post("http://localhost:4000/admin-service/api/admin/getClientsByEmail", { email: user.owner }) 
+      .post(`${API_URL_BASE}/admin-service/api/admin/getClientsByEmail`, { email: user.owner }) 
       .then((response) => {
         setClients(response.data); 
         setError(null);

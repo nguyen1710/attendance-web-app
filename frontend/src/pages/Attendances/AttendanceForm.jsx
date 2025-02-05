@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Logo from "~/public/img/logo.png";
 import axios from 'axios';
 import { format } from 'date-fns';
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
 import { useParams } from 'react-router-dom';
 function AttendanceForm() {
     const [email, setEmail] = useState("")
@@ -10,11 +10,13 @@ function AttendanceForm() {
     const [className, setClassname] = useState("")
     const [date, setDate] = useState(null)
     const {id} = useParams()
+    const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Gửi yêu cầu GET tới API
-                const response = await axios.get(`http://localhost:4000/attendance-service/api/attendances/getFormAttend/${id}`);
+                const response = await axios.get(`${API_URL_BASE}/attendance-service/api/attendances/getFormAttend/${id}`);
                 if(response.data.success) {
                     console.log(response)
                     setClassname(response.data.data.classroomName)
@@ -33,7 +35,7 @@ function AttendanceForm() {
         e.preventDefault()
 
         try {
-            const response = await axios.post(`http://localhost:4000/attendance-service/api/attendances/checkFormAttend/${id}`, {email, password})
+            const response = await axios.post(`${API_URL_BASE}/attendance-service/api/attendances/checkFormAttend/${id}`, {email, password})
             console.log(response)
 
             if (response.data.success) {

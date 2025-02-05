@@ -35,11 +35,12 @@ const ProductsPage = () => {
   const [isUnBlockModalOpen, setIsUnBlockModalOpen] = useState(false);
 
   const [selectedClient, setSelectedClient] = useState(null);
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/admin-service/api/admin/getAllClients") // Địa chỉ API của bạn
+      .get(`${API_URL_BASE}/admin-service/api/admin/getAllClients`) // Địa chỉ API của bạn
       .then((response) => {
         setClients(response.data);
       })
@@ -50,7 +51,7 @@ const ProductsPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/admin-service/api/admin/getNewClients")
+      .get(`${API_URL_BASE}/admin-service/api/admin/getNewClients`)
       .then((response) => {
         setNewClientsCount(response.data.count);
       })
@@ -61,7 +62,7 @@ const ProductsPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/admin-service/api/admin/getClientsByStatus")
+      .get(`${API_URL_BASE}/admin-service/api/admin/getClientsByStatus`)
       .then((response) => {
         setActiveClient(response.data.active);
         setInactiveClient(response.data.inactive);
@@ -93,7 +94,7 @@ const ProductsPage = () => {
 
   const handleDeleteClient = async (clientId) => {
     try {
-      await axios.delete("http://localhost:4000/admin-service/api/admin/deleteClient", {data: { clientId: clientId }  })
+      await axios.delete(`${API_URL_BASE}/admin-service/api/admin/deleteClient`, {data: { clientId: clientId }  })
         .then((response) => {
           toast.success(response.data.message);
         })
@@ -119,7 +120,7 @@ const handleBlockClient = (clientId) => {
     );
 
     axios
-      .put("http://localhost:4000/admin-service/api/admin/blockClient", { clientId, status: "Inactive" })
+      .put(`${API_URL_BASE}/admin-service/api/admin/blockClient`, { clientId, status: "Inactive" })
       .then((response) => {
         console.log("Client blocked successfully:", response.data);
         toast.success(response.data.message);
@@ -146,7 +147,7 @@ const handleUnBlockClient = (clientId) => {
     );
 
     axios
-      .put("http://localhost:4000/admin-service/api/admin/blockClient", { clientId, status: "Active" })
+      .put(`${API_URL_BASE}/admin-service/api/admin/blockClient`, { clientId, status: "Active" })
       .then((response) => {
         toast.success("Client Unblocked successfully:");
         setIsBlockModalOpen(false); 

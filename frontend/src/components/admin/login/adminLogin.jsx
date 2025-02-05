@@ -8,13 +8,13 @@ function adminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/admin-service/api/admin/login",
+        `${API_URL_BASE}/admin-service/api/admin/login`,
         { email, password }
       );
 

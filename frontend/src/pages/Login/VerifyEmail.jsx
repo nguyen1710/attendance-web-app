@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "~/public/img/logo.png";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 function VerifyEmail() {
   const [email, setEmail] = useState(localStorage.getItem('email'));
@@ -12,6 +12,7 @@ function VerifyEmail() {
   const [code, setCode] = useState();
   const [errorsMessage, setErrorsMessage] = useState("");
   const navigate = useNavigate();
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
   useEffect(() => {
     if (!email ) {
@@ -23,7 +24,7 @@ function VerifyEmail() {
   }, [navigate]);
 
   useEffect(() => {
-    const storedTime = localStorage.getItem("timeLeft");
+    const storedTime = sessionStorage.getItem("timeLeft");
     if (storedTime) {
       setTimeLeft(parseInt(storedTime, 10)); // Nếu có thì tiếp tục từ giá trị lưu
     }
@@ -32,7 +33,7 @@ function VerifyEmail() {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         const newTime = prevTime - 1;
-        localStorage.setItem("timeLeft", newTime); // Lưu giá trị mới vào localStorage
+        sessionStorage.setItem("timeLeft", newTime); // Lưu giá trị mới vào localStorage
         return newTime;
       })
     }, 1000);
@@ -55,12 +56,13 @@ function VerifyEmail() {
     try {
       if (code.length < 6) {toast.error("Verification code must have 6 digits")}
       const response = await axios.post(
-        "http://localhost:4000/user-service/api/auth/verify-email",
+        `${API_URL_BASE}/user-service/api/auth/verify-email`,
         { code }
       );
       if (response.data.success) {
         toast.success(response.data.message)
-        navigate("/");
+        sessionStorage.removeItem("timeLeft")
+        navigate("/login");
       }
     } catch (error) {
       setErrorsMessage(error.response.data.message)
@@ -73,9 +75,9 @@ function VerifyEmail() {
     e.preventDefault()
 
     try {
-      const response = await axios.post("http://localhost:4000/user-service/api/auth/resend-verification",{ email })
+      const response = await axios.post(`${API_URL_BASE}/user-service/api/auth/resend-verification`,{ email })
       setTimeLeft(60);
-      localStorage.setItem("timeLeft", 60)
+      sessionStorage.setItem("timeLeft", 60)
       if(response.data.success) {
         toast.success(response.data.message)
       }

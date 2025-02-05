@@ -47,6 +47,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "Active"
     },
+    level:{
+        type: Number,
+        default: 1
+    },
+    balance:{
+        type: Number,
+        default: 1
+    },
     idCard: {
         type:String
     },

@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import SidebarHomePage from '~/components/common/SidebarHomePage'
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
 // import { CirclePlus } from 'lucide-react';
 import TabclassNameRoom from '~/components/common/TabclassRoom';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,6 +16,7 @@ function SubmissionPage() {
   const { classId } = useParams(); // Lấy ID từ URL
   const [submission, setSubmission] = useState(null)
   const [classOwner, setClassOwner] = useState("")
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -25,7 +26,7 @@ function SubmissionPage() {
     } else {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
-        .get(`http://localhost:4000/attendance-service/api/submissions/getSubmissions/${classId}`, {
+        .get(`${API_URL_BASE}/attendance-service/api/submissions/getSubmissions/${classId}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Gửi token trong header
           },

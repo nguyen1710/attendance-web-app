@@ -5,6 +5,9 @@ import { useEffect, useState, useRef } from "react";
 import socket from "~/socketio/socket.js";
 import axios from "axios";
 import {  useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+
 const Header = ({ title }) => {
   const navigate = useNavigate()
   const [hasNotification, setHasNotification] = useState(true);
@@ -20,6 +23,8 @@ const Header = ({ title }) => {
   const [notifications, setNotifications] = useState([]);
 
   const notiRef = useRef(null); // Tạo ref cho vùng thông báo
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+
 
   // Lắng nghe sự kiện "notification" từ server
   useEffect(() => {
@@ -75,7 +80,7 @@ const Header = ({ title }) => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4000/attendance-service/api/submissions/getNotification`,
+        `${API_URL_BASE}/attendance-service/api/submissions/getNotification`,
         { notiId }, // Gửi notiId để cập nhật trạng thái
         {
           headers: {
@@ -94,7 +99,7 @@ const Header = ({ title }) => {
     // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
     axios
       .get(
-        `http://localhost:4000/attendance-service/api/submissions/getNotification`,
+        `${API_URL_BASE}/attendance-service/api/submissions/getNotification`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Gửi token trong header
@@ -116,7 +121,38 @@ const Header = ({ title }) => {
         console.log(error);
       });
   }, []);
-  console.log("noti", notifications);
+
+  const handleLogout = () => {
+    const token = localStorage.getItem('token');
+
+    // Gửi yêu cầu logout đến backend
+    axios
+      .post(`${API_URL_BASE}http://localhost:4000/user-service/api/auth/logout`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Gửi token trong header
+        }
+      })
+      .then((response) => {
+        // Xử lý đăng xuất thành công
+        if (response.data.success) {
+          // Xóa token khỏi localStorage
+          localStorage.removeItem('token');
+          localStorage.removeItem('username');
+          localStorage.removeItem('email');
+          toast.success(response.data.message)
+          socket.disconnect()
+          // Chuyển hướng về trang login
+          navigate('/login');
+        } else {
+          // Xử lý nếu có lỗi
+          toast.success(response.data.message)
+        }
+      })
+      .catch((error) => {
+        console.log('Logout error:', error);
+        alert('Error logging out');
+      });
+  };
 
   return (
     <header className="max-w-full bg-white text-black">
@@ -267,7 +303,7 @@ const Header = ({ title }) => {
                 <div className="py-2 border-t">
                   <button
                     className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-600 flex items-center"
-                    onClick={() => alert("Logging out...")} // Replace with logout logic
+                    onClick={handleLogout} // Replace with logout logic
                   >
                     <LogOut className="h-4 w-4 text-red-600 mr-2" />
                     Logout

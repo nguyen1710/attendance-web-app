@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import {  useParams } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import axios from "axios";
 import CreateSubmissionDialog from "~/pages/Dialog/CreateSubmissionDialog";
 import SelectedSubmissionDialog from "../../Dialog/SelectedSubmissionDialog";

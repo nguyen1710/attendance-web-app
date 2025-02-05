@@ -5,6 +5,7 @@ import AttendanceSession from "../models/attendance.model.js"
 import User from "../models/user.model.js"
 import { Submission } from "../models/submission.model.js"
 import Notification from "../models/notification.model.js"
+
 export const createSubmission = [ authMiddleware, async (req, res) => {
     const {classId} = req.params
     const { title, content, evidence, fromDate, toDate } = req.body;

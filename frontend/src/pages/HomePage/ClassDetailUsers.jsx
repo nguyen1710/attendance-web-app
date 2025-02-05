@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ClassCard from '~/components/common/ClassCard';
 import { motion } from "framer-motion";
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
 import Header from '../../components/common/Header';
 import UsersTable from '../../components/common/UsersTable';
 import SidebarHomePage from '../../components/common/SidebarHomePage';
@@ -27,6 +27,8 @@ function ClassDetailUsers() {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState("");
     const fileInputRef = useRef(null); // Tạo tham chiếu đến input file
+    const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+
      // Hàm đóng dialog
   const closeDialog = () => setIsDialogOpen(false);
 
@@ -41,7 +43,7 @@ function ClassDetailUsers() {
         } else {
           // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
           axios
-            .get(`http://localhost:4000/classroom-service/api/classrooms/getUserFromClass/${classId}`, {
+            .get(`${API_URL_BASE}/classroom-service/api/classrooms/getUserFromClass/${classId}`, {
               headers: {
                 Authorization: `Bearer ${token}`, // Gửi token trong header
               },
@@ -81,7 +83,7 @@ function ClassDetailUsers() {
         setUploadStatus("");
     
         try {
-          const response = await axios.post("http://localhost:4000/classroom-service/api/classrooms/upload-excel", formData, {
+          const response = await axios.post(`${API_URL_BASE}/classroom-service/api/classrooms/upload-excel`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },

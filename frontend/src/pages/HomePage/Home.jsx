@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import ClassCard from '~/components/common/ClassCard';
 import { motion } from "framer-motion";
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import { toast } from "react-toastify";
 import Header from '../../components/common/Header';
 import { Link } from 'react-router-dom';
 import { CirclePlus } from 'lucide-react';
@@ -19,6 +19,7 @@ function Home() {
   const [classrooms, setClassrooms] = useState([])
   const [error, setError] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
      // Hàm đóng dialog
   const closeDialog = () => setIsDialogOpen(false);
@@ -34,7 +35,7 @@ function Home() {
     } else {
       // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
       axios
-        .get("http://localhost:4000/classroom-service/api/classrooms/getClassrooms", {
+        .get(`${API_URL_BASE}/classroom-service/api/classrooms/getClassrooms`, {
           headers: {
             Authorization: `Bearer ${token}`, // Gửi token trong header
           },
@@ -47,8 +48,12 @@ function Home() {
           }
         })
         .catch((error) => {
-          toast.error("Error fetching classrooms");
-          console.log(error)
+          if (error.response && error.response.status === 401) {
+            navigate("/login");
+          } else {
+            toast.error("Error fetching classrooms");
+          }
+          console.log(error);
         });
     }
   }, [navigate]);
@@ -102,7 +107,7 @@ function Home() {
             const token = localStorage.getItem("token");
 
             axios
-              .get("http://localhost:4000/classroom-service/api/classrooms/getClassrooms", {
+              .get(`${API_URL_BASE}/classroom-service/api/classrooms/getClassrooms`, {
                 headers: {
                   Authorization: `Bearer ${token}`, // Gửi token trong header
                 },
