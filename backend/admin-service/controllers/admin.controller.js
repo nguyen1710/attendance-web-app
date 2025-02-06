@@ -285,3 +285,51 @@ export const getAttendanceByClassroomId = async (req, res) => {
         res.status(500).json({message:"Error retrieving attendance"});
     }
 }
+
+export const deleteAttendance = async (req, res) => {
+    const { attendanceId } = req.body;  
+
+    try {
+        const result = await AttendanceSession.deleteOne({ _id: attendanceId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Attendance not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Attendance deleted successfully!"
+        });
+
+    } catch (error) {
+        console.error("Error deleting client:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error deleting client.",
+            error: error.message,
+        });
+    }
+};
+
+export const updateAttendance = async (req, res) => {
+    const { _id, name, date } = req.body;
+
+    try {
+        const updateAttendance = await AttendanceSession.findOne({ _id });
+        if(name) updateAttendance.name = name;
+        if(date) updateAttendance.date = date;
+        await updateAttendance.save();
+    
+        return res.status(200).json({
+            message: 'updated successfully!',
+            updated: updateAttendance
+        });
+    
+    } catch (err) {
+        console.error('Error updating attendance:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+}

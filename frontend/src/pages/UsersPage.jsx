@@ -97,7 +97,7 @@ const userStats = {
 					{/* CLIENT GRID */}
 					<div className="flex justify-between items-center bg-white shadow-sm rounded-md p-4 mb-6 font-semibold text-gray-600">
 					<h2 className="text-lg font-semibold">Classroom Grid</h2>
-					<div className="flex space-x-4">
+					{/* <div className="flex space-x-4">
 						<select className="border border-gray-300 rounded-md p-2 text-sm">
 						<option>Select Status</option>
 						<option>Active</option>
@@ -108,7 +108,7 @@ const userStats = {
 						<option>Sort By: Last 30 Days</option>
 						<option>Sort By: All Time</option>
 						</select>
-					</div>
+					</div> */}
 					</div>
 
 					{/* USER CARDS */}

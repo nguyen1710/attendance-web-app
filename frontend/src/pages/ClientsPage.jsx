@@ -246,7 +246,7 @@ const handleUnBlockClient = (clientId) => {
         <div className="flex justify-between items-center bg-white shadow-sm rounded-md p-4 mb-6 border-gray-200 border font-semibold text-gray-600">
           <h2 className="text-lg font-semibold">Client Grid</h2>
           <div className="flex space-x-4">
-            <select
+            {/* <select
               className="border border-gray-300 rounded-md p-2 text-sm"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -254,7 +254,7 @@ const handleUnBlockClient = (clientId) => {
               <option value="">Select Status</option>
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
-            </select>
+            </select> */}
             <select
               className="border border-gray-300 rounded-md p-2 text-sm"
               value={sortOrder}

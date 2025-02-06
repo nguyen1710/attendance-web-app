@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
+import LogoImg from "~/public/img/favicon.png";
 
 const UserCard = ({ user, onClick }) => {
   const [clients, setClients] = useState([]);
@@ -24,7 +25,7 @@ const UserCard = ({ user, onClick }) => {
     onClick={() => onClick(user)}>
       <div className="flex items-center space-x-4">
         <img
-          src={clients.imageUrl}
+          src={clients.imageUrl || LogoImg}
           alt={user.name}
           className="w-1/4 h-14 rounded-full border-2 border-green-500"
         />
