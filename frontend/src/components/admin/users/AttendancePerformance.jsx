@@ -1,15 +1,37 @@
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import React, { useState, useEffect } from "react";
 
-// Dữ liệu thống kê người có mặt và vắng mặt
-const attendanceData = [
-  { name: "Present", value: 2000 }, // Số người có mặt
-  { name: "Absent", value: 800 },   // Số người vắng mặt
-];
+const COLORS = ["#34D399", "#F87171"];
 
-const COLORS = ["#34D399", "#F87171"]; // Màu sắc: xanh cho có mặt, đỏ cho vắng mặt
+const AttendancePerformance = ({ client }) => {
+  const [allParticipants, setAllParticipants] = useState([]);
+  const [attendanceData, setAttendanceData] = useState([]);
 
-const AttendancePerformance = () => {
+  useEffect(() => {
+    if (client) {
+      const attendees = client.attendees || [];
+      const nonAttendees = client.nonAttendees || [];
+
+      const participants = [
+        ...attendees.map((emailObj) => {
+          const email = Object.values(emailObj).slice(0, -2).join('') || emailObj.email;
+          return { email, status: "Present" };
+        }),
+        ...nonAttendees.map((emailObj) => {
+          const email = Object.values(emailObj).slice(0, -2).join('') || emailObj.email;
+          return { email, status: "Absent" };
+        }),
+      ];
+
+      setAllParticipants(participants);
+      setAttendanceData([
+        { name: "Present", value: attendees.length },
+        { name: "Absent", value: nonAttendees.length },
+      ]);
+    }
+  }, [client]);
+
   return (
     <motion.div
       className="bg-[#fff] rounded-xl border-gray-700 mb-6"
@@ -18,8 +40,7 @@ const AttendancePerformance = () => {
       transition={{ delay: 0.3 }}
     >
       <h2 className="text-lg font-semibold text-gray-600">Attendance Statistics</h2>
-      
-      {/* Biểu đồ tròn cho "Có mặt" và "Vắng mặt" */}
+
       <div style={{ width: "100%", height: 300 }}>
         <ResponsiveContainer>
           <PieChart>
@@ -47,8 +68,6 @@ const AttendancePerformance = () => {
           </PieChart>
         </ResponsiveContainer>
       </div>
-
-      
     </motion.div>
   );
 };

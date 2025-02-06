@@ -1,13 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import AttendanceTable from "../../admin/users/AttendanceTable";
 import axios from "axios";
-import {MoreVertical} from "lucide-react";
+import {MoreVertical, Edit2} from "lucide-react";
 import AttendacePerformance from "./AttendancePerformance";
+import toast from "react-hot-toast";
+import EditModal from "./EditModal";
+
 
 const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
   const [clients, setClients] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [visibleContent, setVisibleContent] = useState({});
+  const [visibleMenu, setVisibleMenu] = useState(null); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clientToEdit, setClientToEdit] = useState(null);
+
   const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
   const toggleContent = (clientId) => {
@@ -30,16 +37,76 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
       });
 	  }, []);
 
-  const handleEditClick = (client) => {
-    console.log("Edit client:", client);
-    // Add your logic for editing a client
+  const handleMenuToggle = (clientId, e) => {
+    e.stopPropagation(); // Ngăn không mở nội dung khi bấm vào MoreVertical
+    setVisibleMenu((prev) => (prev === clientId ? null : clientId));
   };
 
-  const handleDeleteClick = (client) => {
-    console.log("Delete client:", client);
-    // Add your logic for deleting a client
-    setClients(clients.filter((c) => c._id !== client._id));
+  const closeMenu = () => {
+    setVisibleMenu(null);
   };
+
+  useEffect(() => {
+    document.addEventListener("click", closeMenu);
+    return () => {
+      document.removeEventListener("click", closeMenu);
+    };
+  }, []);
+
+  const handleEditClick = (client) => {
+    setClientToEdit(client);
+    setIsModalOpen(true);
+  };
+
+  const handleCancelEdit = () => {
+    setClientToEdit(null); 
+    setIsModalOpen(false); 
+  };
+
+  const handleSaveChanges = (updatedClient) => {
+    axios
+      .put(`${API_URL_BASE}/admin-service/api/admin/updateAttendance`, updatedClient)
+      .then((response) => {
+        setClients((prevClients) =>
+          prevClients.map((client) =>
+            client._id === updatedClient._id ? updatedClient : client
+          )
+        );
+        setIsModalOpen(false);
+        toast.success('Client updated successfully!');
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); 
+
+      })
+      .catch((err) => {
+        console.error('Error updating client:', err);
+      });
+  };
+  
+
+
+  const handleDeleteClick = async (client) => {
+    if (!window.confirm(`Are you sure you want to delete ${client.name}?`)) {
+      return;
+    }
+  
+    try {
+      await axios.delete(`${API_URL_BASE}/admin-service/api/admin/deleteAttendance`, {
+        data: { attendanceId: client._id } 
+      }).then((response) => {
+        toast.success(response.data.message);
+      });
+      
+      setClients((prevClients) => prevClients.filter((c) => c._id !== client._id));
+  
+      console.log(`Deleted client: ${client._id}`);
+    } catch (error) {
+      console.error("Error deleting client:", error);
+    }
+  };
+  
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -57,8 +124,8 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0"); 
     const year = date.getFullYear();
-  
-    return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+  // ${hours}:${minutes}:${seconds} 
+    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -97,21 +164,52 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
                 {visibleContent[client._id] ? "⏷" : "⏵"}
                 </p>
                 <p className="text-lg font-semibold">{client.name}</p>
-                <p className="text-xs text-gray-400 flex">{formatDate(client.date)} <MoreVertical className="ml-2" size={16}/></p>
-                
+                <div className="text-xs text-gray-400 flex relative">
+                  {formatDate(client.date)} 
+                  <MoreVertical className="ml-2" size={16} onClick={(e) => handleMenuToggle(client._id, e)}/>
+
+                  {visibleMenu === client._id && (
+                    <div className=" absolute top-0 right-0 bg-white shadow-lg rounded-md border w-28 p-2 z-50">
+                      <button
+                        className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 font-semibold"
+                        onClick={() => handleEditClick(client)}
+                      >
+                        Edit
+                      </button>
+
+                      
+                      <button
+                        className="block w-full text-left px-3 py-2 text-red-600 hover:bg-gray-100 font-semibold"
+                        onClick={() => handleDeleteClick(client)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
+              
+              {clientToEdit && (
+                <EditModal
+                  client={clientToEdit}
+                  isOpen={isModalOpen}
+                  onClose={() => setIsModalOpen(false)}
+                  onCancel={handleCancelEdit}
+                  onSave={handleSaveChanges}
+                />
+              )}    
 
               {visibleContent[client._id] && (
 
                 
                 <div className="flex flex-col mb-6 bg-[#fff] p-6">
 
-                  <AttendacePerformance />
+                  <AttendacePerformance client={client}/>
 
                   <div className="flex justify-between items-center bg-white mb-6 font-semibold text-gray-600">
                     <h2 className="text-lg font-semibold">Attendance Grid</h2>
                     <div className="flex space-x-4">
-                      {/* Status filter */}
+                      {/* Status filter
                       <select
                         className="border border-gray-300 rounded-md p-2 text-sm"
                         onChange={(e) => handleStatusChange(e.target.value)} // Handle status change
@@ -119,25 +217,25 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
                         <option value="">Select Status</option>
                         <option value="Active">Active</option>
                         <option value="Inactive">Inactive</option>
-                      </select>
+                      </select> */}
                       
                       {/* Sorting filter */}
-                      <select
+                      {/* <select
                         className="border border-gray-300 rounded-md p-2 text-sm"
                         onChange={(e) => handleSortChange(e.target.value)} // Handle sorting change
                       >
                         <option value="">Sort by: Name</option>
                         <option value="A → Z">A ⮁ Z</option>
                         <option value="Z → A">Z ⮃ A</option>
-                      </select>
+                      </select> */}
                       
                       {/* Date picker */}
-                      <input
+                      {/* <input
                         type="date"
                         className="border border-gray-300 rounded-md p-2 text-sm"
                         value={selectedDate}
                         onChange={handleDateChange} // Handle date change
-                      />
+                      /> */}
                     </div>
                   </div>
 
@@ -191,11 +289,11 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
               <div className="flex flex-col gap-2">
                 {selectedUser.teacherEmails.map((email, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <img
+                    {/* <img
                       src="/path/to/avatar.jpg"
                       alt={`Avatar of ${email}`}
                       className="w-8 h-8 rounded-full"
-                    />
+                    /> */}
                     {email}
                   </div>
                   
@@ -212,11 +310,11 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
               <div className="flex flex-col gap-2">
                 {selectedUser.studentEmails.map((email, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <img
+                    {/* <img
                       src="/path/to/avatar.jpg"
                       alt={`Avatar of ${email}`}
                       className="w-8 h-8 rounded-full"
-                    />
+                    /> */}
                     {email}
                   </div>
                   

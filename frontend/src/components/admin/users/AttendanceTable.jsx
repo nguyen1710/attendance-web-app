@@ -51,28 +51,28 @@ const AttendanceTable = ({
         <thead>
           <tr className="bg-gray-100 text-left">
             <th className="py-2 px-4 border-b">Date</th>
-            <th className="py-2 px-4 border-b">Client Name</th>
-            <th className="py-2 px-4 border-b">Phone</th>
+            {/* <th className="py-2 px-4 border-b">Client Name</th> */}
+            <th className="py-2 px-4 border-b">Client Email</th>
             <th className="py-2 px-4 border-b text-center">Check-in</th>
             <th className="py-2 px-4 border-b">Status</th>
-            <th className="py-2 px-4 border-b">Actions</th>
+            {/* <th className="py-2 px-4 border-b">Actions</th> */}
           </tr>
         </thead>
         <tbody>
           {allParticipants.map((participant, index) => (
             <tr key={index} className="hover:bg-gray-50">
               <td className="py-2 px-4 border-b">{formatDate(client.date)}</td>
-              <td className="py-2 px-4 border-b flex items-center gap-2">
+              {/* <td className="py-2 px-4 border-b flex items-center gap-2">
                 <img
                   src={"https://via.placeholder.com/150"}
                   alt="Profile"
                   className="h-8 w-8 rounded-full object-cover border border-gray-300"
                 />
                 <div>
-                  <div className="font-semibold">{participant.email}</div>
+                  <div className="font-semibold">{participant.username}</div>
                   <div className="text-sm text-gray-500">Email</div>
                 </div>
-              </td>
+              </td> */}
               <td className="py-2 px-4 border-b">{participant.email}</td>
               <td className="py-2 px-4 border-b text-center">-</td>
               <td className="py-2 px-4 border-b">
@@ -86,7 +86,7 @@ const AttendanceTable = ({
                   { participant.status}
                 </span>
               </td>
-              <td className="py-2 px-4 border-b flex gap-2">
+              {/* <td className="py-2 px-4 border-b flex gap-2">
                 <button
                   className="text-blue-500 hover:text-blue-700"
                   onClick={() => handleEditClick(client)}
@@ -99,7 +99,7 @@ const AttendanceTable = ({
                 >
                   <Trash2 size={18} />
                 </button>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>
