@@ -295,6 +295,8 @@ export const getAllAttendances = [authMiddleware, async (req, res) => {
     const {id} = req.params
     try {
         const attendances = await AttendanceSession.find({classroomId: id})
+        
+        console.log(id)
 
         if(!attendances) {
             return res.status(404).json({success: false, message: "Classroom not found"})
