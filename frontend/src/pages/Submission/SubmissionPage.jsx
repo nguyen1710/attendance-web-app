@@ -54,23 +54,9 @@ function SubmissionPage() {
         <Header username={username} email={email} title={"Submission"}/>
         <TabclassNameRoom classId={classId} currentTab={'submission'}/>
 
-			<main className='max-width mx-auto py-6 px-4 lg:px-8'>
+			<main className='w-full py-6 px-4 lg:px-8'>
         <div className="flex justify-end">
-          {/* <button
-            type="button"
-            onClick={openDialog}
-            classNameName="flex items-center text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-          >
-            <CirclePlus classNameName="w-5 h-5 mr-2" />
-            Add Student
-          </button> */}
       </div>
-        {/* <AddStudentDialog
-          isOpen={isDialogOpen}
-          onClose={closeDialog}
-          id={classNameId}
-
-        /> */}
 
           <SubmissionTable submissionsData={submission} classOwner={classOwner}/>
 

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { toast } from "react-toastify";
 import axios from 'axios';
+import Swal from 'sweetalert2';
 function CreateClassDialog({ isOpen, onClose, refreshData}) {
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
@@ -28,6 +29,11 @@ function CreateClassDialog({ isOpen, onClose, refreshData}) {
         setDescription("");
         // onClose(); // Đóng dialog
         // window.location.reload(); // Làm mới toàn bộ trang
+        await Swal.fire({
+          title: "Create new class successfully!",
+          text: `A new class has been created.`,
+          icon: "success",
+        });
         refreshData();
         onClose
       }
@@ -66,7 +72,21 @@ function CreateClassDialog({ isOpen, onClose, refreshData}) {
       <div className="flex justify-end">
         <button
           type="button"
-          onClick={handleCreate}
+          onClick={() => 
+            Swal.fire({
+                title: `Are you sure create this class?`,
+                text: "You won't be able to revert this!",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, add it!",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  handleCreate()
+                }
+              })
+           }
           className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2"
         >
           Create

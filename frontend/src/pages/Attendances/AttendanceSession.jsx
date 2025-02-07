@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import AttendingTable from "~/components/common/AttendingTable";
 import { QRCode } from "react-qrcode-logo";
 import logo from "~/public/img/logo.png";
+import Swal from "sweetalert2";
 const AttendanceSession = () => {
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [username, setUsername] = useState(localStorage.getItem("username"));
@@ -59,6 +60,7 @@ const AttendanceSession = () => {
     }
   }, [navigate]);
 
+
   return (
     <>
       <SidebarHomePage />
@@ -79,11 +81,7 @@ const AttendanceSession = () => {
                       eyeColor={['#9469d7','#efbd75', '#70c2b4' ]}
                     />
                   </div>
-                )}
-
-                
-
-          
+                )}         
           <motion.div
             className="grid grid-cols-1 gap-5 mb-8"
             initial={{ opacity: 0, y: 20 }}

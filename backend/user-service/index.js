@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./db/connectDB.js";  // Đảm bảo có phần mở rộng .js
 import authRoutes from "./routes/auth.route.js";  // Đảm bảo có phần mở rộng .js
 import upgradeRoutes from "./routes/upgrade.route.js"
-
+import userRoute from "./routes/user.route.js"
 import cors from 'cors';
 
 dotenv.config();
@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 })
 app.use("/api/auth", authRoutes)
 app.use("/api/upgrade", upgradeRoutes)
-
+app.use("/api/user", userRoute)
 app.listen(port, () => {
     connectDB()
     console.log(`Server is running on port ${port}`)

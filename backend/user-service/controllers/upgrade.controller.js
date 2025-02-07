@@ -12,7 +12,7 @@ export const upgradeAccount =  async (req, res) => {
     var partnerCode = 'MOMO';
     var redirectUrl = 'http://localhost:5173';
     // var ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
-    var ipnUrl = 'https://6b0f-2001-ee0-554e-3b60-3904-d0b6-89fb-1188.ngrok-free.app/user-service/api/upgrade/callback';
+    var ipnUrl = 'https://45d8-2001-ee0-554e-3b60-9140-7f4a-45b7-bd6e.ngrok-free.app/user-service/api/upgrade/callback';
 
     var requestType = "payWithMethod";
     // var amount = '2000';

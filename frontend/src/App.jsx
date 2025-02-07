@@ -11,6 +11,7 @@ import socket from './socketio/socket.js'
 import Sidebar from './components/common/Sidebar.jsx'
 import SubmissionPage from './pages/Submission/SubmissionPage.jsx'
 import ProfilePage from './pages/ProfilePage.jsx'
+import Footer from './components/common/Footer.jsx'
 //admin
 import OverviewPage from "./pages/OverviewPage";
 import ClientsPage from "./pages/ClientsPage.jsx";
@@ -55,9 +56,9 @@ function App() {
 
         </Routes>
         {/* <Toaster position="top-right" reverseOrder={false} /> */}
-        <ToastContainer />
-
+        <ToastContainer autoClose={1000} />
     </div>
+    
     );
   }
 
@@ -79,10 +80,10 @@ function App() {
           <Route path="/verify" element={<VerifyEmail />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/attendance/form/:id" element={<AttendanceForm/>}/>
-          
         </Routes>
+        <Footer/>
         {/* <Toaster position="top-right" reverseOrder={false} /> */}
-        <ToastContainer />
+        <ToastContainer autoClose={1000} />
       </>
     );
   }
@@ -107,7 +108,7 @@ function App() {
             <Route path='/admin/profile' element={<ProfilePage />} />
         </Routes>
         {/* <Toaster position="top-right" reverseOrder={false} /> */}
-        <ToastContainer />
+        <ToastContainer autoClose={1000} />
     </div>
   )
 }

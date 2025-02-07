@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import Header from '../../components/common/Header';
 import { Link } from 'react-router-dom';
 import { CirclePlus } from 'lucide-react';
-import CreateClassDialog from '../Dialog/CreataClassDialog';
+import CreateClassDialog from '../Dialog/CreateClassDialog';
 function Home() {
   const navigate = useNavigate();
 

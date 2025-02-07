@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,6 +13,8 @@ import { Link } from "react-router-dom";
 import { CirclePlus } from "lucide-react";
 import TabClassRoom from "../../components/common/TabClassRoom";
 import SelectAttendanceMethodDialog from "../Dialog/SelectAttendanceMethodDialog";
+import Swal from "sweetalert2";
+
 function ClassDetail() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(localStorage.getItem("email"));
@@ -97,6 +101,42 @@ function ClassDetail() {
     }
   }, [navigate]);
 
+  const handleDelete = async () => {
+    const token = localStorage.getItem("token");
+    console.log("token",token)
+    if (!token) {
+      // Nếu không có token, chuyển hướng đến trang login
+      navigate("/login");
+    } else {
+      try {
+        // Gọi API để xử lý email
+        const response = await axios.post(
+          `${API_URL_BASE}/classroom-service/api/classrooms/deleteClassroom/${classId}`,
+          {}, // Body (nếu không có thì để trống `{}`)
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gửi token đúng cách
+            },
+          }
+        );
+        
+  
+        if (response.data.success) {
+          await Swal.fire({
+            title: "Deleted!",
+            text: "The class has been deleted.",
+            icon: "success"
+          });
+          window.location.href = '/'
+        }
+      } catch (error) {
+        console.error('Error delete class:', error);
+        toast.error(error.response.data.message);
+      }
+    }
+    
+  };
+
   //   console.log(students)
   return (
     <>
@@ -105,7 +145,7 @@ function ClassDetail() {
         <Header username={username} email={email} title={classroom?.name} />
         <TabClassRoom classId={classId} currentTab={"attendance"} />
 
-        <main className="w-full mx-auto py-6 px-4 lg:px-8 ">
+        <main className="w-full py-6 px-4 lg:px-8 ">
           {email.replace(/"/g, "") === classroom?.owner ? (
             <div className="flex justify-end mb-3">
               <button
@@ -116,6 +156,30 @@ function ClassDetail() {
                 <CirclePlus className="w-5 h-5 mr-2" />
                 New Attendance
               </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          handleDelete()
+                        }
+                      });
+                }}
+                className="flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              >
+                <CirclePlus className="w-5 h-5 mr-2" />
+                Delete Classroom
+              </button>
+
             </div>
           ) : null}
 

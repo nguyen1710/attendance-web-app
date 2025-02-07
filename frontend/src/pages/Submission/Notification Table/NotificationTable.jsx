@@ -1,7 +1,7 @@
 // export default SubmissionTablle;
 
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 function NotificationTable({ notificationsData }) {
   const [notifications, setNotifications] = useState(notificationsData);
   const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
