@@ -56,43 +56,37 @@ const SidebarHomePage = () => {
 
   return (
     <motion.div
-      className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
+      className={`relative z-50 transition-all duration-300 ease-in-out flex-shrink-0 ${
         isSidebarOpen || window.innerWidth >= 1024 ? "w-64" : "w-15"
       }`}
       animate={{ width: isSidebarOpen ? 256 : 80 }}
     >
-      <div className="h-screen bg-[#f9fafb] flex flex-col">
+      <div className="h-screen bg-white flex flex-col">
               <AnimatePresence>
                   {isSidebarOpen ? (
-                    <motion.span
+                    
+                      
+                  
+            
+                        <div className="flex items-center">
+                          <img src={Logo} className="w-14 h-14 mt-3 ml-3 " alt="NN Logo" />
+                          <motion.span
                       className="ml-4 whitespace-nowrap"
                       initial={{ opacity: 0, width: 0 }}
                       animate={{ opacity: 1, width: "auto" }}
                       exit={{ opacity: 0, width: 0 }}
                       transition={{ duration: 0.2, delay: 0.3 }}
-                    >
                       
-                  
-            
-                        <div className="flex items-center">
-                          <img src={Logo} className="w-20 h-20 mt-3 ml-[-8px]" alt="Windster Logo" />
-                          <span className="self-center text-xl font-bold whitespace-nowrap">NN Innovation</span>
+                    >                          <span className="self-center text-xl font-bold whitespace-nowrap">NN Innovation</span>
+                          </motion.span>
                         </div>
                         
                       
-                    </motion.span>
                   ): (
-                    <motion.div
-                      className=" whitespace-nowrap"
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: "auto" }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{ duration: 0.2, delay: 0.3 }}
-                    >
+                    
                       <div className="flex items-center">
-                        <img src={Logo} className="w-20 h-20 mt-3" alt="NN Logo" /> {/* Logo nhỏ khi đóng */}
+                        <img src={Logo} className="w-14 h-14 mt-3 ml-3" alt="NN Logo" /> {/* Logo nhỏ khi đóng */}
                       </div>
-                    </motion.div>
                   )}
                 </AnimatePresence>
         

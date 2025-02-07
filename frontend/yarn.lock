@@ -4164,6 +4164,11 @@ svg-parser@^2.0.4:
   resolved "https://registry.npmjs.org/svg-parser/-/svg-parser-2.0.4.tgz"
   integrity sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==
 
+sweetalert2@^11.15.10:
+  version "11.15.10"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.15.10.tgz#315ed4d0933bb1b6fbd7d0daf3d160bd3cc78b64"
+  integrity sha512-Sjiwcd5mWiz8X0JFkHsso2EPVQHrLCjVv+xR6Ry2LKf4KY6kSi4U5pM0Tgmn1c7SMfkyDqPal2NWqwj6vck8bw==
+
 tabbable@^6.2.0:
   version "6.2.0"
   resolved "https://registry.npmjs.org/tabbable/-/tabbable-6.2.0.tgz"

@@ -5,17 +5,9 @@ import { color, motion } from "framer-motion";
 import { Edit, Search, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
-
-// const userData = [
-// 	{ id: 1, name: "John Doe", email: "john@example.com", role: "Customer", status: "Active" },
-// 	{ id: 2, name: "Jane Smith", email: "jane@example.com", role: "Admin", status: "Active" },
-// 	{ id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Customer", status: "Inactive" },
-// 	{ id: 4, name: "Alice Brown", email: "alice@example.com", role: "Customer", status: "Active" },
-// 	{ id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "Moderator", status: "Active" },
-// ];
-
+import Swal from "sweetalert2";
 const UsersTable = ({
   title,
   attendeesData,
@@ -25,18 +17,19 @@ const UsersTable = ({
   methodAttend,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { attendanceId } = useParams();
+  const { attendanceId, classId } = useParams();
   // const [filteredUsers, setFilteredUsers] = useState(userData)
   const [attendees, setAttendees] = useState();
   const [nonAttendees, setNonAttendees] = useState();
-  const [idCard, setIdCard] = useState()
-  const [method, setMethod] = useState()
-  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+  const [idCard, setIdCard] = useState();
+  const [method, setMethod] = useState();
+  const navigate = useNavigate();
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     setAttendees(attendeesData);
     setNonAttendees(nonAttendeesData);
-    setMethod(methodAttend)
+    setMethod(methodAttend);
   }, [attendeesData, nonAttendeesData, methodAttend]);
 
   const numberOfStudents = attendeesData.length + nonAttendeesData.length;
@@ -83,7 +76,7 @@ const UsersTable = ({
   const handleInputIdCardChange = (e) => {
     const value = e.target.value;
     setIdCard(value);
-    console.log(value)
+    console.log(value);
     // Kiểm tra nếu giá trị có 10 ký tự
     if (value.length === 10) {
       // Gọi API ở đây
@@ -109,13 +102,13 @@ const UsersTable = ({
         // setSuccessMessage(response.data.message);
         // Optionally, you can store the user data in state or localStorage
         toast.success(response.data.message);
-        setIdCard("")
+        setIdCard("");
         refreshData();
         // navigate('/')
       }
     } catch (error) {
       toast.error(error.response.data.message);
-      setIdCard("")
+      setIdCard("");
       console.error("Error data data:", error); // Bắt lỗi nếu có
     }
     // console.log(email)
@@ -203,7 +196,41 @@ const UsersTable = ({
       `Attendance_${className}_${new Date().toISOString().split("T")[0]}.xlsx`
     );
   };
-  console.log(nonAttendeesData);
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem("token");
+    console.log("token", token);
+    if (!token) {
+      // Nếu không có token, chuyển hướng đến trang login
+      navigate("/login");
+    } else {
+      try {
+        // Gọi API để xử lý email
+        const response = await axios.post(
+          `${API_URL_BASE}/attendance-service/api/attendances/deleteAttendance/${attendanceId}`,
+          {}, // Body (nếu không có thì để trống `{}`)
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gửi token đúng cách
+            },
+          }
+        );
+
+        if (response.data.success) {
+          await Swal.fire({
+            title: "Deleted!",
+            text: "The attendance session has been deleted.",
+            icon: "success",
+          });
+          navigate(`/classroom/${classId}`);
+        }
+      } catch (error) {
+        console.error("Error delete class:", error);
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
   return (
     <>
       {method === "IDCard" ? (
@@ -238,7 +265,6 @@ const UsersTable = ({
                 onChange={handleInputIdCardChange}
               />
             </div>
-
           </div>
         </div>
       ) : null}
@@ -516,17 +542,44 @@ const UsersTable = ({
           </table>
         </div>
       </div>
-      <div className="relative w-full">
-        <button
-          type="button"
-          onClick={exportToExcel}
-          // disabled={isUploading}
-          className=" absolute right-0 text-center text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-        >
-          Export Exel
-          {/* {isUploading ? "Uploading..." : "Import Excel Students"} */}
-        </button>
-      </div>
+
+      {localStorage.getItem("email").replace(/"/g, "") === classOwner ? (
+        <div className="relative w-full">
+          <button
+            type="button"
+            onClick={exportToExcel}
+            // disabled={isUploading}
+            className=" absolute right-0 text-center text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          >
+            Export Exel
+            {/* {isUploading ? "Uploading..." : "Import Excel Students"} */}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  handleDelete();
+                }
+              });
+            }}
+            // disabled={isUploading}
+            className=" absolute left-0 text-center text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-green-300  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          >
+            Delete attendance session
+            {/* {isUploading ? "Uploading..." : "Import Excel Students"} */}
+          </button>
+        </div>
+      ) : null}
     </>
   );
 };

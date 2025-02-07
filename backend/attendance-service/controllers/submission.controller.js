@@ -114,12 +114,13 @@ export const updateSubmission = [ authMiddleware, async (req, res) => {
         submission.status = newStatus 
         
         const classroom = await Classroom.findById(submission.classId)
+        const user = await User.findOne({ email: req.userEmail }).select("username");
         if(classroom.owner === req.userEmail) {
           const notification = new Notification({
             receiver: submission.userEmail,
             title: newTitle,
             className: classroom?.name,
-            sender: req.userEmail,
+            sender: user.username,
             classId: classroom._id,
             isResponse: true
         })

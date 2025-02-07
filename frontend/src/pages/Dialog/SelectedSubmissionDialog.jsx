@@ -26,7 +26,7 @@ function SelectedSubmissionDialog({
     const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
     // console.log("class owner" , classOwner)
-    // c localStorage.getItem('email').replace(/"/g, ""))
+    const email = localStorage.getItem('email').replace(/"/g, "")
     const formatDate = (isoDate) => {
       const date = new Date(isoDate);
       const day = String(date.getDate()).padStart(2, '0');
@@ -63,7 +63,9 @@ function SelectedSubmissionDialog({
     
           if (response.data.success) {
             toast.success('Update new attendences successfully');
-            socket.emit("notification", {notification: response?.data.notification})
+            if(email === classOwner) {
+              socket.emit("notification", {notification: response?.data.notification})
+            }
             
             refreshData();
             onClose

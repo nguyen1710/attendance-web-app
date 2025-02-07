@@ -1,5 +1,13 @@
 import express from "express"
-import { createClassroom, getAllClassrooms, deleteClassroom, addStudent, handleExcelUpload, getDetailClass, getUserFromClass } from "../controllers/classroom.controller.js"
+import { createClassroom, 
+    getAllClassrooms, 
+    deleteClassroom, 
+    addStudent, 
+    handleExcelUpload, 
+    getDetailClass, 
+    getUserFromClass, 
+    deleteStudentInClass, 
+    addTeacher} from "../controllers/classroom.controller.js"
 import multer from "multer";
 const router = express.Router()
 
@@ -13,11 +21,12 @@ router.post("/createClassroom", createClassroom)
 
 // router.post("/updateClassroom", updateClassroom)
 
-router.post("/deleteClassroom/:id", deleteClassroom)
+router.post("/deleteClassroom/:classId", deleteClassroom)
 
 router.get("/getClassrooms", getAllClassrooms)
 
 router.post("/add-student", addStudent)
+router.post("/add-teacher", addTeacher)
 
 router.get("/getClassroom/:classId", getDetailClass)
 
@@ -26,4 +35,5 @@ router.get("/getUserFromClass/:classId", getUserFromClass)
 // Route xử lý file Excel
 router.post('/upload-excel', upload, handleExcelUpload);
 
+router.post("/deleteUserInClass", deleteStudentInClass)
 export default router

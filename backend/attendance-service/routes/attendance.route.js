@@ -1,5 +1,12 @@
 import express from "express"
-import { createAttendance, getAllAttendances, getAttendance, getFormAttendance, checkAttendance, checkAttendanceDirectly, checkAttendanceByIdCard} from "../controllers/attendance.controller.js"
+import { createAttendance, 
+  getAllAttendances, 
+  getAttendance, 
+  getFormAttendance, 
+  checkAttendance, 
+  checkAttendanceDirectly, 
+  checkAttendanceByIdCard, 
+  deleteAttendance} from "../controllers/attendance.controller.js"
 import cors from "cors"
 const router = express.Router()
 const corsOptionsPublic = {
@@ -16,7 +23,7 @@ router.post("/checkAttendance/:id", checkAttendanceDirectly)
 router.post("/checkAttendanceByIdCard/:id", checkAttendanceByIdCard)
 router.get("/getFormAttend/:id", cors(corsOptionsPublic), getFormAttendance)
 router.post("/checkFormAttend/:id", cors(corsOptionsPublic), checkAttendance);
-
+router.post("/deleteAttendance/:attendanceId", deleteAttendance)
 
 
 export default router

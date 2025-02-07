@@ -10,7 +10,7 @@ const port = process.env.PORT || 3002
 
 // Cấu hình CORS để cho phép frontend ở cổng 5731
 const corsOptions = {
-    origin: 'http://localhost:5173', // Cổng frontend của bạn
+    origin: 'http://localhost:5173',  // Cổng frontend của bạn
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP bạn muốn cho phép
     credentials: true, // Cho phép gửi cookie nếu cần
   };

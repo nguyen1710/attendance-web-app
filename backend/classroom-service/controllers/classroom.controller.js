@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 import User from "../models/user.model.js"
 import { sendInviteEmail } from "../nodeMailer/emails.js"
 import xlsx from 'xlsx'
-
+import AttendanceSession from "../models/attendance.model.js"
 export const createClassroom = [authMiddleware , async (req, res) => {
     try {
         const {name, description} = req.body
@@ -81,8 +81,10 @@ export const getAllClassrooms = [authMiddleware, async (req, res) => {
 
 export const deleteClassroom = [authMiddleware, async (req, res) => {
     try {
-        const { id } = req.params
-        const classroom = await Classroom.findById(id)
+        const { classId } = req.params
+        const objectId = new mongoose.Types.ObjectId(classId); // Chuyển đổi id sang ObjectId
+        
+        const classroom = await Classroom.findById(classId)
         if(!classroom) {
             return res.status(404).json({
                 success: "false",
@@ -95,7 +97,10 @@ export const deleteClassroom = [authMiddleware, async (req, res) => {
             return res.status(403).json({ success: false, message: "You do not have permission to delete this classroom" });
         }
 
-        await Classroom.findByIdAndDelete(id)
+        // const attendances = await AttendanceSession.find({classroomId: id})
+        await AttendanceSession.deleteMany({ classroomId: objectId });
+
+        await Classroom.findByIdAndDelete(classId)
 
         return res.status(200).json({
             success: true,
@@ -141,6 +146,60 @@ export const addStudent = [authMiddleware, async (req, res) => {
     } catch (error) {
         console.log("Error when add student", error)
         return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}]
+
+export const addTeacher = [authMiddleware, async (req, res) => {
+    try {
+        // const { id } = req.params
+        const { id, email } = req.body
+
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'Email is required' });
+        }
+        const classroom = await Classroom.findById(id)
+        if(!classroom) {
+            return res.status(404).json({
+                success: "false",
+                message: "Classroom not found"
+            })
+        }
+
+        if(classroom.owner.toString() != req.userEmail) {
+            return res.status(403).json({ success: false, message: "You do not have permission to delete this classroom" });
+        }
+
+        // const user = await User.findOne({email: email})
+        classroom.teacherEmails.push(email)
+        await classroom.save()
+        return res.status(200).json({
+            success: true,
+            message: ` Add ${email} successfully`
+        });
+    } catch (error) {
+        console.log("Error when add student", error)
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}]
+
+export const deleteStudentInClass = [authMiddleware, async (req, res) => {
+    const {classId, userEmail} = req.body
+    try {
+        await Classroom.updateOne(
+            { _id: classId },
+            {
+                $pull: {
+                    teacherEmails: userEmail,  // Xóa khỏi danh sách teacherEmails nếu có
+                    studentEmails: userEmail  // Xóa khỏi danh sách teacherEmails nếu có
+                }
+            }
+        );
+        return res.status(200).json({
+            success: true,
+            message: ` Delete ${userEmail} out of classroom successfully`
+        });
+    } catch (error) {
+        console.error('Lỗi khi xóa user:', error);
     }
 }]
 

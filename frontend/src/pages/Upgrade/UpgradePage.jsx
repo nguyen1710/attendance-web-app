@@ -121,7 +121,7 @@ function UpgradePage() {
 
             {/* <!-- Pricing Card --> */}
             <div className="flex flex-col max-w-lg p-6 mx-auto text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 xl:p-8 dark:bg-gray-800 dark:text-white">
-              <h3 className="mb-4 text-2xl font-semibold">Company</h3>
+              <h3 className="mb-4 text-2xl font-semibold">Premium</h3>
               <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
                 Best for large scale uses and extended redistribution rights.{" "}
               </p>
@@ -216,7 +216,7 @@ function UpgradePage() {
 
             {/* <!-- Pricing Card --> */}
             <div className="flex flex-col max-w-lg p-6 mx-auto text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 xl:p-8 dark:bg-gray-800 dark:text-white">
-              <h3 className="mb-4 text-2xl font-semibold">Enterprise</h3>
+              <h3 className="mb-4 text-2xl font-semibold">VIP Premium</h3>
               <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
                 Relevant for multiple users, extended & premium support.
               </p>

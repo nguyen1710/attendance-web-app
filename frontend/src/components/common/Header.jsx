@@ -6,6 +6,7 @@ import socket from "~/socketio/socket.js";
 import axios from "axios";
 import {  useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Logo from "~/public/img/logo.png"
 
 
 const Header = ({ title }) => {
@@ -155,9 +156,13 @@ const Header = ({ title }) => {
   };
 
   return (
-    <header className="max-w-full bg-white text-black">
-      <div className="max-w-full mx-auto py-2 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-black">{title} </h1>
+    <header className="w-full bg-white text-black z-50">
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <div className="flex items-center h-16">
+          {/* <h1 className="text-2xl font-semibold text-black"> NN Attendance </h1> */}
+          <h2 className="text-2xl font-semibold text-black">{title} </h2>
+        </div>
+        
 
         <div className="flex items-center gap-6">
           {/* Notification Bell */}

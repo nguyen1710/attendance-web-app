@@ -61,6 +61,29 @@ export const createAttendance = [authMiddleware, async (req, res) => {
     }
 }]
 
+export const deleteAttendance=  async (req, res) => {
+    const {attendanceId} = req.params
+    try {
+        const attendances = await AttendanceSession.findById(attendanceId)
+
+        if(!attendances) {
+            return res.status(404).json({success: false, message: "Attendance not found"})
+        }
+        // console.log(attendances.classroomId)
+        await AttendanceSession.findByIdAndDelete(attendanceId)
+        
+        return res.status(200).json({ 
+            success: true, 
+            message: "Delete attendances success"
+         });
+
+    } catch (error) {
+        console.error('Error form attandence:', error.message);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
+
 export const getFormAttendance=  async (req, res) => {
     const {id} = req.params
     try {
