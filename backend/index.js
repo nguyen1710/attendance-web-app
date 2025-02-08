@@ -78,7 +78,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     connectionStateRecovery: {},
     cors: {
-        origin: "http://localhost:5173", // Cho phép kết nối từ localhost:5173
+        origin: "*", // Cho phép kết nối từ localhost:5173
         methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP bạn muốn cho phép
     }
 });
