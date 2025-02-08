@@ -287,8 +287,11 @@ const Header = ({ title }) => {
                 </div>
                 <ul className="py-2">
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-                    <User className="h-4 w-4 text-gray-600" />
-                    My Profile
+                    <a href="/profile" className="flex gap-2">
+                      <User className="h-4 w-4 text-gray-600" />
+                      My Profile
+                    </a>
+                    
                   </li>
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
                     <Settings className="h-4 w-4 text-gray-600" />

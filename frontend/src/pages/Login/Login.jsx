@@ -154,7 +154,7 @@ function Login() {
 
                 <div className="text-sm">
                   <a
-                    href="jajvascript:void(0);"
+                    href="/sendEmail"
                     className="text-blue-600 hover:underline font-semibold"
                   >
                     Forgot your password?
