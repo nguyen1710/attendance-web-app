@@ -7,12 +7,12 @@ var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
 
 export const upgradeAccount =  async (req, res) => {
     let {amount, orderInfo} = req.body
-
+    console.log(amount, orderInfo, api_url)
     // var orderInfo = 'pay with MoMo';
     var partnerCode = 'MOMO';
-    var redirectUrl = 'http://localhost:5173';
+    var redirectUrl = 'https://attendance-web-app-frontend.onrender.com';
     // var ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
-    var ipnUrl = 'https://45d8-2001-ee0-554e-3b60-9140-7f4a-45b7-bd6e.ngrok-free.app/user-service/api/upgrade/callback';
+    var ipnUrl = `https://attendance-web-app-backend.onrender.com/user-service/api/upgrade/callback`;
 
     var requestType = "payWithMethod";
     // var amount = '2000';

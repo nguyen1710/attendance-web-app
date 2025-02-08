@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
-import SidebarHomePage from '~/components/common/SidebarHomePage'
+import SidebarHomePage from '~/components/common/SidebarHomePage.jsx'
 import { toast } from "react-toastify";
 // import { CirclePlus } from 'lucide-react';
-import TabclassNameRoom from '~/components/common/TabclassRoom';
+import TabclassNameRoom from '~/components/common/TabClassRoom.jsx';
 import { useNavigate, useParams } from 'react-router-dom';
-import Header from '~/components/common/Header';
-import SubmissionTable from './SubmissionTable/SubmissionTable';
+import Header from '~/components/common/Header.jsx';
+import SubmissionTable from './SubmissionTable/SubmissionTable.jsx';
 
 function SubmissionPage() {
   const navigate = useNavigate();

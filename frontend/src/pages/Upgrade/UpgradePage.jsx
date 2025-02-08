@@ -15,7 +15,10 @@ function UpgradePage() {
 
   const handleUpgade = async (amount, orderInfo) => {
     try {
-      const response = await axios.post(`${API_URL_BASE}/user-service/api/upgrade/payment`, {amount, orderInfo})
+      const response = await axios.post(`${API_URL_BASE}/user-service/api/upgrade/payment`, 
+      {amount,
+      orderInfo
+    })
       if (response.data.success) {
         // setSuccessMessage(response.data.message);
         // Optionally, you can store the user data in state or localStorage
