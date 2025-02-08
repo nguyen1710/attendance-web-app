@@ -31,7 +31,7 @@ const port = process.env.PORT || 4001
 
 // Cấu hình CORS để cho phép frontend ở cổng 5731
 const corsOptions = {
-    origin: '*', // Cổng frontend của bạn
+    origin: 'https://attendance-web-app-frontend.onrender.com', // Cổng frontend của bạn
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP bạn muốn cho phép
     credentials: true, // Cho phép gửi cookie nếu cần
     allowedHeaders: 'Content-Type, Authorization', // Các header được phép
@@ -78,7 +78,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     connectionStateRecovery: {},
     cors: {
-        origin: "http://localhost:5173", // Cho phép kết nối từ localhost:5173
+        origin: "https://attendance-web-app-frontend.onrender.com", // Cho phép kết nối từ localhost:5173
         methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP bạn muốn cho phép
     }
 });
