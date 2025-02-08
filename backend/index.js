@@ -40,9 +40,13 @@ const corsOptions = {
   // Lấy __dirname trong ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+// console.log(__dirname)
 // Cấu hình express để phục vụ các tệp tĩnh trong thư mục public
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend/dist", "index.html"));
+  });
 
   // Sử dụng middleware CORS
 app.use(cors(corsOptions));
