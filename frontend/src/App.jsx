@@ -30,12 +30,15 @@ import AttendanceSession from './pages/Attendances/AttendanceSession.jsx'
 import AttendanceForm from './pages/Attendances/AttendanceForm.jsx'
 import NotificationPage from './pages/Submission/NotificationPage.jsx'
 import UpgradePage from './pages/Upgrade/UpgradePage.jsx'
+import Profile from './pages/Profiles/Profile.jsx'
+import SendEmail from './pages/ResetPassword/SendEmail.jsx'
+import ResetPassword from './pages/ResetPassword/ResetPassword.jsx'
 function App() {
   const location = useLocation(); // Dùng để kiểm tra route hiện tại
   
   // const classroomRoutes = ["/classroom"];
   // const isClassroomRoute = classroomRoutes.includes(location.pathname);
-  const isClassroomRoute = location.pathname.startsWith("/classroom") || location.pathname.startsWith("/notifications") || location.pathname.startsWith("/upgrade");
+  const isClassroomRoute = location.pathname.startsWith("/classroom") || location.pathname.startsWith("/notifications") || location.pathname.startsWith("/upgrade") || location.pathname.startsWith("/profile");
 
   if (isClassroomRoute) {
     // Nếu là route độc lập, render trực tiếp route đó
@@ -53,7 +56,7 @@ function App() {
             <Route path="/classroom/:classId/submission" element={<SubmissionPage/>}/>
             <Route path="/notifications" element={<NotificationPage/>}/>
             <Route path="/upgrade" element={<UpgradePage/>}/>
-
+            <Route path='/profile' element={<Profile/>} />
         </Routes>
         {/* <Toaster position="top-right" reverseOrder={false} /> */}
         <ToastContainer autoClose={1000} />
@@ -63,10 +66,10 @@ function App() {
   }
 
   // Các route hoàn toàn độc lập
-  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/", "/attendance/form/:id", "/notifications"];
+  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/", "/attendance/form/:id", "/notifications", "/sendEmail", "/reset-password/:token"];
   // const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
   const isStandaloneRoute = standaloneRoutes.some(route =>
-    route === location.pathname || (route.includes("/:id") && location.pathname.startsWith(route.split("/:id")[0]))
+    route === location.pathname || (route.includes("/:") && location.pathname.startsWith(route.split("/:")[0]))
   );
 
   if (isStandaloneRoute) {
@@ -80,6 +83,8 @@ function App() {
           <Route path="/verify" element={<VerifyEmail />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/attendance/form/:id" element={<AttendanceForm/>}/>
+          <Route path="/sendEmail" element={<SendEmail/>}/>
+          <Route path="/reset-password/:token" element={<ResetPassword/>}/>
         </Routes>
         <Footer/>
         {/* <Toaster position="top-right" reverseOrder={false} /> */}

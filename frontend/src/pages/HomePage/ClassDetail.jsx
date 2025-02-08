@@ -7,7 +7,7 @@ import AttendanceCard from "~/components/common/AttendanceCard";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { toast } from "react-toastify";
-import Header from "../../components/common/Header";
+import Header from "~/components/common/Header";
 import SidebarHomePage from "../../components/common/SidebarHomePage";
 import { Link } from "react-router-dom";
 import { CirclePlus } from "lucide-react";

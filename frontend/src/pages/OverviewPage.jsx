@@ -15,7 +15,9 @@ const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 const OverviewPage = () => {
 	const [clients, setClients] = useState([]);
 	const [classrooms, setClassrooms] = useState([]);
-
+	const [erroMessage, setErrorMessage] = useState([]);
+	const [ revenue, setRevenue ] = useState(0)
+	
 	useEffect(() => {
 		axios
 		.get(`${API_URL_BASE}/admin-service/api/admin/getAllClients`) // Địa chỉ API của bạ
@@ -23,7 +25,7 @@ const OverviewPage = () => {
 		setClients(response.data);
 		})
 		.catch((error) => {
-		setError(error.message);
+			setErrorMessage(error.message);
 		});
 	}, []);
 
@@ -32,13 +34,14 @@ const OverviewPage = () => {
 		.get("http://localhost:4000/admin-service/api/admin/getAllClassrooms") 
 		.then((response) => {
 		setClassrooms(response.data)
-		console.log(response.data);
 		})
 		.catch((error) => {
-		setError(error.message);
+			setErrorMessage(error.message);
 		});
 	}, []);
 
+	const totalAmount = clients.reduce((sum, item) => sum + item.amountMoney, 0);
+	console.log(totalAmount)
 	return (
 		<div className='flex-1 overflow-auto relative z-10  bg-[#ffffff] bg-opacity-90'>
 			<Header title='Overview' />
@@ -54,7 +57,7 @@ const OverviewPage = () => {
 					<StatCard name="Total Clients" icon={UserSquare} value={clients.length} color="#6366F1" />
 					<StatCard name='Total Classrooms' icon={BarChart2} value={classrooms.length} color='#6366F1' />
 					<StatCard name='Premeum' icon={Zap} value='1' color='#6366F1' />
-					<StatCard name='Revenue' icon={DollarSign} value='123232' color='#6366F1' />
+					<StatCard name='Revenue' icon={DollarSign} value={totalAmount} color='#6366F1' />
 				</motion.div>
 
 				{/* CHARTS */}

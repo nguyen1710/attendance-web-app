@@ -4,6 +4,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { toast } from "react-toastify";
 import { useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 function AttendanceForm() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -42,6 +43,11 @@ function AttendanceForm() {
                 // setSuccessMessage(response.data.message);
                 // Optionally, you can store the user data in state or localStorage
                 toast.success(response.data.message)
+                await Swal.fire({
+                    title: "Successfully!",
+                    text: "Please login and check your attendance.",
+                    icon: "success",
+                });
                 console.log(response.data.message)
                 // navigate('/')
             }
