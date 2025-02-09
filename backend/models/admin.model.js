@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
         type: String, 
         required: false 
     },
+    idCard:{ 
+        type: String, 
+        required: false 
+    },
     imageUrl:{ 
         type: String, 
         required: false 

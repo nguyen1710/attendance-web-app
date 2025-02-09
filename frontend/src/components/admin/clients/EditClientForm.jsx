@@ -28,6 +28,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
         currentPassword: editedClient.password,
         newPassword: "",
         confirmPassword: "",
+        idCard: editedClient.idCard ,
         imageUrl: editedClient.imageUrl || "",
     });
     
@@ -181,6 +182,17 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
             value={editedClient.phone || ""}
             onChange={(e) => setEditedClient({ ...editedClient, phone: e.target.value })}
             name="phone"
+          />
+        </div>
+        <div>
+          <label className="block font-medium mb-2">ID Card</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Enter ID Card"
+            value={editedClient.idCard || ""}
+            onChange={(e) => setEditedClient({ ...editedClient, idCard: e.target.value })}
+            name="idcard"
           />
         </div>
       </div>
