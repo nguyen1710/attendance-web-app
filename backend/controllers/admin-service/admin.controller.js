@@ -21,9 +21,8 @@ export const login = async (req, res) => {
                 message: "Admin not found",
             });
         }
-        
-        const isPasswordValid = await bcryptjs.compare(password, user.password)
-        if(!isPasswordValid) {
+
+        if(password !== user.password) {
             return res.status(400).json(
                 {
                     success: false,
@@ -39,7 +38,6 @@ export const login = async (req, res) => {
             });
           }
         
-        console.log(user)
         res.status(200).json(
             {
                 success: true,

@@ -15,7 +15,7 @@ function adminLogin() {
     try {
       const response = await axios.post(
         `${API_URL_BASE}/admin-service/api/admin/login`,
-        { email, password }
+        { email, password },
       );
 
       if (response.data.success) {
@@ -28,12 +28,7 @@ function adminLogin() {
         navigate("/admin");
       }
     } catch (error) {
-      if (error.response) {
-        // Display the error message from the backend
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      console.log(error)
     }
   };
 

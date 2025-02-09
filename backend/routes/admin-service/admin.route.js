@@ -5,7 +5,7 @@ import express from "express"
 const router = express.Router()
 
 const corsOptionsPublic = {
-    origin: FRONTEND_URL,  // Chỉ cho phép frontend từ localhost:5173 truy cập
+    origin: process.env.FRONTEND_URL,  // Chỉ cho phép frontend từ localhost:5173 truy cập
     methods: ['GET', 'POST'],         // Các phương thức HTTP được phép cho các route công khai
     allowedHeaders: ['Content-Type'], // Các header được phép
     credentials: false,               // Không cần gửi cookie hay token cho các route này
