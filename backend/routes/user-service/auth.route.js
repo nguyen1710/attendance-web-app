@@ -2,9 +2,10 @@ import { login, logout, signup, verifyEmail, resendVerificationCode, loginWithGo
 import cors from 'cors'
 import express from "express"
 const router = express.Router()
+const FRONTEND_URL = process.env.FRONTEND_URL
 
 const corsOptionsPublic = {
-    origin: 'https://attendance-web-app-frontend.onrender.com',  // Chỉ cho phép frontend từ localhost:5173 truy cập
+    origin: FRONTEND_URL,  // Chỉ cho phép frontend từ localhost:5173 truy cập
     methods: ['GET', 'POST'],         // Các phương thức HTTP được phép cho các route công khai
     allowedHeaders: ['Content-Type'], // Các header được phép
     credentials: false,               // Không cần gửi cookie hay token cho các route này

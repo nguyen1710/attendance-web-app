@@ -175,6 +175,7 @@ function ClassDetailUsers() {
           <UsersTable 
             title={"Classmates"} 
             userData={students} 
+            ownerClass={owner}
             />
           <AddStudentDialog
             isOpen={isDialogOpen}

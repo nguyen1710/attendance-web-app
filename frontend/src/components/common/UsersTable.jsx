@@ -6,7 +6,10 @@ import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import axios from "axios";
-const UsersTable = ({ title, userData }) => {
+const UsersTable = ({ title, userData, ownerClass }) => {
+  const [email, setEmail] = useState(localStorage.getItem("email"));
+  const [owner, setOwner] = useState("");
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(userData);
   const [users, setUsers] = useState(userData);
@@ -15,7 +18,8 @@ const UsersTable = ({ title, userData }) => {
   const { classId } = useParams();
   useEffect(() => {
     setUsers(userData);
-  }, [userData]);
+    setOwner(ownerClass)
+  }, [userData, ownerClass]);
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
@@ -26,7 +30,6 @@ const UsersTable = ({ title, userData }) => {
     );
     setFilteredUsers(filtered);
   };
-
 
   const handleDeleteUser = async ({ userEmail }) => {
     const token = localStorage.getItem("token");
@@ -100,12 +103,12 @@ const UsersTable = ({ title, userData }) => {
                     </svg>
                   </p>
                 </th>
-
-                <th className="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
+                {email.replace(/"/g, "") === owner ? (<th className="p-4 transition-colors cursor-pointer border-y border-slate-200 bg-slate-50 hover:bg-slate-100">
                   <p className="flex items-center justify-between gap-2 font-sans text-sm font-normal leading-none text-slate-500">
                     Action
                   </p>
-                </th>
+                </th>) : null }
+                
               </tr>
             </thead>
 
@@ -132,7 +135,7 @@ const UsersTable = ({ title, userData }) => {
                         </div>
                       </td>
 
-                      <td
+                    {email.replace(/"/g, "") === owner ? (<td
                         className="p-4 border-b cursor-pointer text-red-500 border-slate-200"
                         onClick={() => {
                           Swal.fire({
@@ -150,8 +153,9 @@ const UsersTable = ({ title, userData }) => {
                           });
                         }}
                       >
-                        <Trash2 />
-                      </td>
+                          <Trash2 />                     
+                      </td>) : null}
+                      
                     </tr>
                   );
                 })
