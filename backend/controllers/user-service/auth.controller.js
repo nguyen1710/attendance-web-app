@@ -244,7 +244,7 @@ export const sendMailResetPassword = async (req, res) => {
     await user.save();
 
     // Gửi email reset
-    const resetLink = `http://localhost:5173/reset-password/${token}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
     await sendResetPassword(user.email, resetLink)
 
     res.json({ success: true, message: "Email has been send!" });
