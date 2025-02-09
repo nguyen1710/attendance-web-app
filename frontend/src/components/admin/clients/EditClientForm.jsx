@@ -94,7 +94,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
 
       setEditedClient(updatedUserInfo);
 
-      const response = await axios.put(`${API_URL_BASE}/admin-service/api/admin/updateProfile`${API_URL_BASE}, updatedUserInfo);
+      const response = await axios.put(`${API_URL_BASE}/admin-service/api/admin/updateProfile`, updatedUserInfo);
 
       if (response.status === 200) {
           toast.success(response.data.message);
