@@ -45,7 +45,7 @@ const OverviewPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/admin-service/api/admin/getAllClassrooms")
+      .get(`${API_URL_BASE}/admin-service/api/admin/getAllClassrooms`)
       .then((response) => {
         setClassrooms(response.data);
       })
@@ -56,7 +56,7 @@ const OverviewPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/admin-service/api/admin/getAllAttendance")
+      .get(`${API_URL_BASE}/admin-service/api/admin/getAllAttendance`)
       .then((response) => {
         setAttendance(response.data);
       })

@@ -27,10 +27,11 @@ const userStats = {
 	const [selectedUser, setSelectedUser] = useState(null);
   	const [error, setError] = useState(null);
 	const [classrooms, setClassrooms] = useState([]);
-	
+	const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
+
 	useEffect(() => {
 		axios
-		  .get("http://localhost:4000/admin-service/api/admin/getAllClassrooms") // Địa chỉ API của bạn
+		  .get(`${API_URL_BASE}/admin-service/api/admin/getAllClassrooms`) // Địa chỉ API của bạn
 		  .then((response) => {
 			setClassrooms(response.data)
 			console.log(response.data);

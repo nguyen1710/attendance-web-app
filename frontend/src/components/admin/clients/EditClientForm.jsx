@@ -9,7 +9,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
     newPassword: false,
     confirmPassword: false,
   });
-
+  const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   const togglePasswordVisibility = (field) => {
     setPasswordVisible((prev) => ({
       ...prev,
@@ -94,7 +94,7 @@ const EditClientForm = ({ client, onSave, onCancel }) => {
 
       setEditedClient(updatedUserInfo);
 
-      const response = await axios.put("http://localhost:4000/admin-service/api/admin/updateProfile", updatedUserInfo);
+      const response = await axios.put(`${API_URL_BASE}/admin-service/api/admin/updateProfile`${API_URL_BASE}, updatedUserInfo);
 
       if (response.status === 200) {
           toast.success(response.data.message);

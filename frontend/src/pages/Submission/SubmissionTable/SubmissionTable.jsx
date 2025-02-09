@@ -12,6 +12,7 @@ function SubmissionTablle({ submissionsData , classOwner}) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedSubmission, setSelectedSubmission] = useState(null); // Store the selected submission
     const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+    const API_URL_BASE = import.meta.env.VITE_API_BASE_URL;
 
     const closeModal = () => {
         setSelectedSubmission(null)
@@ -303,7 +304,7 @@ function SubmissionTablle({ submissionsData , classOwner}) {
                     status={selectedSubmission.status}
                     refreshData={() => {
                         axios
-                          .get(`http://localhost:4000/attendance-service/api/submissions/getSubmissions/${classId}`, {
+                          .get(`${API_URL_BASE}/attendance-service/api/submissions/getSubmissions/${classId}`, {
                             headers: {
                               Authorization: `Bearer ${localStorage.getItem("token")}`,
                             },
@@ -331,7 +332,7 @@ function SubmissionTablle({ submissionsData , classOwner}) {
                 classId={classId}
                 refreshData={() => {
                     axios
-                      .get(`http://localhost:4000/attendance-service/api/submissions/getSubmissions/${classId}`, {
+                      .get(`${API_URL_BASE}/attendance-service/api/submissions/getSubmissions/${classId}`, {
                         headers: {
                           Authorization: `Bearer ${localStorage.getItem("token")}`,
                         },

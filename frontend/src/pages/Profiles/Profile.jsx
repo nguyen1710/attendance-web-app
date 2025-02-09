@@ -134,7 +134,7 @@ const Profile = () => {
             localStorage.setItem('adminInfo', JSON.stringify(updatedUserInfo));
 
 
-            const response = await axios.put("http://localhost:4000/admin-service/api/admin/updateProfile", updatedUserInfo);
+            const response = await axios.put(`${API_URL_BASE}/admin-service/api/admin/updateProfile`${API_URL_BASE}, updatedUserInfo);
 
             if (response.status === 200) {
                 toast.success(response.data.message);

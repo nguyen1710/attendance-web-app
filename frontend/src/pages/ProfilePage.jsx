@@ -8,6 +8,7 @@ import axios from "axios";
 const ProfilePage = () => {
     const savedUserInfo = localStorage.getItem('adminInfo');
     const user = JSON.parse(savedUserInfo);
+    const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
 
     const initialUserInfo = {
         username: user.username,
@@ -117,7 +118,7 @@ const ProfilePage = () => {
             localStorage.setItem('adminInfo', JSON.stringify(updatedUserInfo));
 
 
-            const response = await axios.put("http://localhost:4000/admin-service/api/admin/updateProfile", updatedUserInfo);
+            const response = await axios.put(`${API_URL_BASE}/admin-service/api/admin/updateProfile`, updatedUserInfo);
 
             if (response.status === 200) {
                 toast.success(response.data.message);
