@@ -359,7 +359,7 @@ export const getAttendance = [authMiddleware, async (req, res) => {
         console.log(nonAttendeesWithStatus)
 
         // Tạo QR Code URL
-        const qrData = attendance.method === "QR" ? `http://localhost:5173/attendance/form/${attendance._id}` : null;
+        const qrData = attendance.method === "QR" ? `${process.env.FRONTEND_URL}/attendance/form/${attendance._id}` : null;
         const classroom = await Classroom.findById(attendance.classroomId)
         // Trả về kết quả
         return res.status(200).json({
