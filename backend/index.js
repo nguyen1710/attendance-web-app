@@ -28,10 +28,10 @@ import { fileURLToPath } from 'url';
 dotenv.config();
 const app = express()
 const port = process.env.PORT || 4001
-
+const FRONTEND_URL = process.env.FRONTEND_URL
 // Cấu hình CORS để cho phép frontend ở cổng 5731
 const corsOptions = {
-    origin: 'https://attendance-web-app-frontend.onrender.com', // Cổng frontend của bạn
+    origin: FRONTEND_URL, // Cổng frontend của bạn
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP bạn muốn cho phép
     credentials: true, // Cho phép gửi cookie nếu cần
     allowedHeaders: 'Content-Type, Authorization', // Các header được phép
@@ -82,7 +82,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     connectionStateRecovery: {},
     cors: {
-        origin: "https://attendance-web-app-frontend.onrender.com", // Cho phép kết nối từ localhost:5173
+        origin: process.env.FRONTEND_URL, // Cho phép kết nối từ localhost:5173
         methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP bạn muốn cho phép
     }
 });

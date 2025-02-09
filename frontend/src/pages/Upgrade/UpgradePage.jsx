@@ -8,10 +8,43 @@ import { useNavigate } from "react-router-dom";
 function UpgradePage() {
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [levelUser, setLevelUser] = useState("");
+  const navigate = useNavigate()
 
   // const [isDialogOpen, setIsDialogOpen] = useState(false);
   const API_URL_BASE = import.meta.env.VITE_API_BASE_URL
   // console.log(id)
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    // console.log("token",token)
+    if (!token) {
+      // Nếu không có token, chuyển hướng đến trang login
+      navigate("/login");
+    } else {
+      // Nếu có token, thực hiện yêu cầu lấy thông tin lớp học
+      axios
+        .post(
+          `${API_URL_BASE}/user-service/api/user/getLevelUser`,{email: email.replace(/"/g, '')},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Gửi token trong header
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            setLevelUser(response.data.level);
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error(error.response.data.message);
+        });
+    }
+  }, [navigate]);
 
   const handleUpgade = async (amount, orderInfo) => {
     try {
@@ -207,14 +240,17 @@ function UpgradePage() {
                   </span>
                 </li>
               </ul>
-              <a
-                onClick={() => {
-                  handleUpgade(1000, `${email} upgrade account to level 2`)
-                }}
-                className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-cyan-900"
-              >
-                Get started
-              </a>
+              {levelUser < 2 ? (
+            <a
+            onClick={() => {
+              handleUpgade(1000, `${email} upgrade account to level 2`)
+            }}
+            className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-cyan-900"
+          >
+            Get started
+          </a>
+          ) : null}
+              
             </div>
 
             {/* <!-- Pricing Card --> */}
@@ -322,14 +358,17 @@ function UpgradePage() {
                   </span>
                 </li>
               </ul>
-              <a
-                onClick={() => {
-                  handleUpgade(2000, `${email} upgrade account to level 3`)
-                }}
-                className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-cyan-900"
-              >
-                Get started
-              </a>
+              {levelUser < 3 ? (
+            <a
+            onClick={() => {
+              handleUpgade(2000, `${email} upgrade account to level 3`)
+            }}
+            className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-cyan-900"
+          >
+            Get started
+          </a>
+          ) : null}
+              
             </div>
           </div>
         </main>

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { useState } from 'react'
-import { Route, Routes, useLocation} from 'react-router-dom'
+import { Route, Routes, useLocation, matchPath} from 'react-router-dom'
 // import Classroom from '../../backend/classroom-service/models/classroom.model'
 import Login from './pages/Login/Login.jsx'
 import Home from './pages/HomePage/Home.jsx'
@@ -38,8 +38,10 @@ function App() {
   
   // const classroomRoutes = ["/classroom"];
   // const isClassroomRoute = classroomRoutes.includes(location.pathname);
-  const isClassroomRoute = location.pathname.startsWith("/classroom") || location.pathname.startsWith("/notifications") || location.pathname.startsWith("/upgrade") || location.pathname.startsWith("/profile");
-
+  // const isClassroomRoute = location.pathname.startsWith("/classroom") || location.pathname.startsWith("/notifications") || location.pathname.startsWith("/upgrade") || location.pathname.startsWith("/profile");
+  const classroomRoutes = ["/classroom", "/notifications", "/upgrade", "/profile"];
+  const isClassroomRoute = classroomRoutes.some(route => location.pathname.startsWith(route));
+  
   if (isClassroomRoute) {
     // Nếu là route độc lập, render trực tiếp route đó
     return (
@@ -66,11 +68,12 @@ function App() {
   }
 
   // Các route hoàn toàn độc lập
-  const standaloneRoutes = ["/login", "/signup", "/verify", "/admin/login", "/", "/attendance/form/:id", "/notifications", "/sendEmail", "/reset-password/:token"];
-  // const isStandaloneRoute = standaloneRoutes.includes(location.pathname);
-  const isStandaloneRoute = standaloneRoutes.some(route =>
-    route === location.pathname || (route.includes("/:") && location.pathname.startsWith(route.split("/:")[0]))
-  );
+  const standaloneRoutes = [
+    "/login", "/signup", "/verify", "/admin/login", "/",
+    "/attendance/form/:id", "/notifications", "/sendEmail", "/reset-password/:token"
+  ];
+  
+  const isStandaloneRoute = standaloneRoutes.some(route => matchPath(route, location.pathname));
 
   if (isStandaloneRoute) {
     // Nếu là route độc lập, render trực tiếp route đó
