@@ -1,5 +1,6 @@
 import { login, getAllClients, getAllClassrooms, updateProfile, getNewClients, deleteClient, blockClient, getClientsByStatus, 
-    getClientsByEmail, getAttendanceByClassroomId, deleteAttendance, updateAttendance} from "../../controllers/admin-service/admin.controller.js";
+    getClientsByEmail, getAttendanceByClassroomId, deleteAttendance, updateAttendance,
+    getAllAttendance} from "../../controllers/admin-service/admin.controller.js";
 import cors from 'cors'
 import express from "express"
 const router = express.Router()
@@ -9,6 +10,7 @@ router.get("/getAllClients", getAllClients);
 router.get("/getNewClients", getNewClients)
 router.get("/getClientsByStatus", getClientsByStatus);
 router.get("/getAllClassrooms", getAllClassrooms);
+router.get("/getAllAttendance", getAllAttendance);
 router.post("/getClientsByEmail", getClientsByEmail);
 router.put("/updateProfile",updateProfile);
 router.delete("/deleteClient", deleteClient);

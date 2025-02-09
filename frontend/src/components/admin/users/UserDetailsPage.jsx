@@ -299,9 +299,9 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
                   
                 ))}
 
-                <button className="flex items-center text-blue-500 border border-blue-500 rounded px-2 py-1 hover:bg-blue-100">
+                {/* <button className="flex items-center text-blue-500 border border-blue-500 rounded px-2 py-1 hover:bg-blue-100">
                   + Add New
-                </button>
+                </button> */}
               </div>
             </div>
 
@@ -320,9 +320,9 @@ const UserDetailsPage = ({ selectedUser, handleBackClick }) => {
                   
                 ))}
 
-                <button className="flex items-center text-blue-500 border border-blue-500 rounded px-2 py-1 hover:bg-blue-100">
+                {/* <button className="flex items-center text-blue-500 border border-blue-500 rounded px-2 py-1 hover:bg-blue-100">
                   + Add New
-                </button>
+                </button> */}
               </div>
             </div>
 

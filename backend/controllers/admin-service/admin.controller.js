@@ -158,6 +158,16 @@ export const getAllClassrooms = async(req, res) => {
     }
 }
 
+export const getAllAttendance = async(req, res) => {
+    try {
+        const attendance = await AttendanceSession.find();
+        res.status(200).json(attendance);
+    }catch (error){
+        console.error("Error:", error)
+        res.status(500).json({message:"Error retrieving attendance"});
+    }
+}
+
 
 export const updateProfile = async(req, res) => {
     const { 
@@ -167,6 +177,7 @@ export const updateProfile = async(req, res) => {
         phone, 
         address, 
         password, 
+        idCard,
         imageUrl
     } = req.body;
 
@@ -183,7 +194,7 @@ export const updateProfile = async(req, res) => {
     if(email) user.email = email;
     if (phone) user.phone = phone;
     if (address) user.address = address;
-
+    if (idCard) user.idCard = idCard;
     if (password) {
         const saltRounds = 10; // Độ mạnh của salt
         user.password = await bcryptjs.hash(password, saltRounds);

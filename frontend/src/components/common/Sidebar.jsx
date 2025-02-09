@@ -13,7 +13,7 @@ const SIDEBAR_ITEMS = [
   // { name: "Analytics", icon: TrendingUp, color: "#6366f1", href: "/admin/analytics" },
   // { name: "Settings", icon: Settings, color: "#6366f1", href: "/admin/settings" },
   { name: "Profile", icon: User, color: "#6366f1", href: "/admin/profile" },
-  { name: "Log out", icon: LogOut, color: "#6366f1", href: "/admin/logout" },
+  // { name: "Log out", icon: LogOut, color: "#6366f1", href: "/admin/logout" },
 
 ];
 
@@ -34,9 +34,9 @@ const Sidebar = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded-full bg-[#000000]  hover:bg-gray-700  max-w-fit"
+          className="p-2 hover:bg-gray-200 transition-colors  max-w-fit"
         >
-          <Menu size={24} />
+          <Menu size={24} style={{ color: "#6366f1" }}/>
         </motion.button>
 
         <nav className="mt-8 flex-grow">
