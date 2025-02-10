@@ -199,7 +199,7 @@ const Header = ({ title }) => {
                         event.preventDefault(); // Ngăn chuyển trang ngay lập tức
                         await handleMarkAsRead(noti._id); // Gọi API
                         // Chuyển hướng sau khi cập nhật
-                        window.location.href = `http://localhost:5173/classroom/${noti.classId}/submission`;
+                        window.location.href = `https://attendance-web-app-frontend.onrender.com/classroom/${noti.classId}/submission`;
                       }}
                       className={`flex cursor-pointer items-center px-4 cursor py-3 ${
                         noti.status === "Unread"
