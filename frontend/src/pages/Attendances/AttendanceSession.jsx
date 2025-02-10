@@ -48,7 +48,7 @@ const AttendanceSession = () => {
             setOwner(response.data.session.classOwner);
             setClassName(response.data.session.className);
             setMethod(response.data.session.method)
-            toast.success("Check Attendance successfully!!!");
+            toast.success("Attendance Session Page!!!");
           } else {
             toast.error(response.data.message);
           }
