@@ -8,7 +8,7 @@ import DeleteClientModal from "../components/admin/clients/DeleteClientModal";
 import BlockClientModal from "../components/admin/clients/BlockClientModal";
 import UnBlockClientModal from "../components/admin/clients/UnBlockClientModal";
 
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 import ClientTable from "../components/admin/clients/ClientTable";
 import { UserCheck, UserSquare, UserMinus, UserPlus, Edit, Trash2 } from "lucide-react";

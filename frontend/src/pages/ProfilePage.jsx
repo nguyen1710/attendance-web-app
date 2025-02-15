@@ -1,6 +1,6 @@
 import Header from "../components/common/Header";
 import { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 
@@ -62,21 +62,26 @@ const ProfilePage = () => {
             if (!emailRegex.test(userInfo.email)) {
                 toast.error("Invalid email format!");
                 return;
-            }else if(!userInfo.username.trim()) {
+            }
+             if(!userInfo.username.trim()) {
                 toast.error("Username cannot be empty!");
                 return;
-            }else if (!userInfo.email.trim()) {
+            }
+             if (!userInfo.email.trim()) {
                 toast.error("Email cannot be empty!");
                 return;
-            }else if (!userInfo.phone.trim()) {
+            }
+             if (!userInfo.phone.trim()) {
                 toast.error("Phone cannot be empty!");
                 console.log("phone empty")
                 return;
-            }else if (!userInfo.address.trim()) {
+            }
+             if (!userInfo.address.trim()) {
                 toast.error("Email cannot be empty!");
                 console.log("address empty")
                 return;
-            }else if (userInfo.newPassword !== userInfo.confirmPassword) {
+            }
+             if (userInfo.newPassword !== userInfo.confirmPassword) {
                 toast.error("Passwords do not match!");
                 console.log("not match")
                 return;

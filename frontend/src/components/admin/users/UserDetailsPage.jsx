@@ -3,7 +3,7 @@ import AttendanceTable from "../../admin/users/AttendanceTable";
 import axios from "axios";
 import {MoreVertical, Edit2} from "lucide-react";
 import AttendacePerformance from "./AttendancePerformance";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import EditModal from "./EditModal";
 
 

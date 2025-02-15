@@ -1,0 +1,88 @@
+services:
+  admin-service:
+    build:
+      context: ./admin-service
+    ports:
+      - "3002"
+    volumes:
+      - ./admin-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  user-service:
+    build:
+      context: ./user-service
+    ports:
+      - "3000"
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  classroom-service:
+    build:
+      context: ./classroom-service
+    ports:
+      - "3001"
+    volumes:
+      - ./classroom-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  attendance-service:
+    build:
+      context: ./attendance-service
+    ports:
+      - "3003"
+    volumes:
+      - ./attendance-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "4000"
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    networks:
+      - app_network
+
+  nginx:
+      image: nginx:latest
+      ports:
+        - "80:80"  # Chuyển hướng tất cả request vào Nginx
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mount file config vào Nginx
+      depends_on:
+        - user-service
+        - admin-service
+        - classroom-service
+        - attendance-service
+        - api-gateway
+      networks:
+        - app_network
+networks:
+  app_network:
+    driver: bridge
