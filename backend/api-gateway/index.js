@@ -4,10 +4,14 @@
 // import http from 'http'
 // import cors from 'cors'
 // import os from 'os'
+// import dotenv from "dotenv";
+// dotenv.config();
+
 // const app = express()
+// const FRONTEND_URL = process.env.FRONTEND_URL
 
 // app.use(cors({
-//     origin: "http://localhost:5173",
+//     origin: FRONTEND_URL,
 //     credentials: true, // Cho phép cookie
 //     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 // }));
@@ -84,7 +88,7 @@
 // const io = new Server(server, {
 //     connectionStateRecovery: {},
 //     cors: {
-//         origin: "http://localhost:5173", // Cho phép kết nối từ localhost:5173
+//         origin: FRONTEND_URL, // Cho phép kết nối từ localhost:5173
 //         methods: ["GET", "POST"],
 //     }
 // });
@@ -137,10 +141,12 @@ import express from 'express'
 import { Server } from "socket.io";
 import http from 'http'
 import cors from 'cors'
+import dotenv from "dotenv";
+dotenv.config();
 const app = express()
-
+const FRONTEND_URL = process.env.FRONTEND_URL
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: FRONTEND_URL,
     credentials: true, // Cho phép cookie
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
@@ -217,7 +223,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     connectionStateRecovery: {},
     cors: {
-        origin: "http://localhost:5173", // Cho phép kết nối từ localhost:5173
+        origin: FRONTEND_URL, // Cho phép kết nối từ localhost:5173
         methods: ["GET", "POST"],
     }
 });

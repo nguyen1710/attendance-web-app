@@ -8,9 +8,10 @@ import cors from 'cors'
 dotenv.config();
 const app = express()
 const port = process.env.PORT || 3002
+const FRONTEND_URL = process.env.FRONTEND_URL
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // Chỉ cho phép frontend từ localhost:5173 truy cập
+    origin: FRONTEND_URL, // Chỉ cho phép frontend từ localhost:5173 truy cập
     methods: 'GET, POST, PUT, DELETE', // Các phương thức HTTP được phép
     allowedHeaders: 'Content-Type, Authorization', // Các header được phép
   };

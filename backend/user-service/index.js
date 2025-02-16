@@ -9,10 +9,10 @@ import cors from 'cors';
 dotenv.config();
 const app = express()
 const port = process.env.PORT || 3001
-
+const FRONTEND_URL = process.env.FRONTEND_URL
 // Cấu hình CORS để cho phép frontend ở cổng 5731
 const corsOptions = {
-    origin: 'http://localhost:5173', // Cổng frontend của bạn
+    origin: FRONTEND_URL, // Cổng frontend của bạn
     methods: ['GET', 'POST'], // Các phương thức HTTP bạn muốn cho phép
     credentials: true, // Cho phép gửi cookie nếu cần
   };
