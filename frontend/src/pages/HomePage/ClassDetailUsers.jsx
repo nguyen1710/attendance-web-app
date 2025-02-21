@@ -11,8 +11,8 @@ import UsersTable from "../../components/common/UsersTable";
 import SidebarHomePage from "../../components/common/SidebarHomePage";
 import { CirclePlus } from "lucide-react";
 import { FileInput } from "lucide-react";
-import AddStudentDialog from "../Dialog/AddUserDialog";
 import TabClassRoom from "../../components/common/TabClassRoom";
+import AddUserDialog from "../Dialog/AddUserDialog";
 function ClassDetailUsers() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(localStorage.getItem("email"));
@@ -177,7 +177,7 @@ function ClassDetailUsers() {
             userData={students} 
             ownerClass={owner}
             />
-          <AddStudentDialog
+          <AddUserDialog
             isOpen={isDialogOpen}
             onClose={closeDialog}
             id={classId}

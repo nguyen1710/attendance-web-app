@@ -1,6 +1,6 @@
 import { verify } from "crypto";
 import { transporter, sender } from "./nodeMailer.config.js";
-import { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE } from "./emailTemplate.js";
+import { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, INVITE_EMAIL_TEMPLATE } from "./emailTemplate.js";
 
 export const sendVerificationEmail = async (email,verificationToken) => {
     const recipient = [{email}]

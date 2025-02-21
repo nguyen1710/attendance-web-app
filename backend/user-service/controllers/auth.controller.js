@@ -263,8 +263,8 @@ export const resetPassword = async (req,res) => {
 
     // Băm mật khẩu mới
     user.password = await bcryptjs.hash(password, 10)
-    user.resetToken = ""; // Xóa token
-    user.resetTokenExpire = undefined;
+    user.resetPasswordToken = ""; // Xóa token
+    user.resetPasswordTokenExpiresAt = undefined;
 
     await user.save();
     res.json({ success: true, message: "Reset password successfully!" });

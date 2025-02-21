@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
-function AddStudentDialog({ isOpen, onClose, id, type }) {
+function AddUserDialog({ isOpen, onClose, id, type }) {
   const [email, setEmail] = useState("");
   const API_URL_BASE = import.meta.env.VITE_API_BASE_URL;
   if (!isOpen) return null;
@@ -127,4 +127,4 @@ function AddStudentDialog({ isOpen, onClose, id, type }) {
   );
 }
 
-export default AddStudentDialog;
+export default AddUserDialog;
