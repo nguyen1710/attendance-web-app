@@ -64,8 +64,8 @@ const userSchema = new mongoose.Schema({
         default: "student"
     },
     googleId: { type: String, unique: true }, // Thêm trường googleId
-    resetPassordToken: String,
-    resetPassordExpiresAt: Date,
+    resetPasswordToken: String,
+    resetPasswordTokenExpiresAt: Date,
     verificationToken: String,
     verificationTokenExpiresAt: Date,
 

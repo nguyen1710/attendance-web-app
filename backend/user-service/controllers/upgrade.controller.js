@@ -5,6 +5,7 @@ import User from "../models/user.model.js";
 var accessKey = 'F8BBA842ECF85';
 var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
 const FRONTEND_URL = process.env.FRONTEND_URL
+const API_URL = process.env.API_URL
 
 export const upgradeAccount =  async (req, res) => {
     let {amount, orderInfo} = req.body
@@ -12,7 +13,7 @@ export const upgradeAccount =  async (req, res) => {
     var partnerCode = 'MOMO';
     var redirectUrl = FRONTEND_URL;
     // var ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
-    var ipnUrl = `https://attendance-web-app-backend.onrender.com/user-service/api/upgrade/callback`;
+    var ipnUrl = `${API_URL}/user-service/api/upgrade/callback`;
 
     var requestType = "payWithMethod";
     // var amount = '2000';
