@@ -6,7 +6,7 @@ const API_URL_BASE = import.meta.env.VITE_API_BASE_URL;
 
 // const socket = io.connect(API_URL_BASE)
 const socket = io(API_URL_BASE, {
-  transports: ["websocket", "polling"],
+  transports: ["polling"],
   withCredentials: true
 });
 
