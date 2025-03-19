@@ -7,6 +7,8 @@ import { OAuth2Client } from "google-auth-library";
 import dotenv from 'dotenv'
 dotenv.config()
 
+const GG_CLIENT_ID = process.env.GG_CLIENT_ID
+const GG_CLIENT_SECRET = process.env.GG_CLIENT_SECRET
 export const signup = async (req, res) => {
     const {email, password, username, role} = req.body
 
@@ -169,7 +171,7 @@ export const login = async (req, res) => {
     }
 }
 
-const client = new OAuth2Client("445233952000-4jbhe1jsti861ebec6pqac3hjmb1i83e.apps.googleusercontent.com");
+const client = new OAuth2Client(GG_CLIENT_ID);
 export const loginWithGoogle = async (req, res) => {
     const { token, profile } = req.body;
     console.log(process.env.GG_CLIENT_ID)
@@ -181,7 +183,7 @@ export const loginWithGoogle = async (req, res) => {
         // Xác thực token với Google
         const ticket = await client.verifyIdToken({
             idToken: token,
-            audience: "445233952000-4jbhe1jsti861ebec6pqac3hjmb1i83e.apps.googleusercontent.com",
+            audience: GG_CLIENT_ID,
         });
 
         const payload = ticket.getPayload();
